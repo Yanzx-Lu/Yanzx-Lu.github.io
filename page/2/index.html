@@ -6,11 +6,11 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2022 | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2022/index.html">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="John Doe">
@@ -158,232 +158,619 @@
           <div id="js-content" class="content-ll">
             
   
-  
+    <article id="post-Redux" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redux组成"><a href="#Redux组成" class="headerlink" title="Redux组成"></a>Redux组成</h1><h2 id="State状态"><a href="#State状态" class="headerlink" title="State状态"></a>State状态</h2><ul>
+<li>DomainState：服务器返回的状态</li>
+<li>UI State：关于当前组件的状态</li>
+<li>App State：全局的状态</li>
+</ul>
+<h2 id="Action事件"><a href="#Action事件" class="headerlink" title="Action事件"></a>Action事件</h2><ul>
+<li><p>其本质为一个JS对象</p>
+</li>
+<li><p>必须含有type属性</p>
+</li>
+<li><p>只是描述了有事情发生，并没有描述如何更新state</p>
+</li>
+</ul>
+<h2 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h2><ul>
+<li>本质为函数</li>
+<li>响应发送过来的action</li>
+<li>函数接收两个函数，第一个是初始化的state，第二个为发送过来的action</li>
+<li>必须要有return返回值</li>
+</ul>
+<h2 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h2><ul>
+<li>用来联系action和reducer</li>
+<li>通过createStore构建store</li>
+<li>subscribe来注册监听</li>
+<li>通过dispatch发送action</li>
+<li>.getState获取状态………</li>
+</ul>
+<h1 id="React-redux"><a href="#React-redux" class="headerlink" title="React-redux"></a>React-redux</h1><p>react-redux就是Redux官方出的配合React的绑定库。</p>
+<p>它可以使你的React组件从Redux store中很方便的读取数据，并向store中分发actions以此来更新数据</p>
+<h3 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h3><p>此组件可以使你整个app都能获取到store中的数据：</p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012163850292.png" alt="image-20211012163850292"></p>
+<h3 id="connet"><a href="#connet" class="headerlink" title="connet"></a>connet</h3><p>此方法能够使组件跟store进行关联</p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012164401465.png" alt="image-20211012164401465"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012170133555.png" alt="image-20211012170133555"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012170215676.png" alt="image-20211012170215676"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E4%BA%91%E5%B9%B3%E5%8F%B0/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/14/Redux/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JSX" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h1><h3 id="嵌入表达式"><a href="#嵌入表达式" class="headerlink" title="嵌入表达式"></a>嵌入表达式</h3><blockquote>
+<p>在jsx的语法中，大括号中可以放置任何有效的js表达式，例如user.firstName，formatName(user)，2+2等都是有效的js表达式。</p>
+</blockquote>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> name=<span class="string">`yanzixu`</span></span><br><span class="line"><span class="keyword">const</span> element=<span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>hello,&#123;name&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><span class="comment">//变量可以直接是标签</span></span><br><span class="line"><span class="title class_">ReactDom</span>.<span class="title function_">render</span>(<span class="comment">//虚拟DOM</span></span><br><span class="line">	element,</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">formatName</span>(<span class="params">user</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> user.<span class="property">firstName</span>+<span class="string">&#x27; &#x27;</span>+user.<span class="property">lastName</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">User</span>=&#123;</span><br><span class="line">    <span class="attr">firstName</span>:<span class="string">&#x27;Yan&#x27;</span>,</span><br><span class="line">    <span class="attr">lastName</span>:<span class="string">&#x27;Zixu&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line">cosnt element=(</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    hello,&#123;formatName(user)&#125;!</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">);     </span><br><span class="line"><span class="title class_">ReactDom</span>.<span class="title function_">render</span>(</span><br><span class="line">	element,</span><br><span class="line">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">);               </span><br></pre></td></tr></table></figure>
+
+<h3 id="JSX-特定属性"><a href="#JSX-特定属性" class="headerlink" title="JSX 特定属性"></a>JSX 特定属性</h3><p>可以通过引号，来将属性值指定为字符串字面量：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> element=<span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">tabIndex</span>=<span class="string">&quot;0&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>也可以使用大括号，为属性值添加一个js表达式</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> element =<span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;user.avatarurl&#125;</span>&gt;</span><span class="tag">&lt;/<span class="name">img</span>&gt;</span></span><span class="comment">//note:此时不可以在大括号外面加上引号，应该仅仅使用引号（对于字符串）或者大括号（表达式）中一个</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-JSX-指定子元素"><a href="#使用-JSX-指定子元素" class="headerlink" title="使用 JSX 指定子元素"></a>使用 JSX 指定子元素</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> element = <span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#123;user.avatarUrl&#125;</span> /&gt;</span></span>;<span class="comment">//假如一个标签里面没有内容，你可以使用 /&gt; 来闭合标签，就像 XML 语法一样</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> element = (<span class="comment">//JSX 标签里能够包含很多子元素:</span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Good to see you here.<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h3 id="JSX-防止注入攻击"><a href="#JSX-防止注入攻击" class="headerlink" title="JSX 防止注入攻击"></a>JSX 防止注入攻击</h3><p>你可以安全地在 JSX 当中插入用户输入内容：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> title = response.<span class="property">potentiallyMaliciousInput</span>;</span><br><span class="line"><span class="comment">// 直接使用是安全的：</span></span><br><span class="line"><span class="keyword">const</span> element = <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;title&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>React DOM 在渲染所有输入内容之前，默认会进行<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-on-html">转义</a>。它可以确保在你的应用中，永远不会注入那些并非自己明确编写的内容。所有的内容在渲染之前都被转换成了字符串。这样可以有效地防止 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Cross-site_scripting">XSS（cross-site-scripting, 跨站脚本）</a>攻击。</p>
+</blockquote>
+<p><img src="C:\Users\E0005171\Desktop\个人\React\React\课件\Snipaste_2021-08-11_09-10-06.png" alt="Snipaste_2021-08-11_09-10-06"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/14/JSX/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-ES6" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Es6"><a href="#Es6" class="headerlink" title="Es6"></a>Es6</h1><h3 id="Class的基本语法"><a href="#Class的基本语法" class="headerlink" title="Class的基本语法"></a>Class的基本语法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>&#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">x,y</span>)&#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">x</span>=x;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">y</span>=y;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="title function_">toString</span>(<span class="params"></span>)&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="string">&#x27;(&#x27;</span>+<span class="variable language_">this</span>.<span class="property">x</span>+<span class="string">&#x27;,&#x27;</span>+<span class="variable language_">this</span>.<span class="property">y</span>+<span class="string">&#x27;)&#x27;</span> </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>constructor()</code>方法，这就是构造方法，而<code>this</code>关键字则代表实例对象；<code>Point</code>类除了构造方法，还定义了一个<code>toString()</code>方法。注意，定义<code>toString()</code>方法的时候，前面不需要加上<code>function</code>这个关键字，直接把函数定义放进去了就可以了。另外，方法与方法之间<strong>不需要逗号分隔</strong>。</p>
+</blockquote>
+<h3 id="Class的继承"><a href="#Class的继承" class="headerlink" title="Class的继承"></a>Class的继承</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ColorPoint</span> extents <span class="title class_">Point</span>&#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params">x,y.color</span>)&#123;</span><br><span class="line">        <span class="variable language_">super</span>(x,y)；<span class="comment">//调用父类的constructor(x,y)</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">color</span>=color;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">toString</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">color</span>+<span class="string">&#x27;&#x27;</span>+<span class="variable language_">super</span>.<span class="title function_">toString</span>();<span class="comment">//调用父类的toString()方法</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="async-函数"><a href="#async-函数" class="headerlink" title="async 函数"></a>async 函数</h1><blockquote>
+<h1 id="异步操作概述"><a href="#异步操作概述" class="headerlink" title="异步操作概述"></a>异步操作概述</h1><h2 id="单线程模型"><a href="#单线程模型" class="headerlink" title="单线程模型"></a>单线程模型</h2><p>单线程模型指的是，JavaScript 只在一个线程上运行。也就是说，JavaScript 同时只能执行一个任务，其他任务都必须在后面排队等待。</p>
+<p>注意，JavaScript 只在一个线程上运行，不代表 JavaScript 引擎只有一个线程。事实上，JavaScript 引擎有多个线程，单个脚本只能在一个线程上运行（称为主线程），其他线程都是在后台配合。</p>
+<p>JavaScript 之所以采用单线程，而不是多线程，跟历史有关系。JavaScript 从诞生起就是单线程，原因是不想让浏览器变得太复杂，因为多线程需要共享资源、且有可能修改彼此的运行结果，对于一种网页脚本语言来说，这就太复杂了。如果 JavaScript 同时有两个线程，一个线程在网页 DOM 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准？是不是还要有锁机制？所以，为了避免复杂性，JavaScript 一开始就是单线程，这已经成了这门语言的核心特征，将来也不会改变。</p>
+<p>这种模式的好处是实现起来比较简单，执行环境相对单纯；坏处是只要有一个任务耗时很长，后面的任务都必须排队等着，会拖延整个程序的执行。常见的浏览器无响应（假死），往往就是因为某一段 JavaScript 代码长时间运行（比如死循环），导致整个页面卡在这个地方，其他任务无法执行。JavaScript 语言本身并不慢，慢的是读写外部数据，比如等待 Ajax 请求返回结果。这个时候，如果对方服务器迟迟没有响应，或者网络不通畅，就会导致脚本的长时间停滞。</p>
+<p>如果排队是因为计算量大，CPU 忙不过来，倒也算了，但是很多时候 CPU 是闲着的，因为 IO 操作（输入输出）很慢（比如 Ajax 操作从网络读取数据），不得不等着结果出来，再往下执行。JavaScript 语言的设计者意识到，这时 CPU 完全可以不管 IO 操作，挂起处于等待中的任务，先运行排在后面的任务。等到 IO 操作返回了结果，再回过头，把挂起的任务继续执行下去。这种机制就是 JavaScript 内部采用的“事件循环”机制（Event Loop）。</p>
+<p>单线程模型虽然对 JavaScript 构成了很大的限制，但也因此使它具备了其他语言不具备的优势。如果用得好，JavaScript 程序是不会出现堵塞的，这就是为什么 Node 可以用很少的资源，应付大流量访问的原因。</p>
+<p>为了利用多核 CPU 的计算能力，HTML5 提出 Web Worker 标准，允许 JavaScript 脚本创建多个线程，但是子线程完全受主线程控制，且不得操作 DOM。所以，这个新标准并没有改变 JavaScript 单线程的本质。</p>
+<h2 id="同步任务和异步任务"><a href="#同步任务和异步任务" class="headerlink" title="同步任务和异步任务"></a>同步任务和异步任务</h2><p>程序里面所有的任务，可以分成两类：同步任务（synchronous）和异步任务（asynchronous）。</p>
+<p>同步任务是那些没有被引擎挂起、在主线程上排队执行的任务。只有前一个任务执行完毕，才能执行后一个任务。</p>
+<p>异步任务是那些被引擎放在一边，不进入主线程、而进入任务队列的任务。只有引擎认为某个异步任务可以执行了（比如 Ajax 操作从服务器得到了结果），该任务（采用回调函数的形式）才会进入主线程执行。排在异步任务后面的代码，不用等待异步任务结束会马上运行，也就是说，异步任务不具有“堵塞”效应。</p>
+<p>举例来说，Ajax 操作可以当作同步任务处理，也可以当作异步任务处理，由开发者决定。如果是同步任务，主线程就等着 Ajax 操作返回结果，再往下执行；如果是异步任务，主线程在发出 Ajax 请求以后，就直接往下执行，等到 Ajax 操作有了结果，主线程再执行对应的回调函数。</p>
+<h2 id="任务队列和事件循环"><a href="#任务队列和事件循环" class="headerlink" title="任务队列和事件循环"></a>任务队列和事件循环</h2><p>JavaScript 运行时，除了一个正在运行的主线程，引擎还提供一个任务队列（task queue），里面是各种需要当前程序处理的异步任务。（实际上，根据异步任务的类型，存在多个任务队列。为了方便理解，这里假设只存在一个队列。）</p>
+<p>首先，主线程会去执行所有的同步任务。等到同步任务全部执行完，就会去看任务队列里面的异步任务。如果满足条件，那么异步任务就重新进入主线程开始执行，这时它就变成同步任务了。等到执行完，下一个异步任务再进入主线程开始执行。一旦任务队列清空，程序就结束执行。</p>
+<p>异步任务的写法通常是回调函数。一旦异步任务重新进入主线程，就会执行对应的回调函数。如果一个异步任务没有回调函数，就不会进入任务队列，也就是说，不会重新进入主线程，因为没有用回调函数指定下一步的操作。</p>
+<p>JavaScript 引擎怎么知道异步任务有没有结果，能不能进入主线程呢？答案就是引擎在不停地检查，一遍又一遍，只要同步任务执行完了，引擎就会去检查那些挂起来的异步任务，是不是可以进入主线程了。这种循环检查的机制，就叫做事件循环（Event Loop）。<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Event_loop">维基百科</a>的定义是：“事件循环是一个程序结构，用于等待和发送消息和事件（a programming construct that waits for and dispatches events or messages in a program）”。</p>
+<h2 id="异步操作的模式"><a href="#异步操作的模式" class="headerlink" title="异步操作的模式"></a>异步操作的模式</h2><p>下面总结一下异步操作的几种模式。</p>
+<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p>回调函数是异步操作最基本的方法。</p>
+<p>下面是两个函数<code>f1</code>和<code>f2</code>，编程的意图是<code>f2</code>必须等到<code>f1</code>执行完成，才能执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f2</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">f1</span>();</span><br><span class="line"><span class="title function_">f2</span>();</span><br></pre></td></tr></table></figure>
+
+<p>上面代码的问题在于，如果<code>f1</code>是异步操作，<code>f2</code>会立即执行，不会等到<code>f1</code>结束再执行。</p>
+<p>这时，可以考虑改写<code>f1</code>，把<code>f2</code>写成<code>f1</code>的回调函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f1</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="title function_">callback</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">f2</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">f1</span>(f2);</span><br></pre></td></tr></table></figure>
+
+<p>回调函数的优点是简单、容易理解和实现，缺点是不利于代码的阅读和维护，各个部分之间高度<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Coupling_(computer_programming)">耦合</a>（coupling），使得程序结构混乱、流程难以追踪（尤其是多个回调函数嵌套的情况），而且每个任务只能指定一个回调函数。</p>
+<h3 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h3><p>另一种思路是采用事件驱动模式。异步任务的执行不取决于代码的顺序，而取决于某个事件是否发生。</p>
+<p>还是以<code>f1</code>和<code>f2</code>为例。首先，为<code>f1</code>绑定一个事件（这里采用的 jQuery 的<a target="_blank" rel="noopener" href="https://api.jquery.com/on/">写法</a>）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f1.<span class="title function_">on</span>(<span class="string">&#x27;done&#x27;</span>, f2);</span><br></pre></td></tr></table></figure>
+
+<p>上面这行代码的意思是，当<code>f1</code>发生<code>done</code>事件，就执行<code>f2</code>。然后，对<code>f1</code>进行改写：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    f1.<span class="title function_">trigger</span>(<span class="string">&#x27;done&#x27;</span>);</span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>f1.trigger(&#39;done&#39;)</code>表示，执行完成后，立即触发<code>done</code>事件，从而开始执行<code>f2</code>。</p>
+<p>这种方法的优点是比较容易理解，可以绑定多个事件，每个事件可以指定多个回调函数，而且可以“<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Decoupling">去耦合</a>”（decoupling），有利于实现模块化。缺点是整个程序都要变成事件驱动型，运行流程会变得很不清晰。阅读代码的时候，很难看出主流程。</p>
+<h3 id="发布-x2F-订阅"><a href="#发布-x2F-订阅" class="headerlink" title="发布&#x2F;订阅"></a>发布&#x2F;订阅</h3><p>事件完全可以理解成“信号”，如果存在一个“信号中心”，某个任务执行完成，就向信号中心“发布”（publish）一个信号，其他任务可以向信号中心“订阅”（subscribe）这个信号，从而知道什么时候自己可以开始执行。这就叫做”<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Publish-subscribe_pattern">发布&#x2F;订阅模式</a>”（publish-subscribe pattern），又称“<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Observer_pattern">观察者模式</a>”（observer pattern）。</p>
+<p>这个模式有多种<a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/magazine/hh201955.aspx">实现</a>，下面采用的是 Ben Alman 的 <a target="_blank" rel="noopener" href="https://gist.github.com/661855">Tiny Pub&#x2F;Sub</a>，这是 jQuery 的一个插件。</p>
+<p>首先，<code>f2</code>向信号中心<code>jQuery</code>订阅<code>done</code>信号。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jQuery.<span class="title function_">subscribe</span>(<span class="string">&#x27;done&#x27;</span>, f2);</span><br></pre></td></tr></table></figure>
+
+<p>然后，<code>f1</code>进行如下改写。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f1</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    jQuery.<span class="title function_">publish</span>(<span class="string">&#x27;done&#x27;</span>);</span><br><span class="line">  &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>jQuery.publish(&#39;done&#39;)</code>的意思是，<code>f1</code>执行完成后，向信号中心<code>jQuery</code>发布<code>done</code>信号，从而引发<code>f2</code>的执行。</p>
+<p><code>f2</code>完成执行后，可以取消订阅（unsubscribe）。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jQuery.<span class="title function_">unsubscribe</span>(<span class="string">&#x27;done&#x27;</span>, f2);</span><br></pre></td></tr></table></figure>
+
+<p>这种方法的性质与“事件监听”类似，但是明显优于后者。因为可以通过查看“消息中心”，了解存在多少信号、每个信号有多少订阅者，从而监控程序的运行。</p>
+<h2 id="异步操作的流程控制"><a href="#异步操作的流程控制" class="headerlink" title="异步操作的流程控制"></a>异步操作的流程控制</h2><p>如果有多个异步操作，就存在一个流程控制的问题：如何确定异步操作执行的顺序，以及如何保证遵守这种顺序。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">async</span>(<span class="params">arg, callback</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;参数为 &#x27;</span> + arg +<span class="string">&#x27; , 1秒后返回结果&#x27;</span>);</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123; <span class="title function_">callback</span>(arg * <span class="number">2</span>); &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码的<code>async</code>函数是一个异步任务，非常耗时，每次执行需要1秒才能完成，然后再调用回调函数。</p>
+<p>如果有六个这样的异步任务，需要全部完成后，才能执行最后的<code>final</code>函数。请问应该如何安排操作流程？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">final</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;完成: &#x27;</span>, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">async</span>(<span class="number">1</span>, <span class="keyword">function</span> (<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="title function_">async</span>(<span class="number">2</span>, <span class="keyword">function</span> (<span class="params">value</span>) &#123;</span><br><span class="line">    <span class="title function_">async</span>(<span class="number">3</span>, <span class="keyword">function</span> (<span class="params">value</span>) &#123;</span><br><span class="line">      <span class="title function_">async</span>(<span class="number">4</span>, <span class="keyword">function</span> (<span class="params">value</span>) &#123;</span><br><span class="line">        <span class="title function_">async</span>(<span class="number">5</span>, <span class="keyword">function</span> (<span class="params">value</span>) &#123;</span><br><span class="line">          <span class="title function_">async</span>(<span class="number">6</span>, final);</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 参数为 1 , 1秒后返回结果</span></span><br><span class="line"><span class="comment">// 参数为 2 , 1秒后返回结果</span></span><br><span class="line"><span class="comment">// 参数为 3 , 1秒后返回结果</span></span><br><span class="line"><span class="comment">// 参数为 4 , 1秒后返回结果</span></span><br><span class="line"><span class="comment">// 参数为 5 , 1秒后返回结果</span></span><br><span class="line"><span class="comment">// 参数为 6 , 1秒后返回结果</span></span><br><span class="line"><span class="comment">// 完成:  12</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，六个回调函数的嵌套，不仅写起来麻烦，容易出错，而且难以维护。</p>
+<h3 id="串行执行"><a href="#串行执行" class="headerlink" title="串行执行"></a>串行执行</h3><p>我们可以编写一个流程控制函数，让它来控制异步任务，一个任务完成以后，再执行另一个。这就叫串行执行。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> items = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> ];</span><br><span class="line"><span class="keyword">var</span> results = [];</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">async</span>(<span class="params">arg, callback</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;参数为 &#x27;</span> + arg +<span class="string">&#x27; , 1秒后返回结果&#x27;</span>);</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123; <span class="title function_">callback</span>(arg * <span class="number">2</span>); &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">final</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;完成: &#x27;</span>, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">series</span>(<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span>(item) &#123;</span><br><span class="line">    <span class="title function_">async</span>( item, <span class="keyword">function</span>(<span class="params">result</span>) &#123;</span><br><span class="line">      results.<span class="title function_">push</span>(result);</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">series</span>(items.<span class="title function_">shift</span>());</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">final</span>(results[results.<span class="property">length</span> - <span class="number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">series</span>(items.<span class="title function_">shift</span>());</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，函数<code>series</code>就是串行函数，它会依次执行异步任务，所有任务都完成后，才会执行<code>final</code>函数。<code>items</code>数组保存每一个异步任务的参数，<code>results</code>数组保存每一个异步任务的运行结果。</p>
+<p>注意，上面的写法需要六秒，才能完成整个脚本。</p>
+<h3 id="并行执行"><a href="#并行执行" class="headerlink" title="并行执行"></a>并行执行</h3><p>流程控制函数也可以是并行执行，即所有异步任务同时执行，等到全部完成以后，才执行<code>final</code>函数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> items = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> ];</span><br><span class="line"><span class="keyword">var</span> results = [];</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">async</span>(<span class="params">arg, callback</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;参数为 &#x27;</span> + arg +<span class="string">&#x27; , 1秒后返回结果&#x27;</span>);</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123; <span class="title function_">callback</span>(arg * <span class="number">2</span>); &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">final</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;完成: &#x27;</span>, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">items.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="title function_">async</span>(item, <span class="keyword">function</span>(<span class="params">result</span>)&#123;</span><br><span class="line">    results.<span class="title function_">push</span>(result);</span><br><span class="line">    <span class="keyword">if</span>(results.<span class="property">length</span> === items.<span class="property">length</span>) &#123;</span><br><span class="line">      <span class="title function_">final</span>(results[results.<span class="property">length</span> - <span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>forEach</code>方法会同时发起六个异步任务，等到它们全部完成以后，才会执行<code>final</code>函数。</p>
+<p>相比而言，上面的写法只要一秒，就能完成整个脚本。这就是说，并行执行的效率较高，比起串行执行一次只能执行一个任务，较为节约时间。但是问题在于如果并行的任务较多，很容易耗尽系统资源，拖慢运行速度。因此有了第三种流程控制方式。</p>
+<h3 id="并行与串行的结合"><a href="#并行与串行的结合" class="headerlink" title="并行与串行的结合"></a>并行与串行的结合</h3><p>所谓并行与串行的结合，就是设置一个门槛，每次最多只能并行执行<code>n</code>个异步任务，这样就避免了过分占用系统资源。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> items = [ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> ];</span><br><span class="line"><span class="keyword">var</span> results = [];</span><br><span class="line"><span class="keyword">var</span> running = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> limit = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">async</span>(<span class="params">arg, callback</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;参数为 &#x27;</span> + arg +<span class="string">&#x27; , 1秒后返回结果&#x27;</span>);</span><br><span class="line">  <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123; <span class="title function_">callback</span>(arg * <span class="number">2</span>); &#125;, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">final</span>(<span class="params">value</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;完成: &#x27;</span>, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">launcher</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">while</span>(running &lt; limit &amp;&amp; items.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> item = items.<span class="title function_">shift</span>();</span><br><span class="line">    <span class="title function_">async</span>(item, <span class="keyword">function</span>(<span class="params">result</span>) &#123;</span><br><span class="line">      results.<span class="title function_">push</span>(result);</span><br><span class="line">      running--;</span><br><span class="line">      <span class="keyword">if</span>(items.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">launcher</span>();</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span>(running == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">final</span>(results);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    running++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">launcher</span>();</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，最多只能同时运行两个异步任务。变量<code>running</code>记录当前正在运行的任务数，只要低于门槛值，就再启动一个新的任务，如果等于<code>0</code>，就表示所有任务都执行完了，这时就执行<code>final</code>函数。</p>
+<p>这段代码需要三秒完成整个脚本，处在串行执行和并行执行之间。通过调节<code>limit</code>变量，达到效率和资源的最佳平衡。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">getStockPriceByName</span>(<span class="params">name</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> symbol = <span class="keyword">await</span> <span class="title function_">getStockSymbol</span>(name);</span><br><span class="line">  <span class="keyword">const</span> stockPrice = <span class="keyword">await</span> <span class="title function_">getStockPrice</span>(symbol);</span><br><span class="line">  <span class="keyword">return</span> stockPrice;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">getStockPriceByName</span>(<span class="string">&#x27;goog&#x27;</span>).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">result</span>) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面代码是一个获取股票报价的函数，函数前面的<code>async</code>关键字，表明该函数内部有异步操作。调用该函数时，会立即返回一个<code>Promise</code>对象。<code>async</code>表示函数里有异步操作，<code>await</code>表示紧跟在后面的表达式需要等待结果。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/14/ES6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E8%AE%BE%E5%A4%87%E6%A0%91/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Dva" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="入门课"><a href="#入门课" class="headerlink" title="入门课"></a>入门课</h1><p>TIP</p>
+<p>内容来自之前为内部同学准备的入门课。</p>
+<h2 id="React-没有解决的问题"><a href="#React-没有解决的问题" class="headerlink" title="#React 没有解决的问题"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#react-%E6%B2%A1%E6%9C%89%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98">#</a>React 没有解决的问题</h2><p>React 本身只是一个 DOM 的抽象层，使用组件构建虚拟 DOM。</p>
+<p>如果开发大应用，还需要解决一个问题。</p>
+<ul>
+<li>通信：组件之间如何通信？</li>
+<li>数据流：数据如何和视图串联起来？路由和数据如何绑定？如何编写异步逻辑？等等</li>
+</ul>
+<h2 id="通信问题"><a href="#通信问题" class="headerlink" title="#通信问题"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E9%80%9A%E4%BF%A1%E9%97%AE%E9%A2%98">#</a>通信问题</h2><p>组件会发生三种通信。</p>
+<ul>
+<li>向子组件发消息</li>
+<li>向父组件发消息</li>
+<li>向其他组件发消息</li>
+</ul>
+<p>React 只提供了一种通信手段：传参。对于大应用，很不方便。</p>
+<h2 id="组件通信的例子"><a href="#组件通信的例子" class="headerlink" title="#组件通信的例子"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1%E7%9A%84%E4%BE%8B%E5%AD%90">#</a>组件通信的例子</h2><h3 id="步骤1"><a href="#步骤1" class="headerlink" title="#步骤1"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%AD%A5%E9%AA%A41">#</a>步骤1</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Son</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">input</span>/&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Father</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Son</span>/&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>这里显示 Son 组件的内容<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Father</span>/&gt;</span></span>, mountNode);</span><br></pre></td></tr></table></figure>
+
+<p>看这个例子，想一想父组件如何拿到子组件的值。</p>
+<h3 id="步骤2"><a href="#步骤2" class="headerlink" title="#步骤2"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%AD%A5%E9%AA%A42">#</a>步骤2</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Son</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;this.props.onChange&#125;/</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Father</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">super</span>();</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">state</span> = &#123;</span><br><span class="line">      <span class="attr">son</span>: <span class="string">&quot;&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">changeHandler</span>(<span class="params">e</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">      <span class="attr">son</span>: e.<span class="property">target</span>.<span class="property">value</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Son</span> <span class="attr">onChange</span>=<span class="string">&#123;this.changeHandler.bind(this)&#125;/</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>这里显示 Son 组件的内容：&#123;this.state.son&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(<span class="language-xml"><span class="tag">&lt;<span class="name">Father</span>/&gt;</span></span>, mountNode);</span><br></pre></td></tr></table></figure>
+
+<p>看下这个例子，看懂源码，理解子组件如何通过父组件传入的函数，将自己的值再传回父组件。</p>
+<h2 id="数据流问题"><a href="#数据流问题" class="headerlink" title="#数据流问题"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%95%B0%E6%8D%AE%E6%B5%81%E9%97%AE%E9%A2%98">#</a>数据流问题</h2><p>目前流行的数据流方案有：</p>
+<ul>
+<li>Flux，单向数据流方案，以 <a target="_blank" rel="noopener" href="https://github.com/reactjs/redux">Redux</a> 为代表</li>
+<li>Reactive，响应式数据流方案，以 <a target="_blank" rel="noopener" href="https://github.com/mobxjs/mobx">Mobx</a> 为代表</li>
+<li>其他，比如 rxjs 等</li>
+</ul>
+<p>到底哪一种架构最合适 React ？</p>
+<h2 id="目前最流行的数据流方案"><a href="#目前最流行的数据流方案" class="headerlink" title="#目前最流行的数据流方案"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E7%9B%AE%E5%89%8D%E6%9C%80%E6%B5%81%E8%A1%8C%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E6%96%B9%E6%A1%88">#</a>目前最流行的数据流方案</h2><p>截止 2017.1，最流行的社区 React 应用架构方案如下。</p>
+<ul>
+<li>路由： <a target="_blank" rel="noopener" href="https://github.com/ReactTraining/react-router/tree/v2.8.1">React-Router</a></li>
+<li>架构： <a target="_blank" rel="noopener" href="https://github.com/reactjs/redux">Redux</a></li>
+<li>异步操作： <a target="_blank" rel="noopener" href="https://github.com/yelouafi/redux-saga">Redux-saga</a></li>
+</ul>
+<p>缺点：要引入多个库，项目结构复杂。</p>
+<h2 id="dva-是什么"><a href="#dva-是什么" class="headerlink" title="#dva 是什么"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#dva-%E6%98%AF%E4%BB%80%E4%B9%88">#</a>dva 是什么</h2><p>dva 是体验技术部开发的 React 应用框架，将上面三个 React 工具库包装在一起，简化了 API，让开发 React 应用更加方便和快捷。</p>
+<p>dva &#x3D; React-Router + Redux + Redux-saga</p>
+<h2 id="dva-应用的最简结构"><a href="#dva-应用的最简结构" class="headerlink" title="#dva 应用的最简结构"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#dva-%E5%BA%94%E7%94%A8%E7%9A%84%E6%9C%80%E7%AE%80%E7%BB%93%E6%9E%84">#</a>dva 应用的最简结构</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> dva <span class="keyword">from</span> <span class="string">&#x27;dva&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">App</span> = (<span class="params"></span>) =&gt; <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello dva<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建应用</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">dva</span>();</span><br><span class="line"><span class="comment">// 注册视图</span></span><br><span class="line">app.<span class="title function_">router</span>(<span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>);</span><br><span class="line"><span class="comment">// 启动应用</span></span><br><span class="line">app.<span class="title function_">start</span>(<span class="string">&#x27;#root&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据流图"><a href="#数据流图" class="headerlink" title="#数据流图"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE">#</a>数据流图</h2><p><img src="https://zos.alipayobjects.com/rmsportal/hUFIivoOFjVmwNXjjfPE.png" alt="img"></p>
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="#核心概念"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5">#</a>核心概念</h2><ul>
+<li>State：一个对象，保存整个应用状态</li>
+<li>View：React 组件构成的视图层</li>
+<li>Action：一个对象，描述事件</li>
+<li>connect 方法：一个函数，绑定 State 到 View</li>
+<li>dispatch 方法：一个函数，发送 Action 到 State</li>
+</ul>
+<h2 id="State-和-View"><a href="#State-和-View" class="headerlink" title="#State 和 View"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#state-%E5%92%8C-view">#</a>State 和 View</h2><p>State 是储存数据的地方，收到 Action 以后，会更新数据。</p>
+<p>View 就是 React 组件构成的 UI 层，从 State 取数据后，渲染成 HTML 代码。只要 State 有变化，View 就会自动更新。</p>
+<h2 id="Action"><a href="#Action" class="headerlink" title="#Action"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#action">#</a>Action</h2><p>Action 是用来描述 UI 层事件的一个对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="string">&#x27;click-submit-button&#x27;</span>,</span><br><span class="line">  <span class="attr">payload</span>: <span class="variable language_">this</span>.<span class="property">form</span>.<span class="property">data</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="connect-方法"><a href="#connect-方法" class="headerlink" title="#connect 方法"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#connect-%E6%96%B9%E6%B3%95">#</a>connect 方法</h2><p>connect 是一个函数，绑定 State 到 View。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;dva&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">mapStateToProps</span>(<span class="params">state</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">todos</span>: state.<span class="property">todos</span> &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">connect</span>(mapStateToProps)(<span class="title class_">App</span>);</span><br></pre></td></tr></table></figure>
+
+<p>connect 方法返回的也是一个 React 组件，通常称为容器组件。因为它是原始 UI 组件的容器，即在外面包了一层 State。</p>
+<p>connect 方法传入的第一个参数是 mapStateToProps 函数，mapStateToProps 函数会返回一个对象，用于建立 State 到 Props 的映射关系。</p>
+<h2 id="dispatch-方法"><a href="#dispatch-方法" class="headerlink" title="#dispatch 方法"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#dispatch-%E6%96%B9%E6%B3%95">#</a>dispatch 方法</h2><p>dispatch 是一个函数方法，用来将 Action 发送给 State。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">dispatch</span>(&#123;</span><br><span class="line">  <span class="attr">type</span>: <span class="string">&#x27;click-submit-button&#x27;</span>,</span><br><span class="line">  <span class="attr">payload</span>: <span class="variable language_">this</span>.<span class="property">form</span>.<span class="property">data</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>dispatch 方法从哪里来？被 connect 的 Component 会自动在 props 中拥有 dispatch 方法。</p>
+<blockquote>
+<p>connect 的数据从哪里来?</p>
+</blockquote>
+<h2 id="dva-应用的最简结构（带-model"><a href="#dva-应用的最简结构（带-model" class="headerlink" title="#dva 应用的最简结构（带 model)"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#dva-%E5%BA%94%E7%94%A8%E7%9A%84%E6%9C%80%E7%AE%80%E7%BB%93%E6%9E%84%EF%BC%88%E5%B8%A6-model">#</a>dva 应用的最简结构（带 model)</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建应用</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">dva</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册 Model</span></span><br><span class="line">app.<span class="title function_">model</span>(&#123;</span><br><span class="line">  <span class="attr">namespace</span>: <span class="string">&#x27;count&#x27;</span>,</span><br><span class="line">  <span class="attr">state</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">reducers</span>: &#123;</span><br><span class="line">    <span class="title function_">add</span>(<span class="params">state</span>) &#123; <span class="keyword">return</span> state + <span class="number">1</span> &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">effects</span>: &#123;</span><br><span class="line">    *<span class="title function_">addAfter1Second</span>(<span class="params">action, &#123; call, put &#125;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span> <span class="title function_">call</span>(delay, <span class="number">1000</span>);</span><br><span class="line">      <span class="keyword">yield</span> <span class="title function_">put</span>(&#123; <span class="attr">type</span>: <span class="string">&#x27;add&#x27;</span> &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册视图</span></span><br><span class="line">app.<span class="title function_">router</span>(<span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">ConnectedApp</span> /&gt;</span></span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动应用</span></span><br><span class="line">app.<span class="title function_">start</span>(<span class="string">&#x27;#root&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据流图-1"><a href="#数据流图-1" class="headerlink" title="#数据流图 1"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE-1">#</a>数据流图 1</h2><p><img src="https://zos.alipayobjects.com/rmsportal/cyzvnIrRhJGOiLliwhcZ.png" alt="img"></p>
+<h2 id="数据流图-2"><a href="#数据流图-2" class="headerlink" title="#数据流图 2"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#%E6%95%B0%E6%8D%AE%E6%B5%81%E5%9B%BE-2">#</a>数据流图 2</h2><p><img src="https://zos.alipayobjects.com/rmsportal/pHTYrKJxQHPyJGAYOzMu.png" alt="img"></p>
+<h2 id="app-model"><a href="#app-model" class="headerlink" title="#app.model"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#app-model">#</a>app.model</h2><p>dva 提供 app.model 这个对象，所有的应用逻辑都定义在它上面。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = <span class="title function_">dva</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新增这一行</span></span><br><span class="line">app.<span class="title function_">model</span>(&#123; <span class="comment">/**/</span> &#125;);</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">router</span>(<span class="function">() =&gt;</span> <span class="language-xml"><span class="tag">&lt;<span class="name">App</span> /&gt;</span></span>);</span><br><span class="line">app.<span class="title function_">start</span>(<span class="string">&#x27;#root&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Model-对象的例子"><a href="#Model-对象的例子" class="headerlink" title="#Model 对象的例子"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#model-%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%BE%8B%E5%AD%90">#</a>Model 对象的例子</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">namespace</span>: <span class="string">&#x27;count&#x27;</span>,</span><br><span class="line">  <span class="attr">state</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">reducers</span>: &#123;</span><br><span class="line">    <span class="title function_">add</span>(<span class="params">state</span>) &#123; <span class="keyword">return</span> state + <span class="number">1</span> &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">effects</span>: &#123;</span><br><span class="line">    *<span class="title function_">addAfter1Second</span>(<span class="params">action, &#123; call, put &#125;</span>) &#123;</span><br><span class="line">      <span class="keyword">yield</span> <span class="title function_">call</span>(delay, <span class="number">1000</span>);</span><br><span class="line">      <span class="keyword">yield</span> <span class="title function_">put</span>(&#123; <span class="attr">type</span>: <span class="string">&#x27;add&#x27;</span> &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Model-对象的属性"><a href="#Model-对象的属性" class="headerlink" title="#Model 对象的属性"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#model-%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%B1%9E%E6%80%A7">#</a>Model 对象的属性</h2><ul>
+<li>namespace: 当前 Model 的名称。整个应用的 State，由多个小的 Model 的 State 以 namespace 为 key 合成</li>
+<li>state: 该 Model 当前的状态。数据保存在这里，直接决定了视图层的输出</li>
+<li>reducers: Action 处理器，处理同步动作，用来算出最新的 State</li>
+<li>effects：Action 处理器，处理异步动作</li>
+</ul>
+<h2 id="Reducer"><a href="#Reducer" class="headerlink" title="#Reducer"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#reducer">#</a>Reducer</h2><p>Reducer 是 Action 处理器，用来处理同步操作，可以看做是 state 的计算器。它的作用是根据 Action，从上一个 State 算出当前 State。</p>
+<p>一些例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// count +1</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">add</span>(<span class="params">state</span>) &#123; <span class="keyword">return</span> state + <span class="number">1</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 往 [] 里添加一个新 todo</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">addTodo</span>(<span class="params">state, action</span>) &#123; <span class="keyword">return</span> [...state, action.<span class="property">payload</span>]; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 往 &#123; todos: [], loading: true &#125; 里添加一个新 todo，并标记 loading 为 false</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">addTodo</span>(<span class="params">state, action</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    ...state,</span><br><span class="line">    <span class="attr">todos</span>: state.<span class="property">todos</span>.<span class="title function_">concat</span>(action.<span class="property">payload</span>),</span><br><span class="line">    <span class="attr">loading</span>: <span class="literal">false</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Effect"><a href="#Effect" class="headerlink" title="#Effect"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#effect">#</a>Effect</h2><p>Action 处理器，处理异步动作，基于 Redux-saga 实现。Effect 指的是副作用。根据函数式编程，计算以外的操作都属于 Effect，典型的就是 I&#x2F;O 操作、数据库读写。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> *<span class="title function_">addAfter1Second</span>(<span class="params">action, &#123; put, call &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">yield</span> <span class="title function_">call</span>(delay, <span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">yield</span> <span class="title function_">put</span>(&#123; <span class="attr">type</span>: <span class="string">&#x27;add&#x27;</span> &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Generator-函数"><a href="#Generator-函数" class="headerlink" title="#Generator 函数"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#generator-%E5%87%BD%E6%95%B0">#</a>Generator 函数</h2><p>Effect 是一个 Generator 函数，内部使用 yield 关键字，标识每一步的操作（不管是异步或同步）。</p>
+<h2 id="call-和-put"><a href="#call-和-put" class="headerlink" title="#call 和 put"></a><a target="_blank" rel="noopener" href="https://dvajs.com/guide/introduce-class.html#call-%E5%92%8C-put">#</a>call 和 put</h2><p>dva 提供多个 effect 函数内部的处理函数，比较常用的是 <code>call</code> 和 <code>put</code>。</p>
+<ul>
+<li>call：执行异步函数</li>
+<li>put：发出一个 Action，类似于 dispatch</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/14/Dva/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Docker" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><h3 id="Docker架构"><a href="#Docker架构" class="headerlink" title="Docker架构"></a>Docker架构</h3><blockquote>
+<ul>
+<li><p><strong>镜像（image）</strong>:相当于一个文件系统，比如官方镜像 ubuntu:16.04 就包含了完整的一套 Ubuntu16.04 最小系统的 root 文件系统。</p>
+</li>
+<li><p><strong>容器（Container）</strong>：镜像和容器的关系就像面向对象程序设计中的类与实例一样，镜像是静态的定义，容器是镜像运行的实体。容器可以被创建、启动、停止、删除、暂停等。</p>
+</li>
+<li><p><strong>仓库（Repository）</strong>：仓库可看成一个代码控制中心，用来保存镜像。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Docker容器</th>
+<th>虚拟机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>操作系统</td>
+<td>与宿主共享OS</td>
+<td>宿主机OS上运行虚拟机OS</td>
+</tr>
+<tr>
+<td>存储大小</td>
+<td>镜像小，便于存储与传输</td>
+<td>镜像庞大</td>
+</tr>
+<tr>
+<td>运行性能</td>
+<td>几乎无额外性能损失</td>
+<td>操作系统额外的cpu、内存消耗</td>
+</tr>
+<tr>
+<td>移植性</td>
+<td>亲便、灵活</td>
+<td>笨重、与虚拟化耦合度高</td>
+</tr>
+<tr>
+<td>硬件亲和性</td>
+<td>面向软件开发者</td>
+<td>面向硬件运维者</td>
+</tr>
+<tr>
+<td>部署速度</td>
+<td>快速</td>
+<td>较慢</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</blockquote>
+<h1 id="Kubernets"><a href="#Kubernets" class="headerlink" title="Kubernets"></a>Kubernets</h1><p><img src="https://static001.infoq.cn/resource/image/1f/a7/1f5c9e99df79ea86ca5062fef22e21a7.png" alt="img"></p>
+<p>这是一艘载着一堆集装箱的轮船，轮船在大海上运着集装箱奔波，把集装箱送到它们该去的地方。我们之前其实介绍过一个概念叫做 container，container 这个英文单词也有另外的一个意思就是“集装箱”。Kubernetes 也就借着这个寓意，希望成为运送集装箱的一个轮船，来帮助我们管理这些集装箱，也就是管理这些容器。</p>
+<p>这个就是为什么会选用 Kubernetes 这个词来代表这个项目的原因。更具体一点地来说：</p>
+<blockquote>
+<p>Kubernetes 是一个自动化的容器编排平台，它负责应用的部署、应用的弹性以及应用的管理，这些都是基于容器的。</p>
+</blockquote>
+<h2 id="核心的功能"><a href="#核心的功能" class="headerlink" title="核心的功能"></a>核心的功能</h2><ul>
+<li>服务的发现与负载的均衡；</li>
+<li>容器的自动装箱，我们也会把它叫做 scheduling，就是“调度”，把一个容器放到一个集群的某一个机器上，Kubernetes 会帮助我们去做存储的编排，让存储的声明周期与容器的生命周期能有一个连接；</li>
+<li>Kubernetes 会帮助我们去做自动化的容器的恢复。在一个集群中，经常会出现宿主机的问题或者说是 OS 的问题，导致容器本身的不可用，Kubernetes 会自动地对这些不可用的容器进行恢复；</li>
+<li>Kubernetes 会帮助我们去做应用的自动发布与应用的回滚，以及与应用相关的配置密文的管理；</li>
+<li>对于 job 类型任务，Kubernetes 可以去做批量的执行；</li>
+<li>为了让这个集群、这个应用更富有弹性，Kubernetes 也支持水平的伸缩。</li>
+</ul>
+<h2 id="构成"><a href="#构成" class="headerlink" title="构成"></a>构成</h2><p>由控制节点（master）,工作节点（node）构成，每个节点会安装不同的<strong>组件</strong>。</p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20210802105303617.png" alt="image-20210802105303617"></p>
+<p>​                            <img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20210802105332284.png" alt="image-20210802105332284"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20210802105727122.png" alt="image-20210802105727122"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20210802110301369.png" alt="image-20210802110301369"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/14/Docker/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E9%93%BE%E5%BC%8F%E5%88%A4%E6%96%AD/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.448Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/13/hello-world/">Hello World</a>
+    </h1>
+  
+
+        
+        <a href="/2022/09/13/hello-world/" class="archive-article-date">
+  	<time datetime="2022-09-13T08:06:16.737Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/13/hello-world/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.448Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/React%20form%E8%A1%A8%E5%8D%95fetch%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/linux%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/react.component/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
+  
+  
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2022/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/page/2/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
     </nav>
   
 
@@ -407,9 +794,9 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
+		isHome: true,
 		isPost: false,
-		isArchive: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

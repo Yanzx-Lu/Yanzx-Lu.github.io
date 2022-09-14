@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2022 | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="简单的大文件上传前言：最近在做一个后台管理项目涉及到上传文件，使用antd里的Upload实现上传文件。记录一下遇到的问题和坑。 1.要实现的效果 我要实现的效果就是点击上传文件，选择完文件后点击ok(也就是提交表单后在上传)其实就是手动上传文件。下面我来介绍一下我的做法和我遇到的一些坑。 2.实现步骤1.引入所需antd的部件 import { Table, Button, Modal, F">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2022/index.html">
+<meta property="og:url" content="http://example.com/2022/09/14/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简单的大文件上传前言：最近在做一个后台管理项目涉及到上传文件，使用antd里的Upload实现上传文件。记录一下遇到的问题和坑。 1.要实现的效果 我要实现的效果就是点击上传文件，选择完文件后点击ok(也就是提交表单后在上传)其实就是手动上传文件。下面我来介绍一下我的做法和我遇到的一些坑。 2.实现步骤1.引入所需antd的部件 import { Table, Button, Modal, F">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211020164718340.png">
+<meta property="og:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211020164722309.png">
+<meta property="article:published_time" content="2022-09-14T01:42:07.463Z">
+<meta property="article:modified_time" content="2021-10-21T07:12:52.291Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211020164718340.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -156,235 +163,179 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-文件上传" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211020164718340.png" alt="image-20211020164718340"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211020164722309.png" alt="image-20211020164722309"></p>
+<h2 id="简单的大文件上传"><a href="#简单的大文件上传" class="headerlink" title="简单的大文件上传"></a>简单的大文件上传</h2><p>前言：最近在做一个后台管理项目涉及到上传文件，使用antd里的Upload实现上传文件。记录一下遇到的问题和坑。</p>
+<p>1.要实现的效果</p>
+<p>我要实现的效果就是点击上传文件，选择完文件后点击ok(也就是提交表单后在上传)其实就是手动上传文件。下面我来介绍一下我的做法和我遇到的一些坑。</p>
+<p>2.实现步骤<br>1.引入所需antd的部件</p>
+<p>import { Table, Button, Modal, Form, Input, Upload, Icon, notification } from ‘antd’;</p>
+<p>这个是表单的 </p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">        &lt;<span class="title class_">Modal</span></span><br><span class="line">          title=<span class="string">&quot;文件上传&quot;</span></span><br><span class="line">          visible=&#123;<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">visible</span>&#125;</span><br><span class="line">          onOk=&#123;<span class="variable language_">this</span>.<span class="property">handleOk</span>&#125; <span class="comment">//点击按钮提价表单并上传文件</span></span><br><span class="line">          onCancel=&#123;<span class="variable language_">this</span>.<span class="property">handleCancel</span>&#125;</span><br><span class="line">        &gt;</span><br><span class="line">          <span class="language-xml"><span class="tag">&lt;<span class="name">Form</span> <span class="attr">layout</span>=<span class="string">&quot;vertical&quot;</span> <span class="attr">onSubmit</span>=<span class="string">&#123;this.handleSubmit&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Form.Item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">div</span>  <span class="attr">key</span>=<span class="string">&#123;Math.random()&#125;</span>&gt;</span>//点击关闭在次打开还会有上次上传文件的缓存</span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">Upload</span> &#123;<span class="attr">...props</span>&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;<span class="name">Button</span> <span class="attr">type</span>=<span class="string">&quot;primary&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">Icon</span> <span class="attr">type</span>=<span class="string">&quot;upload&quot;</span> /&gt;</span>选择文件</span></span><br><span class="line"><span class="language-xml">                 <span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">Upload</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"> </span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Form.Item</span> <span class="attr">label</span>=<span class="string">&quot;文件名(可更改)&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              &#123;getFieldDecorator(&#x27;filename&#x27;, &#123;</span></span><br><span class="line"><span class="language-xml">                // initialValue:this.state.defEmail,</span></span><br><span class="line"><span class="language-xml">                rules: [</span></span><br><span class="line"><span class="language-xml">                  &#123;</span></span><br><span class="line"><span class="language-xml">                    message: &#x27;请输入正确的文件名&#x27;,</span></span><br><span class="line"><span class="language-xml">                    // pattern: /^[0-9]+$/,</span></span><br><span class="line"><span class="language-xml">                  &#125;,</span></span><br><span class="line"><span class="language-xml">                  &#123;</span></span><br><span class="line"><span class="language-xml">                    required: true,</span></span><br><span class="line"><span class="language-xml">                    message: &#x27;请输入文件名&#x27;,</span></span><br><span class="line"><span class="language-xml">                  &#125;,</span></span><br><span class="line"><span class="language-xml">                ],</span></span><br><span class="line"><span class="language-xml">              &#125;)(<span class="tag">&lt;<span class="name">Input</span> /&gt;</span>)&#125;</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Form.Item</span> <span class="attr">label</span>=<span class="string">&quot;描述(选填)&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              &#123;getFieldDecorator(&#x27;describe&#x27;, &#123;</span></span><br><span class="line"><span class="language-xml"> </span></span><br><span class="line"><span class="language-xml">                rules: [</span></span><br><span class="line"><span class="language-xml">                  &#123;</span></span><br><span class="line"><span class="language-xml">                    message: &#x27;描述不能为空&#x27;,</span></span><br><span class="line"><span class="language-xml">                  &#125;,</span></span><br><span class="line"><span class="language-xml">                  &#123;</span></span><br><span class="line"><span class="language-xml">                    required: false,</span></span><br><span class="line"><span class="language-xml">                    message: &#x27;请输入描述&#x27;,</span></span><br><span class="line"><span class="language-xml">                  &#125;,</span></span><br><span class="line"><span class="language-xml">                ],</span></span><br><span class="line"><span class="language-xml">              &#125;)(<span class="tag">&lt;<span class="name">TextArea</span> /&gt;</span>)&#125;</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">Form.Item</span> <span class="attr">label</span>=<span class="string">&quot;文件类型&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              &#123;getFieldDecorator(&#x27;filetype&#x27;, &#123;</span></span><br><span class="line"><span class="language-xml">                rules: [</span></span><br><span class="line"><span class="language-xml">                  &#123;</span></span><br><span class="line"><span class="language-xml">                    message: &#x27;文件类型&#x27;,</span></span><br><span class="line"><span class="language-xml">                  &#125;,</span></span><br><span class="line"><span class="language-xml">                  &#123;</span></span><br><span class="line"><span class="language-xml">                    required: true,</span></span><br><span class="line"><span class="language-xml">                    message: &#x27;文件类型&#x27;,</span></span><br><span class="line"><span class="language-xml">                  &#125;,</span></span><br><span class="line"><span class="language-xml">                ],</span></span><br><span class="line"><span class="language-xml">              &#125;)(<span class="tag">&lt;<span class="name">Input</span> <span class="attr">disabled</span>=<span class="string">&#123;true&#125;</span> /&gt;</span>)&#125;</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">Form.Item</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">Form</span>&gt;</span></span></span><br><span class="line">        &lt;/<span class="title class_">Modal</span>&gt;</span><br><span class="line">————————————————</span><br><span class="line">版权声明：本文为<span class="variable constant_">CSDN</span>博主「雨生百谷，方为谷雨」的原创文章，遵循<span class="variable constant_">CC</span> <span class="number">4.0</span> <span class="variable constant_">BY</span>-<span class="variable constant_">SA</span>版权协议，转载请附上原文出处链接及本声明。</span><br><span class="line">原文链接：<span class="attr">https</span>:<span class="comment">//blog.csdn.net/weixin_44058725/article/details/103647583</span></span><br></pre></td></tr></table></figure>
+<p>下面的代码时Upload的props</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> props = &#123;</span><br><span class="line">  <span class="attr">showUploadList</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">onRemove</span>: <span class="function"><span class="params">file</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> index = state.<span class="property">fileList</span>.<span class="title function_">indexOf</span>(file);</span><br><span class="line">      <span class="keyword">const</span> newFileList = state.<span class="property">fileList</span>.<span class="title function_">slice</span>();</span><br><span class="line">      newFileList.<span class="title function_">splice</span>(index, <span class="number">1</span>);</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">fileList</span>: newFileList,</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">beforeUpload</span>: <span class="function"><span class="params">file</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(file)</span><br><span class="line">    <span class="keyword">let</span> &#123; name &#125; = file;</span><br><span class="line">    <span class="keyword">var</span> fileExtension = name.<span class="title function_">substring</span>(name.<span class="title function_">lastIndexOf</span>(<span class="string">&#x27;.&#x27;</span>) + <span class="number">1</span>);<span class="comment">//截取文件后缀名</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">form</span>.<span class="title function_">setFieldsValue</span>(&#123; <span class="string">&#x27;filename&#x27;</span>: name, <span class="string">&#x27;filetype&#x27;</span>: fileExtension &#125;);<span class="comment">//选择完文件后把文件名和后缀名自动填入表单</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function"><span class="params">state</span> =&gt;</span> (&#123;</span><br><span class="line">      <span class="attr">fileList</span>: [...state.<span class="property">fileList</span>, file],</span><br><span class="line">    &#125;));</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  fileList,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>下面是重点提交表单并上传文件</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">handleOk = <span class="function"><span class="params">e</span> =&gt;</span> &#123;<span class="comment">//点击ok确认上传</span></span><br><span class="line">    <span class="keyword">const</span> &#123; fileList &#125; = <span class="variable language_">this</span>.<span class="property">state</span>;</span><br><span class="line">    <span class="keyword">let</span> formData = <span class="keyword">new</span> <span class="title class_">FormData</span>();</span><br><span class="line">    fileList.<span class="title function_">forEach</span>(<span class="function"><span class="params">file</span> =&gt;</span> &#123;</span><br><span class="line">      formData.<span class="title function_">append</span>(<span class="string">&#x27;file&#x27;</span>, file);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">form</span>.<span class="title function_">validateFields</span>(<span class="function">(<span class="params">err, values</span>) =&gt;</span> &#123; <span class="comment">//获取表单值</span></span><br><span class="line">  <span class="keyword">let</span> &#123; filename, filetype, describe &#125; = values;</span><br><span class="line">  formData.<span class="title function_">append</span>(<span class="string">&#x27;name&#x27;</span>, filename);</span><br><span class="line">  formData.<span class="title function_">append</span>(<span class="string">&#x27;type&#x27;</span>, filetype);</span><br><span class="line">  formData.<span class="title function_">append</span>(<span class="string">&quot;dir&quot;</span>, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span>(describe==<span class="literal">undefined</span>)&#123;</span><br><span class="line">    formData.<span class="title function_">append</span>(<span class="string">&#x27;description&#x27;</span>,<span class="string">&quot;&quot;</span>);</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    formData.<span class="title function_">append</span>(<span class="string">&#x27;description&#x27;</span>,describe);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="title class_">UploadFile</span>(formData).<span class="title function_">then</span>(<span class="function"><span class="params">res</span> =&gt;</span> &#123; <span class="comment">//这个是请求</span></span><br><span class="line">    <span class="keyword">if</span> (res.<span class="property">status</span> == <span class="number">200</span> &amp;&amp; res.<span class="property">data</span> != <span class="literal">undefined</span>) &#123;</span><br><span class="line">      notification.<span class="title function_">success</span>(&#123;</span><br><span class="line">        <span class="attr">message</span>: <span class="string">&quot;上传成功&quot;</span>,</span><br><span class="line">        <span class="attr">description</span>: res.<span class="property">data</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      notification.<span class="title function_">error</span>(&#123;</span><br><span class="line">        <span class="attr">message</span>: <span class="string">&quot;上传失败&quot;</span>,</span><br><span class="line">        <span class="attr">description</span>: res.<span class="property">status</span>,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">visible</span>: <span class="literal">false</span></span><br><span class="line">  &#125;);</span><br><span class="line"> </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>  };<br>注意我用的axios,post必须使用formData.append（”接口参数名”，“要传的值”）；如果不想用axios还可以用别的请求</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="title function_">fetch</span>(url, &#123; <span class="comment">//fetch请求</span></span><br><span class="line">        <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">        <span class="attr">body</span>: formData,</span><br><span class="line">    &#125;)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"> <span class="title function_">axios</span>(&#123; <span class="comment">//axios</span></span><br><span class="line">    <span class="attr">method</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">    <span class="attr">url</span>: url,</span><br><span class="line">    <span class="attr">data</span>: formData,</span><br><span class="line">    <span class="attr">headers</span>:&#123; <span class="comment">//可加可不加</span></span><br><span class="line">      <span class="string">&#x27;Content-Type&#x27;</span>: <span class="string">&#x27;multipart/form-data; boundary=---- </span></span><br><span class="line"><span class="string">       WebKitFormBoundary6jwpHyBuz5iALV7b&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params">response</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(response);</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">catch</span>(<span class="keyword">function</span> (<span class="params">error</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这样就能实现手动上传文件了。</p>
+<p>3.遇到的坑<br>第一次选择完文件，点击上传。第二次在打开Model发现上回的文件列表还在，我在网上找的方法是给upload及一个key值但只有点击ok后第二次打开Model缓存才会消失，但是点击canel还会存在。</p>
+<div key={Math.random()}>
+                <Upload  {...props}>
+                  <Button type="primary">
+                    <Icon type="upload" />选择文件
+                 </Button>
+                </Upload>
+       </div>
+
+<p>最好的方法就是this.setState把state里文件列表置空</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">form</span>.<span class="title function_">resetFields</span>()<span class="comment">//添加之前把input值清空</span></span><br><span class="line">   <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">     <span class="attr">visible</span>: <span class="literal">true</span>,</span><br><span class="line">     <span class="attr">fileList</span>: [] <span class="comment">//把文件列表清空</span></span><br><span class="line">   &#125;);</span><br></pre></td></tr></table></figure>
+
+
+<p>也可以给Modal加一个 destroyOnClose 属性  关闭时销毁 Modal 里的子元素<br>————————————————<br>版权声明：本文为CSDN博主「雨生百谷，方为谷雨」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44058725/article/details/103647583">https://blog.csdn.net/weixin_44058725/article/details/103647583</a></p>
+<h2 id="复杂的大文件上传，文件切割以及断点续传"><a href="#复杂的大文件上传，文件切割以及断点续传" class="headerlink" title="复杂的大文件上传，文件切割以及断点续传"></a>复杂的大文件上传，文件切割以及断点续传</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904046436843527#heading-16">https://juejin.cn/post/6844904046436843527#heading-16</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E4%BA%91%E5%B9%B3%E5%8F%B0/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/09/14/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+<nav id="article-nav">
+  
+    <a href="/2022/09/14/%E4%BA%91%E5%B9%B3%E5%8F%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/14/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E8%AE%BE%E5%A4%87%E6%A0%91/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E9%93%BE%E5%BC%8F%E5%88%A4%E6%96%AD/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.448Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.448Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/React%20form%E8%A1%A8%E5%8D%95fetch%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/linux%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/react.component/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2022/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -408,8 +359,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

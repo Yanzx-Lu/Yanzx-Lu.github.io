@@ -6,15 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives: 2022 | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
+  <meta name="description" content="Redux组成State状态 DomainState：服务器返回的状态 UI State：关于当前组件的状态 App State：全局的状态  Action事件 其本质为一个JS对象  必须含有type属性  只是描述了有事情发生，并没有描述如何更新state   Reducer 本质为函数 响应发送过来的action 函数接收两个函数，第一个是初始化的state，第二个为发送过来的action">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/2022/index.html">
+<meta property="og:url" content="http://example.com/2022/09/14/Redux/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Redux组成State状态 DomainState：服务器返回的状态 UI State：关于当前组件的状态 App State：全局的状态  Action事件 其本质为一个JS对象  必须含有type属性  只是描述了有事情发生，并没有描述如何更新state   Reducer 本质为函数 响应发送过来的action 函数接收两个函数，第一个是初始化的state，第二个为发送过来的action">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012163850292.png">
+<meta property="og:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012164401465.png">
+<meta property="og:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012170133555.png">
+<meta property="og:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012170215676.png">
+<meta property="article:published_time" content="2022-09-14T01:41:23.295Z">
+<meta property="article:modified_time" content="2021-10-12T09:14:48.790Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012163850292.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -156,235 +165,182 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Redux" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redux组成"><a href="#Redux组成" class="headerlink" title="Redux组成"></a>Redux组成</h1><h2 id="State状态"><a href="#State状态" class="headerlink" title="State状态"></a>State状态</h2><ul>
+<li>DomainState：服务器返回的状态</li>
+<li>UI State：关于当前组件的状态</li>
+<li>App State：全局的状态</li>
+</ul>
+<h2 id="Action事件"><a href="#Action事件" class="headerlink" title="Action事件"></a>Action事件</h2><ul>
+<li><p>其本质为一个JS对象</p>
+</li>
+<li><p>必须含有type属性</p>
+</li>
+<li><p>只是描述了有事情发生，并没有描述如何更新state</p>
+</li>
+</ul>
+<h2 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h2><ul>
+<li>本质为函数</li>
+<li>响应发送过来的action</li>
+<li>函数接收两个函数，第一个是初始化的state，第二个为发送过来的action</li>
+<li>必须要有return返回值</li>
+</ul>
+<h2 id="Store"><a href="#Store" class="headerlink" title="Store"></a>Store</h2><ul>
+<li>用来联系action和reducer</li>
+<li>通过createStore构建store</li>
+<li>subscribe来注册监听</li>
+<li>通过dispatch发送action</li>
+<li>.getState获取状态………</li>
+</ul>
+<h1 id="React-redux"><a href="#React-redux" class="headerlink" title="React-redux"></a>React-redux</h1><p>react-redux就是Redux官方出的配合React的绑定库。</p>
+<p>它可以使你的React组件从Redux store中很方便的读取数据，并向store中分发actions以此来更新数据</p>
+<h3 id="Provider"><a href="#Provider" class="headerlink" title="Provider"></a>Provider</h3><p>此组件可以使你整个app都能获取到store中的数据：</p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012163850292.png" alt="image-20211012163850292"></p>
+<h3 id="connet"><a href="#connet" class="headerlink" title="connet"></a>connet</h3><p>此方法能够使组件跟store进行关联</p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012164401465.png" alt="image-20211012164401465"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012170133555.png" alt="image-20211012170133555"></p>
+<p><img src="C:\Users\E0005171\AppData\Roaming\Typora\typora-user-images\image-20211012170215676.png" alt="image-20211012170215676"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E4%BA%91%E5%B9%B3%E5%8F%B0/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/09/14/Redux/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+<nav id="article-nav">
+  
+    <a href="/2022/09/14/react.component/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/14/JSX/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E8%AE%BE%E5%A4%87%E6%A0%91/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.463Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
+        
+        
+    </div>
+</aside>
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E9%93%BE%E5%BC%8F%E5%88%A4%E6%96%AD/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.448Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.448Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/React%20form%E8%A1%A8%E5%8D%95fetch%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/linux%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2022/09/14/react.component/" class="archive-article-date">
-  	<time datetime="2022-09-14T01:42:07.416Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-14</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2022/page/2/">2</a><a class="extend next" rel="next" href="/archives/2022/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
   
 
 
@@ -408,8 +364,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
