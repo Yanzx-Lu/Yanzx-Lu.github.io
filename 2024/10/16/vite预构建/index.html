@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点Vite 的依赖解析&#x2F;预构建与 ES 模块的静态解析是现代前端构建工具中重要的两个概念。它们有一些相似之处，但也有许多不同之处。以下是它们的主要相同点和不同点： 相同点 模块解析：  Vite 的依赖解析&#x2F;预构建 和 ES 模块的静态解析 都涉及到模块依赖的解析。在这两个过程中，工具需要识别和处理模块之间的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点Vite 的依赖解析&#x2F;预构建与 ES 模块的静态解析是现代前端构建工具中重要的两个概念。它们有一些相似之处，但也有许多不同之处。以下是它们的主要相同点和不同点： 相同点 模块解析：  Vite 的依赖解析&#x2F;预构建 和 ES 模块的静态解析 都涉及到模块依赖的解析。在这两个过程中，工具需要识别和处理模块之间的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-16T14:37:19.719Z">
+<meta property="article:modified_time" content="2024-09-13T13:35:59.388Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-09-13 21:35:59" itemprop="dateModified" datetime="2024-09-13T21:35:59+08:00">2024-09-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="vite的依赖解析-预构建与es模块的静态解析有什么相同不同点"><a href="#vite的依赖解析-预构建与es模块的静态解析有什么相同不同点" class="headerlink" title="vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点"></a>vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点</h2><p>Vite 的依赖解析&#x2F;预构建与 ES 模块的静态解析是现代前端构建工具中重要的两个概念。它们有一些相似之处，但也有许多不同之处。以下是它们的主要相同点和不同点：</p>
+<h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
+<li><p><strong>模块解析</strong>：</p>
+<ul>
+<li><strong>Vite 的依赖解析&#x2F;预构建</strong> 和 <strong>ES 模块的静态解析</strong> 都涉及到模块依赖的解析。在这两个过程中，工具需要识别和处理模块之间的依赖关系，以便正确地加载和构建应用程序。</li>
+</ul>
+</li>
+<li><p><strong>提高开发效率</strong>：</p>
+<ul>
+<li><strong>Vite 的预构建</strong> 和 <strong>ES 模块的静态解析</strong> 都旨在提高开发效率。Vite 的预构建通过优化依赖关系来加速开发过程，而 ES 模块的静态解析则允许浏览器高效地加载和缓存模块。</li>
+</ul>
+</li>
+</ol>
+<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
+<li><p><strong>处理阶段</strong>：</p>
+<ul>
+<li><strong>Vite 的依赖解析&#x2F;预构建</strong>：Vite 的预构建发生在开发启动时，它会将所有的依赖模块（如 npm 包）提前编译为浏览器可以直接使用的格式。这个过程通过 <code>esbuild</code> 快速完成，主要是为了加速后续的模块加载和热重载。</li>
+<li><strong>ES 模块的静态解析</strong>：在浏览器中，ES 模块的静态解析发生在运行时。浏览器根据 <code>&lt;script type=&quot;module&quot;&gt;</code> 标签加载的模块来解析和执行模块依赖。这一过程是浏览器内建的，通常无需开发者干预。</li>
+</ul>
+</li>
+<li><p><strong>目的和优化</strong>：</p>
+<ul>
+<li><strong>Vite 的预构建</strong>：主要目的是提高开发模式下的构建速度和性能。通过将常用依赖预构建，Vite 可以减少在开发过程中实时构建和转换的时间，尤其是对于大型项目或大量依赖时。</li>
+<li><strong>ES 模块的静态解析</strong>：其主要目的是确保模块的正确加载和执行。浏览器在运行时解析模块依赖，并确保模块能够按照正确的顺序加载和执行。这一过程对开发者透明，不需要手动干预。</li>
+</ul>
+</li>
+<li><p><strong>工具支持</strong>：</p>
+<ul>
+<li><strong>Vite 的预构建</strong>：通常依赖工具链（如 <code>esbuild</code>）和配置来处理各种构建需求。Vite 会将依赖模块提前编译和优化，以便更好地支持开发体验。</li>
+<li><strong>ES 模块的静态解析</strong>：是浏览器原生支持的功能，不依赖于外部工具。浏览器根据 ES 模块规范直接解析模块，并处理动态导入等特性。</li>
+</ul>
+</li>
+<li><p><strong>缓存和更新</strong>：</p>
+<ul>
+<li><strong>Vite 的预构建</strong>：会缓存预构建的依赖，以便在开发过程中更快地读取和使用。它还会处理依赖的更新，以确保开发环境的实时反馈。</li>
+<li><strong>ES 模块的静态解析</strong>：浏览器会缓存已加载的模块，以提高性能，但它会根据文件的版本和缓存策略来决定何时重新加载或更新模块。</li>
+</ul>
+</li>
+<li><p><strong>适用范围</strong>：</p>
+<ul>
+<li><strong>Vite 的预构建</strong>：主要用于开发工具和构建工具中，帮助提升开发体验和构建速度。</li>
+<li><strong>ES 模块的静态解析</strong>：主要用于浏览器中，用于模块的实际加载和执行，是浏览器原生的模块处理机制。</li>
+</ul>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Vite 的依赖解析&#x2F;预构建和 ES 模块的静态解析虽然在某些方面具有相似性（如模块解析和提高开发效率），但它们在目的、处理阶段、工具支持以及适用范围等方面有显著不同。Vite 的预构建是为了优化开发体验，通过工具链加速构建过程；而 ES 模块的静态解析是浏览器原生支持的功能，用于模块的实际加载和执行。</p>
+<h2 id="可以基于vite项目讲下在vite的预构建和js引擎对es模块的静态解析发生的时机吗"><a href="#可以基于vite项目讲下在vite的预构建和js引擎对es模块的静态解析发生的时机吗" class="headerlink" title="可以基于vite项目讲下在vite的预构建和js引擎对es模块的静态解析发生的时机吗"></a>可以基于vite项目讲下在vite的预构建和js引擎对es模块的静态解析发生的时机吗</h2><p>当然可以。Vite 的预构建和 JavaScript 引擎对 ES 模块的静态解析是在不同阶段发生的，具体的时机和过程如下：</p>
+<h3 id="Vite-的预构建"><a href="#Vite-的预构建" class="headerlink" title="Vite 的预构建"></a>Vite 的预构建</h3><p><strong>时机</strong>：</p>
+<ul>
+<li><strong>开发启动阶段</strong>：Vite 的预构建主要发生在开发服务器启动时。在你运行 <code>vite</code> 或 <code>npm run dev</code> 启动开发服务器时，Vite 会执行预构建操作。这是为了优化开发环境下的模块加载和性能。</li>
+</ul>
+<p><strong>过程</strong>：</p>
+<ol>
+<li><p><strong>依赖解析</strong>：Vite 会扫描项目中的源代码，识别和分析所有的依赖项。这包括所有直接和间接的依赖模块。</p>
+</li>
+<li><p><strong>预构建依赖</strong>：Vite 使用 <code>esbuild</code> 或其他工具将这些依赖模块进行预构建。这个过程将依赖项转换为浏览器可以直接理解的格式，通常是将现代 JavaScript 代码（如 ES6+ 代码）转译为兼容性更好的代码（如 ES5）。同时，Vite 也会进行一些优化，比如模块合并、移除不必要的代码等。</p>
+</li>
+<li><p><strong>缓存和优化</strong>：预构建后的模块会被缓存，以便在开发过程中可以快速加载。这样，在你修改代码或启动开发服务器时，Vite 可以更快地响应，因为它不需要重新编译所有的依赖项。</p>
+</li>
+<li><p><strong>启动开发服务器</strong>：一旦预构建完成，Vite 开发服务器会启动并开始提供服务。开发服务器会使用预构建的模块，并处理文件的实时更新和热模块替换（HMR）。</p>
+</li>
+</ol>
+<h3 id="JavaScript-引擎对-ES-模块的静态解析"><a href="#JavaScript-引擎对-ES-模块的静态解析" class="headerlink" title="JavaScript 引擎对 ES 模块的静态解析"></a>JavaScript 引擎对 ES 模块的静态解析</h3><p><strong>时机</strong>：</p>
+<ul>
+<li><strong>运行时</strong>：ES 模块的静态解析发生在浏览器运行时，也就是当浏览器加载和执行 JavaScript 代码时。这个过程是在你访问网页并加载 JavaScript 文件时发生的。</li>
+</ul>
+<p><strong>过程</strong>：</p>
+<ol>
+<li><p><strong>加载模块</strong>：当浏览器遇到 <code>&lt;script type=&quot;module&quot;&gt;</code> 标签或动态导入（<code>import()</code>）语句时，它会开始加载相关的 ES 模块。</p>
+</li>
+<li><p><strong>静态分析</strong>：浏览器会进行静态分析来解析模块的依赖关系。它会读取模块中的 <code>import</code> 和 <code>export</code> 语句，并根据这些语句确定模块之间的依赖关系。这是一个静态的过程，即在运行时之前就完成了模块的解析，不涉及动态行为。</p>
+</li>
+<li><p><strong>解析和执行</strong>：在解析完所有的模块依赖关系后，浏览器会按照正确的顺序加载和执行这些模块。模块的执行顺序基于它们的依赖关系和导入顺序。浏览器会确保所有依赖项在模块执行之前已加载完成。</p>
+</li>
+<li><p><strong>缓存</strong>：浏览器会缓存已加载的模块，以便在后续的页面访问中更快地加载这些模块。缓存策略可能会根据浏览器的实现和网络条件有所不同。</p>
+</li>
+</ol>
+<h3 id="对比总结"><a href="#对比总结" class="headerlink" title="对比总结"></a>对比总结</h3><ul>
+<li><p><strong>Vite 的预构建</strong>：</p>
+<ul>
+<li><strong>发生时机</strong>：开发启动时</li>
+<li><strong>目的</strong>：优化开发模式下的构建速度和性能，提前编译和优化依赖</li>
+<li><strong>过程</strong>：依赖解析、预构建、缓存优化</li>
+</ul>
+</li>
+<li><p><strong>JavaScript 引擎对 ES 模块的静态解析</strong>：</p>
+<ul>
+<li><strong>发生时机</strong>：浏览器运行时（页面加载时）</li>
+<li><strong>目的</strong>：在浏览器中正确加载和执行模块</li>
+<li><strong>过程</strong>：静态分析、解析、执行、缓存</li>
+</ul>
+</li>
+</ul>
+<p>Vite 的预构建是为了在开发过程中提高效率，而浏览器的 ES 模块静态解析是为了在运行时正确地加载和执行模块。两者的时机和目的不同，但都在各自的阶段扮演着重要的角色。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/10/16/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vite%E7%9A%84%E4%BE%9D%E8%B5%96%E8%A7%A3%E6%9E%90-%E9%A2%84%E6%9E%84%E5%BB%BA%E4%B8%8Ees%E6%A8%A1%E5%9D%97%E7%9A%84%E9%9D%99%E6%80%81%E8%A7%A3%E6%9E%90%E6%9C%89%E4%BB%80%E4%B9%88%E7%9B%B8%E5%90%8C%E4%B8%8D%E5%90%8C%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B8%E5%90%8C%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">相同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E7%82%B9"><span class="nav-number">1.2.</span> <span class="nav-text">不同点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E5%9F%BA%E4%BA%8Evite%E9%A1%B9%E7%9B%AE%E8%AE%B2%E4%B8%8B%E5%9C%A8vite%E7%9A%84%E9%A2%84%E6%9E%84%E5%BB%BA%E5%92%8Cjs%E5%BC%95%E6%93%8E%E5%AF%B9es%E6%A8%A1%E5%9D%97%E7%9A%84%E9%9D%99%E6%80%81%E8%A7%A3%E6%9E%90%E5%8F%91%E7%94%9F%E7%9A%84%E6%97%B6%E6%9C%BA%E5%90%97"><span class="nav-number">2.</span> <span class="nav-text">可以基于vite项目讲下在vite的预构建和js引擎对es模块的静态解析发生的时机吗</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vite-%E7%9A%84%E9%A2%84%E6%9E%84%E5%BB%BA"><span class="nav-number">2.1.</span> <span class="nav-text">Vite 的预构建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript-%E5%BC%95%E6%93%8E%E5%AF%B9-ES-%E6%A8%A1%E5%9D%97%E7%9A%84%E9%9D%99%E6%80%81%E8%A7%A3%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">JavaScript 引擎对 ES 模块的静态解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.</span> <span class="nav-text">对比总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

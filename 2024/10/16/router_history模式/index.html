@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="vue-router的历史模式是什么意思在 Vue.js 中，vue-router 是官方提供的路由库，用于在 Vue 应用中实现前端路由功能。vue-router 支持两种主要的路由模式：hash 模式和 history 模式。你提到的“历史模式”就是 history 模式。 history 模式history 模式利用 HTML5 的 History API 来实现路由功能。它允许你使用浏览器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="vue-router的历史模式是什么意思在 Vue.js 中，vue-router 是官方提供的路由库，用于在 Vue 应用中实现前端路由功能。vue-router 支持两种主要的路由模式：hash 模式和 history 模式。你提到的“历史模式”就是 history 模式。 history 模式history 模式利用 HTML5 的 History API 来实现路由功能。它允许你使用浏览器">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-16T14:37:19.717Z">
+<meta property="article:modified_time" content="2024-09-10T14:22:25.074Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-09-10 22:22:25" itemprop="dateModified" datetime="2024-09-10T22:22:25+08:00">2024-09-10</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="vue-router的历史模式是什么意思"><a href="#vue-router的历史模式是什么意思" class="headerlink" title="vue-router的历史模式是什么意思"></a>vue-router的历史模式是什么意思</h2><p>在 Vue.js 中，<code>vue-router</code> 是官方提供的路由库，用于在 Vue 应用中实现前端路由功能。<code>vue-router</code> 支持两种主要的路由模式：<code>hash</code> 模式和 <code>history</code> 模式。你提到的“历史模式”就是 <code>history</code> 模式。</p>
+<h3 id="history-模式"><a href="#history-模式" class="headerlink" title="history 模式"></a><code>history</code> 模式</h3><p><code>history</code> 模式利用 HTML5 的 History API 来实现路由功能。它允许你使用浏览器的标准 URL，而不需要 URL 中的 <code>#</code> 符号。这种模式的 URL 看起来更干净、更友好。例如：</p>
+<ul>
+<li><code>hash</code> 模式的 URL: <code>http://example.com/#/about</code></li>
+<li><code>history</code> 模式的 URL: <code>http://example.com/about</code></li>
+</ul>
+<h4 id="特点："><a href="#特点：" class="headerlink" title="特点："></a>特点：</h4><ol>
+<li><strong>干净的 URL</strong>：不像 <code>hash</code> 模式那样在 URL 中包含 <code>#</code> 符号，使得 URL 更加简洁和美观。</li>
+<li><strong>更好的用户体验</strong>：能够利用浏览器的前进和后退按钮进行导航，同时支持刷新页面。</li>
+<li><strong>对 SEO 更友好</strong>：对于搜索引擎，<code>history</code> 模式的 URL 更容易被识别和索引。</li>
+</ol>
+<h4 id="配置方式："><a href="#配置方式：" class="headerlink" title="配置方式："></a>配置方式：</h4><p>要在 Vue 应用中使用 <code>history</code> 模式，你需要在配置 <code>vue-router</code> 时指定 <code>mode</code> 为 <code>history</code>。示例如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Router</span> <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;./components/Home.vue&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">About</span> <span class="keyword">from</span> <span class="string">&#x27;./components/About.vue&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">Router</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> <span class="title class_">Router</span>(&#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;history&#x27;</span>, <span class="comment">// 使用 history 模式</span></span><br><span class="line">  <span class="attr">routes</span>: [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>, <span class="attr">component</span>: <span class="title class_">Home</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">&#x27;/about&#x27;</span>, <span class="attr">component</span>: <span class="title class_">About</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h4><ul>
+<li><p><strong>服务器配置</strong>：<code>history</code> 模式依赖于服务器的配置。因为在浏览器中直接输入 URL 或者刷新页面时，服务器必须返回应用的入口 HTML 文件（通常是 <code>index.html</code>），而不是尝试解析该 URL 为实际的文件。你可能需要配置服务器，以确保所有路由请求都返回正确的 HTML 文件。</p>
+</li>
+<li><p><strong>历史记录</strong>：<code>history</code> 模式利用浏览器的 History API 来操作浏览器历史记录，因此它的操作更符合现代 Web 应用的需求。</p>
+</li>
+</ul>
+<p>通过使用 <code>history</code> 模式，你可以让 Vue 应用的路由功能更自然、更符合用户和搜索引擎的预期。</p>
+<h2 id="请具体说明下这两者的区别"><a href="#请具体说明下这两者的区别" class="headerlink" title="请具体说明下这两者的区别"></a>请具体说明下这两者的区别</h2><p>当然，<code>hash</code> 模式和 <code>history</code> 模式在 Vue.js 的 <code>vue-router</code> 中有以下主要区别：</p>
+<h3 id="1-URL-结构"><a href="#1-URL-结构" class="headerlink" title="1. URL 结构"></a>1. URL 结构</h3><ul>
+<li><p><strong>Hash 模式</strong>：</p>
+<ul>
+<li>URL 中包含一个 <code>#</code> 符号，后面跟着路径。这个 <code>#</code> 符号和其后面的路径部分不会被发送到服务器。</li>
+<li>示例 URL：<code>http://example.com/#/about</code></li>
+</ul>
+</li>
+<li><p><strong>History 模式</strong>：</p>
+<ul>
+<li>URL 看起来像正常的 URL，不包含 <code>#</code> 符号。路径部分直接映射到浏览器的路径。</li>
+<li>示例 URL：<code>http://example.com/about</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-路由模式的实现"><a href="#2-路由模式的实现" class="headerlink" title="2. 路由模式的实现"></a>2. 路由模式的实现</h3><ul>
+<li><p><strong>Hash 模式</strong>：</p>
+<ul>
+<li>依赖于浏览器的 hash 变化来实现路由切换。当 URL 的 hash 部分变化时，<code>vue-router</code> 会监听这些变化并更新视图。</li>
+<li>由于 hash 不会触发浏览器的页面重新加载，所以 <code>hash</code> 模式非常适合不需要后端支持的简单应用。</li>
+</ul>
+</li>
+<li><p><strong>History 模式</strong>：</p>
+<ul>
+<li>使用 HTML5 的 History API，能够在不重新加载页面的情况下改变浏览器的 URL 路径。</li>
+<li>实际上，<code>history</code> 模式利用了 <code>pushState</code> 和 <code>replaceState</code> 方法来操作浏览器历史记录和 URL。这样用户可以在浏览器的前进和后退按钮之间切换，页面也不会重新加载。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-服务器配置"><a href="#3-服务器配置" class="headerlink" title="3. 服务器配置"></a>3. 服务器配置</h3><ul>
+<li><p><strong>Hash 模式</strong>：</p>
+<ul>
+<li>不需要特别的服务器配置。因为 <code>#</code> 之后的内容不会被发送到服务器，服务器只需提供静态文件即可。</li>
+<li>对于静态网站或没有复杂服务器端路由的应用，<code>hash</code> 模式比较方便。</li>
+</ul>
+</li>
+<li><p><strong>History 模式</strong>：</p>
+<ul>
+<li><p>需要服务器进行特殊配置，以处理客户端路由。因为当用户直接访问某个 URL 或刷新页面时，服务器需要返回应用的入口 HTML 文件（如 <code>index.html</code>），而不是尝试查找该路径对应的文件。</p>
+</li>
+<li><p>例如，在 Node.js 的 Express 应用中，你需要配置所有路径都返回相同的 HTML 文件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;*&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.<span class="title function_">sendFile</span>(path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;index.html&#x27;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-浏览器兼容性"><a href="#4-浏览器兼容性" class="headerlink" title="4. 浏览器兼容性"></a>4. 浏览器兼容性</h3><ul>
+<li><p><strong>Hash 模式</strong>：</p>
+<ul>
+<li>兼容性非常好，因为 <code>hash</code> 是所有现代浏览器都支持的功能。</li>
+</ul>
+</li>
+<li><p><strong>History 模式</strong>：</p>
+<ul>
+<li>支持较新的浏览器，但在非常老旧的浏览器中可能不完全支持。如果你的用户群体使用的是现代浏览器，<code>history</code> 模式通常是合适的选择。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-SEO-影响"><a href="#5-SEO-影响" class="headerlink" title="5. SEO 影响"></a>5. SEO 影响</h3><ul>
+<li><p><strong>Hash 模式</strong>：</p>
+<ul>
+<li>搜索引擎对 <code>#</code> 之后的部分通常不进行索引，因此可能对 SEO 不利。</li>
+</ul>
+</li>
+<li><p><strong>History 模式</strong>：</p>
+<ul>
+<li>由于 URL 是正常的路径，搜索引擎能够更好地索引这些页面，从而对 SEO 更加友好。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>如果你的应用不需要复杂的服务器配置或 SEO 考虑，且希望快速实现前端路由，可以使用 <code>hash</code> 模式。</li>
+<li>如果你需要干净的 URL、支持前进&#x2F;后退功能、或需要考虑 SEO，那么 <code>history</code> 模式是更好的选择，但需要确保服务器正确配置。</li>
+</ul>
+<h2 id="详细说下为什么要进行服务器配置呢"><a href="#详细说下为什么要进行服务器配置呢" class="headerlink" title="详细说下为什么要进行服务器配置呢"></a>详细说下为什么要进行服务器配置呢</h2><p>在使用 <code>vue-router</code> 的 <code>history</code> 模式时，服务器配置是必要的，主要是因为以下原因：</p>
+<h3 id="1-直接访问路径的问题"><a href="#1-直接访问路径的问题" class="headerlink" title="1. 直接访问路径的问题"></a>1. <strong>直接访问路径的问题</strong></h3><ul>
+<li><p><strong><code>hash</code> 模式</strong>： </p>
+<ul>
+<li>在 <code>hash</code> 模式下，URL 中的 <code>#</code> 符号及其后面的路径部分不会被发送到服务器。只有 <code>#</code> 之前的部分（即基础 URL）会被发送到服务器，因此服务器只需要处理静态文件请求，不需要处理客户端路由。</li>
+<li>例如，<code>http://example.com/#/about</code> 中，服务器只会接收到 <code>http://example.com/</code>，<code>/about</code> 是由客户端的 JavaScript 处理的。</li>
+</ul>
+</li>
+<li><p><strong><code>history</code> 模式</strong>： </p>
+<ul>
+<li>在 <code>history</code> 模式下，整个 URL（包括路径）都会被发送到服务器。服务器需要处理这些路径请求，并返回正确的页面内容。如果服务器未正确配置，当用户直接访问某个 URL 或刷新页面时，服务器可能会尝试查找对应的文件，而不是返回应用的主 HTML 文件。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-SPA-应用和服务器的交互"><a href="#2-SPA-应用和服务器的交互" class="headerlink" title="2. SPA 应用和服务器的交互"></a>2. <strong>SPA 应用和服务器的交互</strong></h3><ul>
+<li><p>在单页面应用（SPA）中，前端路由由 JavaScript 处理，而不是由服务器处理。SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 <code>index.html</code>）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。</p>
+</li>
+<li><p>如果服务器没有正确配置，它可能会尝试将所有路径（如 <code>/about</code>, <code>/contact</code> 等）当作实际文件来查找。如果这些路径没有对应的实际文件，服务器会返回 404 错误。</p>
+</li>
+</ul>
+<h3 id="3-如何配置服务器"><a href="#3-如何配置服务器" class="headerlink" title="3. 如何配置服务器"></a>3. <strong>如何配置服务器</strong></h3><p>为了确保服务器能正确处理所有前端路由请求并返回应用的主 HTML 文件，你需要进行适当的配置。以下是不同服务器的配置示例：</p>
+<h4 id="1-Express-js（Node-js）"><a href="#1-Express-js（Node-js）" class="headerlink" title="1. Express.js（Node.js）"></a><strong>1. Express.js（Node.js）</strong></h4><p>在 Node.js 的 Express 应用中，你可以使用以下配置来处理 SPA 的路由：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">express</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提供静态文件</span></span><br><span class="line">app.<span class="title function_">use</span>(express.<span class="title function_">static</span>(path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;dist&#x27;</span>)));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 所有其他请求都返回 index.html</span></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;*&#x27;</span>, <span class="function">(<span class="params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  res.<span class="title function_">sendFile</span>(path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;dist&#x27;</span>, <span class="string">&#x27;index.html&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 启动服务器</span></span><br><span class="line"><span class="keyword">const</span> port = process.<span class="property">env</span>.<span class="property">PORT</span> || <span class="number">8080</span>;</span><br><span class="line">app.<span class="title function_">listen</span>(port, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`Server running on port <span class="subst">$&#123;port&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-Nginx"><a href="#2-Nginx" class="headerlink" title="2. Nginx"></a><strong>2. Nginx</strong></h4><p>在 Nginx 服务器上，你需要配置 <code>location</code> 规则来处理 SPA 路由：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">  <span class="attribute">server_name</span> example.com;</span><br><span class="line">  <span class="attribute">root</span> /path/to/your/dist;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> / &#123;</span><br><span class="line">    <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>try_files</code> 指令会首先尝试提供请求的文件，如果文件不存在，则返回 <code>index.html</code>，允许 Vue Router 在客户端处理路由。</p>
+<h4 id="3-Apache"><a href="#3-Apache" class="headerlink" title="3. Apache"></a><strong>3. Apache</strong></h4><p>在 Apache 服务器上，你可以使用 <code>.htaccess</code> 文件来配置重写规则：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;IfModule mod_rewrite.c&gt;</span></span><br><span class="line">  <span class="attribute">RewriteEngine</span> <span class="literal">On</span></span><br><span class="line">  <span class="attribute">RewriteBase</span> /</span><br><span class="line">  <span class="attribute">RewriteRule</span> ^index\.html$ -<span class="meta"> [L]</span></span><br><span class="line">  <span class="attribute">RewriteCond</span> <span class="variable">%&#123;REQUEST_FILENAME&#125;</span> !-f</span><br><span class="line">  <span class="attribute">RewriteCond</span> <span class="variable">%&#123;REQUEST_FILENAME&#125;</span> !-d</span><br><span class="line">  <span class="attribute">RewriteRule</span> . /index.html<span class="meta"> [L]</span></span><br><span class="line"><span class="section">&lt;/IfModule&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个配置会将所有非文件和非目录的请求重写到 <code>index.html</code>，让客户端的 Vue Router 处理路由。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>服务器配置的目的是确保 SPA 应用能够正确处理前端路由。在 <code>history</code> 模式下，所有路径请求都需要返回同一个 HTML 文件，而不是尝试查找实际的文件。这种配置允许前端 JavaScript 在客户端处理路由变化，同时避免了服务器的 404 错误。正确配置服务器可以确保用户直接访问路径或刷新页面时应用能够正常工作。</p>
+<h2 id="在单页面应用（SPA）中，前端路由由-JavaScript-处理，而不是由服务器处理。SPA-应用的不同视图（路由）都由同一个-HTML-文件（如-index-html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端-JavaScript-处理实际的路由切换。其中如何理解“SPA-应用的不同视图（路由）都由同一个-HTML-文件（如-index-html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端-JavaScript-处理实际的路由切换。”呢"><a href="#在单页面应用（SPA）中，前端路由由-JavaScript-处理，而不是由服务器处理。SPA-应用的不同视图（路由）都由同一个-HTML-文件（如-index-html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端-JavaScript-处理实际的路由切换。其中如何理解“SPA-应用的不同视图（路由）都由同一个-HTML-文件（如-index-html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端-JavaScript-处理实际的路由切换。”呢" class="headerlink" title="在单页面应用（SPA）中，前端路由由 JavaScript 处理，而不是由服务器处理。SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 index.html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。其中如何理解“SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 index.html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。”呢"></a>在单页面应用（SPA）中，前端路由由 JavaScript 处理，而不是由服务器处理。SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 index.html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。其中如何理解“SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 index.html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。”呢</h2><p>在单页面应用（SPA）中，理解“SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 <code>index.html</code>）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换”这一概念，可以从以下几个方面来详细解释：</p>
+<h3 id="单页面应用的基本概念"><a href="#单页面应用的基本概念" class="headerlink" title="单页面应用的基本概念"></a>单页面应用的基本概念</h3><ol>
+<li><p><strong>单页面应用（SPA）</strong>：</p>
+<ul>
+<li>SPA 是一种网页应用程序，它通过 JavaScript 在客户端动态地加载和展示内容，而不是重新加载整个页面。用户与应用的交互通常不会引发完整的页面刷新。</li>
+</ul>
+</li>
+<li><p><strong>前端路由</strong>：</p>
+<ul>
+<li>在 SPA 中，前端路由是由 JavaScript 控制的。当用户导航到不同的视图或路由时，JavaScript 会更新页面内容，而不是通过传统的页面加载来处理。这种方式使得应用体验更流畅、速度更快。</li>
+</ul>
+</li>
+</ol>
+<h3 id="index-html-和前端路由"><a href="#index-html-和前端路由" class="headerlink" title="index.html 和前端路由"></a><code>index.html</code> 和前端路由</h3><ol>
+<li><p><strong><code>index.html</code> 文件</strong>：</p>
+<ul>
+<li><code>index.html</code> 是应用的主入口 HTML 文件。在 SPA 中，所有的页面内容和路由逻辑都在这个文件中加载和处理。实际上，应用的所有路由视图和组件都是由这个主 HTML 文件和关联的 JavaScript 文件动态生成的。</li>
+</ul>
+</li>
+<li><p><strong>返回主 HTML 文件</strong>：</p>
+<ul>
+<li>当用户访问应用中的不同路径或刷新页面时，服务器需要返回这个 <code>index.html</code> 文件。无论用户请求的是 <code>/about</code>、<code>/contact</code> 还是其他路径，服务器都会返回 <code>index.html</code> 文件。</li>
+<li>服务器返回 <code>index.html</code> 文件后，前端的 JavaScript 会接管页面，使用前端路由库（如 <code>vue-router</code>）来解析 URL 并呈现相应的视图组件。</li>
+</ul>
+</li>
+</ol>
+<h3 id="前端-JavaScript-处理路由"><a href="#前端-JavaScript-处理路由" class="headerlink" title="前端 JavaScript 处理路由"></a>前端 JavaScript 处理路由</h3><ol>
+<li><p><strong>前端路由库</strong>：</p>
+<ul>
+<li>在 SPA 中，前端路由库（如 <code>vue-router</code>、<code>react-router</code>）会监控 URL 的变化，并根据 URL 显示不同的视图。路由库通过 JavaScript 实现路由功能，而不需要重新加载页面。</li>
+<li>当用户导航到不同的路由时，前端路由库会根据配置的路由规则动态加载和渲染对应的组件，而不会引发完整的页面刷新。</li>
+</ul>
+</li>
+<li><p><strong>示例流程</strong>：</p>
+<ul>
+<li>假设你有一个 SPA 应用，用户访问 <code>http://example.com/about</code>。请求首先会被发送到服务器。</li>
+<li>如果服务器配置正确，服务器会返回 <code>index.html</code> 文件。</li>
+<li>浏览器加载 <code>index.html</code> 文件后，应用的 JavaScript 代码会初始化并加载路由库（如 <code>vue-router</code>）。</li>
+<li>路由库接收到 URL 中的路径（<code>/about</code>），并根据路径来渲染对应的视图组件，如“关于我们”页面。</li>
+<li>由于所有视图都在 JavaScript 中动态生成，不需要再次请求服务器上的 HTML 页面。</li>
+</ul>
+</li>
+</ol>
+<h3 id="服务器配置的必要性"><a href="#服务器配置的必要性" class="headerlink" title="服务器配置的必要性"></a>服务器配置的必要性</h3><ul>
+<li><p><strong>SPA 路由与服务器路由</strong>：</p>
+<ul>
+<li>在 SPA 中，服务器主要负责提供主 HTML 文件（<code>index.html</code>）。SPA 的路由逻辑完全由前端 JavaScript 处理。</li>
+<li>如果服务器没有配置正确，直接访问 SPA 应用中的子路由（如 <code>/about</code>）可能会导致服务器查找实际的文件路径。如果没有对应的文件，服务器会返回 404 错误。</li>
+</ul>
+</li>
+<li><p><strong>正确的配置</strong>：</p>
+<ul>
+<li>正确的服务器配置确保所有的路径请求（无论是 <code>/</code>, <code>/about</code>, <code>/contact</code> 等）都返回 <code>index.html</code>。然后，前端的 JavaScript 会处理这些路径并显示相应的内容。</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>在单页面应用（SPA）中，用户的所有路由请求都指向同一个 HTML 文件（<code>index.html</code>），这个文件包含了整个应用的结构和 JavaScript 代码。通过前端路由库，JavaScript 根据 URL 动态加载和呈现不同的视图。服务器配置的关键是确保它总是返回 <code>index.html</code>，以便前端 JavaScript 能够正确地处理路由和视图切换。这样可以实现流畅的用户体验和高效的页面导航。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/10/16/MIME/" rel="prev" title="">
+      <i class="fa fa-chevron-left"></i> 
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/" rel="next" title="">
+       <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#vue-router%E7%9A%84%E5%8E%86%E5%8F%B2%E6%A8%A1%E5%BC%8F%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D"><span class="nav-number">1.</span> <span class="nav-text">vue-router的历史模式是什么意思</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#history-%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">history 模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%89%B9%E7%82%B9%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">特点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="nav-number">1.1.2.</span> <span class="nav-text">配置方式：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%EF%BC%9A"><span class="nav-number">1.1.3.</span> <span class="nav-text">注意事项：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E5%85%B7%E4%BD%93%E8%AF%B4%E6%98%8E%E4%B8%8B%E8%BF%99%E4%B8%A4%E8%80%85%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">请具体说明下这两者的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-URL-%E7%BB%93%E6%9E%84"><span class="nav-number">2.1.</span> <span class="nav-text">1. URL 结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%B7%AF%E7%94%B1%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.2.</span> <span class="nav-text">2. 路由模式的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">2.3.</span> <span class="nav-text">3. 服务器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%B5%8F%E8%A7%88%E5%99%A8%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="nav-number">2.4.</span> <span class="nav-text">4. 浏览器兼容性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-SEO-%E5%BD%B1%E5%93%8D"><span class="nav-number">2.5.</span> <span class="nav-text">5. SEO 影响</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.6.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%A6%E7%BB%86%E8%AF%B4%E4%B8%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%BF%9B%E8%A1%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E5%91%A2"><span class="nav-number">3.</span> <span class="nav-text">详细说下为什么要进行服务器配置呢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE%E8%B7%AF%E5%BE%84%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">3.1.</span> <span class="nav-text">1. 直接访问路径的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-SPA-%E5%BA%94%E7%94%A8%E5%92%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E4%BA%A4%E4%BA%92"><span class="nav-number">3.2.</span> <span class="nav-text">2. SPA 应用和服务器的交互</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">3.3.</span> <span class="nav-text">3. 如何配置服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Express-js%EF%BC%88Node-js%EF%BC%89"><span class="nav-number">3.3.1.</span> <span class="nav-text">1. Express.js（Node.js）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Nginx"><span class="nav-number">3.3.2.</span> <span class="nav-text">2. Nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Apache"><span class="nav-number">3.3.3.</span> <span class="nav-text">3. Apache</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-1"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E5%8D%95%E9%A1%B5%E9%9D%A2%E5%BA%94%E7%94%A8%EF%BC%88SPA%EF%BC%89%E4%B8%AD%EF%BC%8C%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1%E7%94%B1-JavaScript-%E5%A4%84%E7%90%86%EF%BC%8C%E8%80%8C%E4%B8%8D%E6%98%AF%E7%94%B1%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%A4%84%E7%90%86%E3%80%82SPA-%E5%BA%94%E7%94%A8%E7%9A%84%E4%B8%8D%E5%90%8C%E8%A7%86%E5%9B%BE%EF%BC%88%E8%B7%AF%E7%94%B1%EF%BC%89%E9%83%BD%E7%94%B1%E5%90%8C%E4%B8%80%E4%B8%AA-HTML-%E6%96%87%E4%BB%B6%EF%BC%88%E5%A6%82-index-html%EF%BC%89%E6%9D%A5%E5%91%88%E7%8E%B0%EF%BC%8C%E6%89%80%E6%9C%89%E7%9A%84%E8%B7%AF%E7%94%B1%E8%AF%B7%E6%B1%82%E9%83%BD%E5%BA%94%E8%AF%A5%E8%BF%94%E5%9B%9E%E8%BF%99%E4%B8%AA%E4%B8%BB%E6%96%87%E4%BB%B6%EF%BC%8C%E7%84%B6%E5%90%8E%E7%94%B1%E5%89%8D%E7%AB%AF-JavaScript-%E5%A4%84%E7%90%86%E5%AE%9E%E9%99%85%E7%9A%84%E8%B7%AF%E7%94%B1%E5%88%87%E6%8D%A2%E3%80%82%E5%85%B6%E4%B8%AD%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E2%80%9CSPA-%E5%BA%94%E7%94%A8%E7%9A%84%E4%B8%8D%E5%90%8C%E8%A7%86%E5%9B%BE%EF%BC%88%E8%B7%AF%E7%94%B1%EF%BC%89%E9%83%BD%E7%94%B1%E5%90%8C%E4%B8%80%E4%B8%AA-HTML-%E6%96%87%E4%BB%B6%EF%BC%88%E5%A6%82-index-html%EF%BC%89%E6%9D%A5%E5%91%88%E7%8E%B0%EF%BC%8C%E6%89%80%E6%9C%89%E7%9A%84%E8%B7%AF%E7%94%B1%E8%AF%B7%E6%B1%82%E9%83%BD%E5%BA%94%E8%AF%A5%E8%BF%94%E5%9B%9E%E8%BF%99%E4%B8%AA%E4%B8%BB%E6%96%87%E4%BB%B6%EF%BC%8C%E7%84%B6%E5%90%8E%E7%94%B1%E5%89%8D%E7%AB%AF-JavaScript-%E5%A4%84%E7%90%86%E5%AE%9E%E9%99%85%E7%9A%84%E8%B7%AF%E7%94%B1%E5%88%87%E6%8D%A2%E3%80%82%E2%80%9D%E5%91%A2"><span class="nav-number">4.</span> <span class="nav-text">在单页面应用（SPA）中，前端路由由 JavaScript 处理，而不是由服务器处理。SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 index.html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。其中如何理解“SPA 应用的不同视图（路由）都由同一个 HTML 文件（如 index.html）来呈现，所有的路由请求都应该返回这个主文件，然后由前端 JavaScript 处理实际的路由切换。”呢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E9%A1%B5%E9%9D%A2%E5%BA%94%E7%94%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">4.1.</span> <span class="nav-text">单页面应用的基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-html-%E5%92%8C%E5%89%8D%E7%AB%AF%E8%B7%AF%E7%94%B1"><span class="nav-number">4.2.</span> <span class="nav-text">index.html 和前端路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF-JavaScript-%E5%A4%84%E7%90%86%E8%B7%AF%E7%94%B1"><span class="nav-number">4.3.</span> <span class="nav-text">前端 JavaScript 处理路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7"><span class="nav-number">4.4.</span> <span class="nav-text">服务器配置的必要性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93-2"><span class="nav-number">4.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
