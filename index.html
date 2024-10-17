@@ -1,196 +1,35 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 7.3.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Hexo"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Hexo"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="John Doe"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Hexo","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"John Doe"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":""}</script><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
 
-<link rel="stylesheet" href="/css/main.css">
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
 
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
-
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-
-<link rel="canonical" href="http://example.com/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : true,
-    isPost : false,
-    lang   : 'zh-CN'
-  };
-</script>
-
-  <title>Hexo</title>
-  
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Hexo</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-  </ul>
-</nav>
-
-
-
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content index posts-expand">
-            
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-08-20 22:36:57" itemprop="dateModified" datetime="2024-08-20T22:36:57+08:00">2024-08-20</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> events.<span class="title class_">EventEmitter</span>(); </span><br><span class="line"><span class="keyword">var</span> status = <span class="string">&quot;ready&quot;</span>; </span><br><span class="line"><span class="keyword">var</span> select = <span class="keyword">function</span> (<span class="params">callback</span>) &#123; </span><br><span class="line"> proxy.<span class="title function_">once</span>(<span class="string">&quot;selected&quot;</span>, callback); </span><br><span class="line"> <span class="keyword">if</span> (status === <span class="string">&quot;ready&quot;</span>) &#123; </span><br><span class="line"> status = <span class="string">&quot;pending&quot;</span>; </span><br><span class="line"> db.<span class="title function_">select</span>(<span class="string">&quot;SQL&quot;</span>, <span class="keyword">function</span> (<span class="params">results</span>) &#123; </span><br><span class="line"> proxy.<span class="title function_">emit</span>(<span class="string">&quot;selected&quot;</span>, results); </span><br><span class="line"> status = <span class="string">&quot;ready&quot;</span>; </span><br><span class="line"> &#125;); </span><br><span class="line"> &#125; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T14:37:19.722Z" title="2024/10/16 22:37:19">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T14:47:18.623Z" title="2024/10/16 22:47:18">2024-10-16</time>更新</span><span class="level-item">22 分钟读完 (大约3364个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/">Node 异步编程</a></p><div class="content"><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> events.<span class="title class_">EventEmitter</span>(); </span><br><span class="line"><span class="keyword">var</span> status = <span class="string">&quot;ready&quot;</span>; </span><br><span class="line"><span class="keyword">var</span> select = <span class="keyword">function</span> (<span class="params">callback</span>) &#123; </span><br><span class="line"> proxy.<span class="title function_">once</span>(<span class="string">&quot;selected&quot;</span>, callback); </span><br><span class="line"> <span class="keyword">if</span> (status === <span class="string">&quot;ready&quot;</span>) &#123; </span><br><span class="line"> status = <span class="string">&quot;pending&quot;</span>; </span><br><span class="line"> db.<span class="title function_">select</span>(<span class="string">&quot;SQL&quot;</span>, <span class="keyword">function</span> (<span class="params">results</span>) &#123; </span><br><span class="line"> proxy.<span class="title function_">emit</span>(<span class="string">&quot;selected&quot;</span>, results); </span><br><span class="line"> status = <span class="string">&quot;ready&quot;</span>; </span><br><span class="line"> &#125;); </span><br><span class="line"> &#125; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>解释下此段node代码</p>
 <p>这段代码主要演示了如何使用 Node.js 的 <code>EventEmitter</code> 来处理异步操作，同时确保某个操作在特定状态下只会执行一次。</p>
 <h3 id="代码解析："><a href="#代码解析：" class="headerlink" title="代码解析："></a>代码解析：</h3><ol>
@@ -322,71 +161,7 @@
 <li><code>ep.fail(callback)</code> 方法用于处理所有 <code>ep.emit(&#39;error&#39;, err)</code> 触发的错误。当任意异步操作中发生错误，都会通过 <code>ep.emit(&#39;error&#39;, err)</code> 传递给 <code>ep.fail</code> 处理。</li>
 </ul>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>EventProxy</code> 是处理复杂异步操作、事件组合、以及多异步操作同步控制的强大工具。通过 <code>all</code>、<code>after</code>、<code>fail</code> 等方法，你可以轻松地协调多个异步事件，简化代码逻辑，避免回调地狱或手动管理复杂的异步状态。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-09-13 21:35:59" itemprop="dateModified" datetime="2024-09-13T21:35:59+08:00">2024-09-13</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="vite的依赖解析-预构建与es模块的静态解析有什么相同不同点"><a href="#vite的依赖解析-预构建与es模块的静态解析有什么相同不同点" class="headerlink" title="vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点"></a>vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点</h2><p>Vite 的依赖解析&#x2F;预构建与 ES 模块的静态解析是现代前端构建工具中重要的两个概念。它们有一些相似之处，但也有许多不同之处。以下是它们的主要相同点和不同点：</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T14:37:19.719Z" title="2024/10/16 22:37:19">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T14:48:58.214Z" title="2024/10/16 22:48:58">2024-10-16</time>更新</span><span class="level-item">14 分钟读完 (大约2088个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/">vite预构建</a></p><div class="content"><h2 id="vite的依赖解析-预构建与es模块的静态解析有什么相同不同点"><a href="#vite的依赖解析-预构建与es模块的静态解析有什么相同不同点" class="headerlink" title="vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点"></a>vite的依赖解析&#x2F;预构建与es模块的静态解析有什么相同不同点</h2><p>Vite 的依赖解析&#x2F;预构建与 ES 模块的静态解析是现代前端构建工具中重要的两个概念。它们有一些相似之处，但也有许多不同之处。以下是它们的主要相同点和不同点：</p>
 <h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
 <li><p><strong>模块解析</strong>：</p>
 <ul>
@@ -480,71 +255,7 @@
 </li>
 </ul>
 <p>Vite 的预构建是为了在开发过程中提高效率，而浏览器的 ES 模块静态解析是为了在运行时正确地加载和执行模块。两者的时机和目的不同，但都在各自的阶段扮演着重要的角色。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-09-10 22:22:25" itemprop="dateModified" datetime="2024-09-10T22:22:25+08:00">2024-09-10</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="vue-router的历史模式是什么意思"><a href="#vue-router的历史模式是什么意思" class="headerlink" title="vue-router的历史模式是什么意思"></a>vue-router的历史模式是什么意思</h2><p>在 Vue.js 中，<code>vue-router</code> 是官方提供的路由库，用于在 Vue 应用中实现前端路由功能。<code>vue-router</code> 支持两种主要的路由模式：<code>hash</code> 模式和 <code>history</code> 模式。你提到的“历史模式”就是 <code>history</code> 模式。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T14:37:19.717Z" title="2024/10/16 22:37:19">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T14:48:29.827Z" title="2024/10/16 22:48:29">2024-10-16</time>更新</span><span class="level-item">23 分钟读完 (大约3496个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/">vue-router history模式</a></p><div class="content"><h2 id="vue-router的历史模式是什么意思"><a href="#vue-router的历史模式是什么意思" class="headerlink" title="vue-router的历史模式是什么意思"></a>vue-router的历史模式是什么意思</h2><p>在 Vue.js 中，<code>vue-router</code> 是官方提供的路由库，用于在 Vue 应用中实现前端路由功能。<code>vue-router</code> 支持两种主要的路由模式：<code>hash</code> 模式和 <code>history</code> 模式。你提到的“历史模式”就是 <code>history</code> 模式。</p>
 <h3 id="history-模式"><a href="#history-模式" class="headerlink" title="history 模式"></a><code>history</code> 模式</h3><p><code>history</code> 模式利用 HTML5 的 History API 来实现路由功能。它允许你使用浏览器的标准 URL，而不需要 URL 中的 <code>#</code> 符号。这种模式的 URL 看起来更干净、更友好。例如：</p>
 <ul>
 <li><code>hash</code> 模式的 URL: <code>http://example.com/#/about</code></li>
@@ -728,72 +439,7 @@
 </li>
 </ul>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>在单页面应用（SPA）中，用户的所有路由请求都指向同一个 HTML 文件（<code>index.html</code>），这个文件包含了整个应用的结构和 JavaScript 代码。通过前端路由库，JavaScript 根据 URL 动态加载和呈现不同的视图。服务器配置的关键是确保它总是返回 <code>index.html</code>，以便前端 JavaScript 能够正确地处理路由和视图切换。这样可以实现流畅的用户体验和高效的页面导航。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/MIME/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/MIME/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-08-29 21:21:41" itemprop="dateModified" datetime="2024-08-29T21:21:41+08:00">2024-08-29</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>今天我们讨论了多个与浏览器和 Web 开发相关的技术主题。以下是对这些内容的详细总结，并附上相应的例子进行说明。</p>
-<h3 id="1-MIME-类型的命名及其使用"><a href="#1-MIME-类型的命名及其使用" class="headerlink" title="1. MIME 类型的命名及其使用"></a>1. <strong>MIME 类型的命名及其使用</strong></h3><p>MIME 类型（Multipurpose Internet Mail Extensions）用于标识互联网文件的类型和格式，帮助客户端（如浏览器）决定如何处理文件。MIME 类型由两个部分组成，通常以 <code>主类型/子类型</code> 的形式出现。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T14:37:19.714Z" title="2024/10/16 22:37:19">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T14:47:56.003Z" title="2024/10/16 22:47:56">2024-10-16</time>更新</span><span class="level-item">7 分钟读完 (大约1073个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/MIME/">MIME</a></p><div class="content"><h2 id="今天我们讨论了多个与浏览器和-Web-开发相关的技术主题。以下是对这些内容的详细总结，并附上相应的例子进行说明。"><a href="#今天我们讨论了多个与浏览器和-Web-开发相关的技术主题。以下是对这些内容的详细总结，并附上相应的例子进行说明。" class="headerlink" title="今天我们讨论了多个与浏览器和 Web 开发相关的技术主题。以下是对这些内容的详细总结，并附上相应的例子进行说明。"></a>今天我们讨论了多个与浏览器和 Web 开发相关的技术主题。以下是对这些内容的详细总结，并附上相应的例子进行说明。</h2><h3 id="1-MIME-类型的命名及其使用"><a href="#1-MIME-类型的命名及其使用" class="headerlink" title="1. MIME 类型的命名及其使用"></a>1. <strong>MIME 类型的命名及其使用</strong></h3><p>MIME 类型（Multipurpose Internet Mail Extensions）用于标识互联网文件的类型和格式，帮助客户端（如浏览器）决定如何处理文件。MIME 类型由两个部分组成，通常以 <code>主类型/子类型</code> 的形式出现。</p>
 <ul>
 <li><p><strong>主类型</strong>：表示文件的基本类别。</p>
 <ul>
@@ -839,72 +485,7 @@
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@font-face</span> &#123;</span><br><span class="line">    <span class="attribute">font-family</span>: <span class="string">&#x27;MyFont&#x27;</span>;</span><br><span class="line">    <span class="attribute">src</span>: <span class="built_in">url</span>(<span class="string">&#x27;myfont.woff2&#x27;</span>) <span class="built_in">format</span>(<span class="string">&#x27;woff2&#x27;</span>);</span><br><span class="line">    <span class="attribute">font-display</span>: swap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这段代码告诉浏览器先使用备用字体，然后在自定义字体加载完成后进行替换，确保页面在加载字体时不影响用户体验。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>今天我们深入探讨了 MIME 类型的命名与使用、浏览器如何处理不同类型的文件，以及如何使用和优化字体文件。MIME 类型决定了浏览器对各种文件的处理方式，而 <code>@font-face</code> 规则则帮助开发者将自定义字体应用到网页中。通过这些技术，开发者可以创建更丰富和多样化的网页体验，同时保持良好的性能和兼容性。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/202408262_url%E7%BC%96%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/202408262_url%E7%BC%96%E7%A0%81/" class="post-title-link" itemprop="url">未命名</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-10-16 22:37:19" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-08-26 21:29:41" itemprop="dateModified" datetime="2024-08-26T21:29:41+08:00">2024-08-26</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在这几次对话中，我们讨论了多个与字符编码、URL 编码以及相关技术的主题，涵盖了以下内容：</p>
-<h3 id="1-HTML-文件中的字符集和浏览器解析"><a href="#1-HTML-文件中的字符集和浏览器解析" class="headerlink" title="1. HTML 文件中的字符集和浏览器解析"></a>1. <strong>HTML 文件中的字符集和浏览器解析</strong></h3><ul>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T14:37:19.712Z" title="2024/10/16 22:37:19">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T14:46:20.739Z" title="2024/10/16 22:46:20">2024-10-16</time>更新</span><span class="level-item">6 分钟读完 (大约968个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/202408262_url%E7%BC%96%E7%A0%81/">URL 编码</a></p><div class="content"><h2 id="在这几次对话中，我们讨论了多个与字符编码、URL-编码以及相关技术的主题，涵盖了以下内容："><a href="#在这几次对话中，我们讨论了多个与字符编码、URL-编码以及相关技术的主题，涵盖了以下内容：" class="headerlink" title="在这几次对话中，我们讨论了多个与字符编码、URL 编码以及相关技术的主题，涵盖了以下内容："></a>在这几次对话中，我们讨论了多个与字符编码、URL 编码以及相关技术的主题，涵盖了以下内容：</h2><h3 id="1-HTML-文件中的字符集和浏览器解析"><a href="#1-HTML-文件中的字符集和浏览器解析" class="headerlink" title="1. HTML 文件中的字符集和浏览器解析"></a>1. <strong>HTML 文件中的字符集和浏览器解析</strong></h3><ul>
 <li><p><strong>字符集的作用</strong>：HTML 文件中的字符集（如 <code>UTF-8</code>）定义了网页内容使用的编码方式，确保浏览器能够正确解读并显示文本内容。</p>
 </li>
 <li><p><strong>浏览器解析过程</strong>：</p>
@@ -969,65 +550,7 @@
 <li><strong>URL 编码</strong>：为了正确处理特殊字符和非 ASCII 字符，确保 URL 在互联网中安全和正确地传输。</li>
 </ul>
 <p>通过这些知识，您可以理解如何在 Web 开发和处理 URL、字符编码等过程中确保内容的准确性和兼容性。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/20240806/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/20240806/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2024-10-16 22:37:19 / 修改时间：22:39:25" itemprop="dateCreated datePublished" datetime="2024-10-16T22:37:19+08:00">2024-10-16</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="以下是我针对Node-CommonJS的模块系统实现的GPT4o问答，仅供参考"><a href="#以下是我针对Node-CommonJS的模块系统实现的GPT4o问答，仅供参考" class="headerlink" title="以下是我针对Node CommonJS的模块系统实现的GPT4o问答，仅供参考"></a>以下是我针对Node CommonJS的模块系统实现的GPT4o问答，仅供参考</h1><h2 id="一-请尽可能详细的介绍下node对commonJs模块规范的实现"><a href="#一-请尽可能详细的介绍下node对commonJs模块规范的实现" class="headerlink" title="一. 请尽可能详细的介绍下node对commonJs模块规范的实现"></a>一. 请尽可能详细的介绍下node对commonJs模块规范的实现</h2><p>Node.js 是 JavaScript 的运行时环境，它在服务器端和命令行工具中广泛应用。Node.js 最初的模块系统是基于 CommonJS 规范的，该规范定义了模块的导入和导出方式，使得模块化的代码结构成为可能。下面将详细介绍 Node.js 如何实现 CommonJS 模块规范。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T14:37:19.709Z" title="2024/10/16 22:37:19">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T14:45:38.753Z" title="2024/10/16 22:45:38">2024-10-16</time>更新</span><span class="level-item">1 小时读完 (大约7503个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/20240806/">Node CommonJS</a></p><div class="content"><h1 id="以下是我针对Node-CommonJS的模块系统实现的GPT4o问答，仅供参考"><a href="#以下是我针对Node-CommonJS的模块系统实现的GPT4o问答，仅供参考" class="headerlink" title="以下是我针对Node CommonJS的模块系统实现的GPT4o问答，仅供参考"></a>以下是我针对Node CommonJS的模块系统实现的GPT4o问答，仅供参考</h1><h2 id="一-请尽可能详细的介绍下node对commonJs模块规范的实现"><a href="#一-请尽可能详细的介绍下node对commonJs模块规范的实现" class="headerlink" title="一. 请尽可能详细的介绍下node对commonJs模块规范的实现"></a>一. 请尽可能详细的介绍下node对commonJs模块规范的实现</h2><p>Node.js 是 JavaScript 的运行时环境，它在服务器端和命令行工具中广泛应用。Node.js 最初的模块系统是基于 CommonJS 规范的，该规范定义了模块的导入和导出方式，使得模块化的代码结构成为可能。下面将详细介绍 Node.js 如何实现 CommonJS 模块规范。</p>
 <h3 id="1-模块的基本概念"><a href="#1-模块的基本概念" class="headerlink" title="1. 模块的基本概念"></a>1. 模块的基本概念</h3><p>在 Node.js 中，每个文件都被视为一个独立的模块。模块中的变量、函数等默认是私有的，其他模块无法直接访问。模块之间的通信通过导入和导出实现：</p>
 <ul>
 <li><strong>导出</strong>：使用 <code>module.exports</code> 或 <code>exports</code> 将模块的内容暴露给外部。</li>
@@ -1398,64 +921,7 @@
 </li>
 </ol>
 <h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a>总结</h3><p>包装函数并不只是 <code>require()</code> 时才会出现，而是每次 Node.js 加载和执行一个模块时都会使用。无论是加载入口文件还是通过 <code>require()</code> 加载其他模块，Node.js 都会为该模块的代码创建一个包装函数。这种机制确保了每个模块的代码在独立的作用域中运行，并为模块的导入、导出和模块化管理提供了基础。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2024/10/16/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/10/16/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-10-16 21:16:40" itemprop="dateCreated datePublished" datetime="2024-10-16T21:16:40+08:00">2024-10-16</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-16T13:16:40.454Z" title="2024/10/16 21:16:40">2024-10-16</time>发表</span><span class="level-item"><time dateTime="2024-10-16T13:16:40.454Z" title="2024/10/16 21:16:40">2024-10-16</time>更新</span><span class="level-item">1 分钟读完 (大约123个字)</span></div></div><p class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2024/10/16/hello-world/">Hello World</a></p><div class="content"><p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
@@ -1468,174 +934,48 @@
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
 <p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">John Doe</p>
-  <div class="site-description" itemprop="description"></div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">7</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-  </nav>
-</div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2024</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
-  </div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-</body>
-</html>
+</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Yanzx"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Yanzx</p><p class="is-size-6 is-block">Yanzx-Blog</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">7</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-16T14:37:19.722Z">2024-10-16</time></p><p class="title"><a href="/2024/10/16/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E4%B9%8B%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F/">Node 异步编程</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-16T14:37:19.719Z">2024-10-16</time></p><p class="title"><a href="/2024/10/16/vite%E9%A2%84%E6%9E%84%E5%BB%BA/">vite预构建</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-16T14:37:19.717Z">2024-10-16</time></p><p class="title"><a href="/2024/10/16/router_history%E6%A8%A1%E5%BC%8F/">vue-router history模式</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-16T14:37:19.714Z">2024-10-16</time></p><p class="title"><a href="/2024/10/16/MIME/">MIME</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-16T14:37:19.712Z">2024-10-16</time></p><p class="title"><a href="/2024/10/16/202408262_url%E7%BC%96%E7%A0%81/">URL 编码</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2024/10/"><span class="level-start"><span class="level-item">十月 2024</span></span><span class="level-end"><span class="level-item tag">7</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2024 John Doe</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
