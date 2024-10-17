@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Monorepo - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="以下是对 Monorepo、Turborepo、pnpm 这三个概念及其组合使用方式的详细介绍，每个部分都有深入的解释和实际的例子说明。 1. Monorepo 概念与优势Monorepo 是一种软件开发策略，将多个项目存放在同一个代码仓库（Repository）中，而不是为每个项目创建单独的仓库。这种做法在大型公司和复杂系统开发中越来越受欢迎，因为它有助于统一管理、共享代码和简化依赖管理。 优点"><meta property="og:type" content="blog"><meta property="og:title" content="Monorepo"><meta property="og:url" content="http://example.com/2024/10/17/20240816_monorepo/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="以下是对 Monorepo、Turborepo、pnpm 这三个概念及其组合使用方式的详细介绍，每个部分都有深入的解释和实际的例子说明。 1. Monorepo 概念与优势Monorepo 是一种软件开发策略，将多个项目存放在同一个代码仓库（Repository）中，而不是为每个项目创建单独的仓库。这种做法在大型公司和复杂系统开发中越来越受欢迎，因为它有助于统一管理、共享代码和简化依赖管理。 优点"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:published_time" content="2024-10-17T13:25:10.130Z"><meta property="article:modified_time" content="2024-10-17T13:36:05.465Z"><meta property="article:author" content="John Doe"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2024/10/17/20240816_monorepo/"},"headline":"Monorepo","image":["http://example.com/img/og_image.png"],"datePublished":"2024-10-17T13:25:10.130Z","dateModified":"2024-10-17T13:36:05.465Z","author":{"@type":"Person","name":"John Doe"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"以下是对 Monorepo、Turborepo、pnpm 这三个概念及其组合使用方式的详细介绍，每个部分都有深入的解释和实际的例子说明。 1. Monorepo 概念与优势Monorepo 是一种软件开发策略，将多个项目存放在同一个代码仓库（Repository）中，而不是为每个项目创建单独的仓库。这种做法在大型公司和复杂系统开发中越来越受欢迎，因为它有助于统一管理、共享代码和简化依赖管理。 优点"}</script><link rel="canonical" href="http://example.com/2024/10/17/20240816_monorepo/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-17T13:25:10.130Z" title="2024/10/17 21:25:10">2024-10-17</time>发表</span><span class="level-item"><time dateTime="2024-10-17T13:36:05.465Z" title="2024/10/17 21:36:05">2024-10-17</time>更新</span><span class="level-item">31 分钟读完 (大约4629个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">Monorepo</h1><div class="content"><p>以下是对 Monorepo、Turborepo、pnpm 这三个概念及其组合使用方式的详细介绍，每个部分都有深入的解释和实际的例子说明。</p>
+<h3 id="1-Monorepo-概念与优势"><a href="#1-Monorepo-概念与优势" class="headerlink" title="1. Monorepo 概念与优势"></a>1. <strong>Monorepo 概念与优势</strong></h3><p><strong>Monorepo</strong> 是一种软件开发策略，将多个项目存放在同一个代码仓库（Repository）中，而不是为每个项目创建单独的仓库。这种做法在大型公司和复杂系统开发中越来越受欢迎，因为它有助于统一管理、共享代码和简化依赖管理。</p>
+<h4 id="优点详解："><a href="#优点详解：" class="headerlink" title="优点详解："></a><strong>优点详解</strong>：</h4><ol>
+<li><p><strong>共享代码和资源</strong>：</p>
+<ul>
+<li><strong>问题</strong>：在多仓库（Multirepo）设置中，不同项目间的代码共享往往通过发布库到 npm、Maven 等外部仓库实现，这增加了额外的维护和版本管理负担。</li>
+<li><strong>解决方案</strong>：在 Monorepo 中，所有项目共享同一个代码库，可以直接引用和复用其他项目中的代码或资源。例如，一个 <code>shared-library</code> 可以被多个项目如 <code>project-a</code> 和 <code>project-b</code> 直接使用，无需发布和管理外部版本。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/my-monorepo</span><br><span class="line">  /packages</span><br><span class="line">    /project-a</span><br><span class="line">      /src</span><br><span class="line">      package.json</span><br><span class="line">    /project-b</span><br><span class="line">      /src</span><br><span class="line">      package.json</span><br><span class="line">    /shared-library</span><br><span class="line">      /src</span><br><span class="line">      package.json</span><br></pre></td></tr></table></figure>
+<p>在 <code>project-a</code> 中使用 <code>shared-library</code> 的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; utilityFunction &#125; <span class="keyword">from</span> <span class="string">&#x27;shared-library&#x27;</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>简化依赖管理</strong>：</p>
+<ul>
+<li><strong>问题</strong>：在多仓库中，不同项目的依赖版本可能不一致，导致不可预测的兼容性问题，特别是在使用共享库时。</li>
+<li><strong>解决方案</strong>：Monorepo 中可以集中管理所有项目的依赖。通过在根目录下的 <code>package.json</code> 中统一配置依赖版本，确保各项目之间的依赖版本一致。例如，<code>React</code> 或 <code>TypeScript</code> 的版本可以在 Monorepo 根目录下统一管理。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;my-monorepo&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;private&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;workspaces&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;packages/*&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;devDependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;typescript&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^4.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;eslint&quot;</span><span class="punctuation">:</span> <span class="string">&quot;^7.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>协作和工作流效率提升</strong>：</p>
+<ul>
+<li><strong>问题</strong>：多仓库管理会导致团队之间的协作复杂化，尤其是跨项目变更和代码审查。不同项目的代码可能分布在不同的仓库中，沟通和协作需要跨仓库进行，降低了效率。</li>
+<li><strong>解决方案</strong>：Monorepo 提供了一个统一的代码库，所有团队成员在同一个仓库中工作，极大简化了代码审查和协作流程。团队可以在同一平台上进行跨项目的变更、测试和发布操作，提高了整体开发效率。</li>
+</ul>
+<p><strong>示例</strong>：<br>在 Monorepo 中进行 Pull Request（PR），团队可以一次性审查跨多个项目的变更，而不需要在多个仓库间切换。</p>
+</li>
+</ol>
+<h4 id="目录结构示例："><a href="#目录结构示例：" class="headerlink" title="目录结构示例："></a><strong>目录结构示例</strong>：</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/my-monorepo</span><br><span class="line">  /packages</span><br><span class="line">    /project-a</span><br><span class="line">    /project-b</span><br><span class="line">    /shared-library</span><br><span class="line">  package.json  # 根目录管理依赖和统一的脚本</span><br><span class="line">  pnpm-workspace.yaml  # pnpm 的工作区配置文件</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-workspace-与-Monorepo-的关系"><a href="#2-workspace-与-Monorepo-的关系" class="headerlink" title="2. workspace:* 与 Monorepo 的关系"></a>2. <strong><code>workspace:*</code> 与 Monorepo 的关系</strong></h3><p>在 Monorepo 环境中，<code>workspace:*</code> 是一种特殊的依赖版本声明，表示该依赖项是工作区内的一个包，而不是从外部的 npm 仓库中下载。这种声明的主要作用是将本地工作区中的包作为依赖，并自动管理其版本。</p>
+<h4 id="作用详解："><a href="#作用详解：" class="headerlink" title="作用详解："></a><strong>作用详解</strong>：</h4><ol>
+<li><p><strong>本地开发和调试</strong>：</p>
+<ul>
+<li><strong>问题</strong>：传统的开发模式下，依赖本地包进行开发和调试时，需要频繁手动链接（如 <code>npm link</code>）或发布本地包，非常麻烦且容易出错。</li>
+<li><strong>解决方案</strong>：使用 <code>workspace:*</code> 依赖，可以直接使用 Monorepo 中其他项目的最新代码，无需额外配置。这极大简化了本地开发和调试的流程。</li>
+</ul>
+<p><strong>示例</strong>：<br>在 <code>project-b</code> 的 <code>package.json</code> 中依赖 <code>@vben/access</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;project-b&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;@vben/access&quot;</span><span class="punctuation">:</span> <span class="string">&quot;workspace:*&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这样，<code>project-b</code> 会直接引用 Monorepo 中 <code>@vben/access</code> 的最新代码，而不是从 npm 仓库获取。</p>
+</li>
+<li><p><strong>自动版本对齐</strong>：</p>
+<ul>
+<li><strong>问题</strong>：当多个项目共享相同的依赖包时，手动管理版本可能导致版本不一致的问题，造成难以调试的 bug。</li>
+<li><strong>解决方案</strong>：<code>workspace:*</code> 确保所有引用相同包的项目始终使用一致的版本，并且版本变动时会自动更新。例如，更新 <code>@vben/access</code> 包的代码后，所有依赖它的项目都会自动使用最新的代码。</li>
+</ul>
+<p><strong>示例</strong>：<br>当 <code>@vben/access</code> 更新后，<code>project-b</code> 会自动获取最新版本，无需手动更新版本号。</p>
+</li>
+</ol>
+<hr>
+<h3 id="3-本地依赖管理：确保包的更新"><a href="#3-本地依赖管理：确保包的更新" class="headerlink" title="3. 本地依赖管理：确保包的更新"></a>3. <strong>本地依赖管理：确保包的更新</strong></h3><p>在 Monorepo 中，如果某个包变动了，需要确保所有依赖该包的项目能自动获取最新版本。以下是几种确保包更新的常见方法：</p>
+<h4 id="自动更新依赖详解："><a href="#自动更新依赖详解：" class="headerlink" title="自动更新依赖详解："></a><strong>自动更新依赖详解</strong>：</h4><ol>
+<li><p><strong><code>workspace:*</code> 自动更新</strong>：</p>
+<ul>
+<li><strong>作用</strong>：当一个包更新后，所有使用 <code>workspace:*</code> 声明的依赖会自动更新到最新版本。这在 Monorepo 中非常有用，可以避免手动管理各项目的依赖版本。</li>
+<li><strong>例子</strong>：在 <code>project-b</code> 中依赖 <code>@vben/access</code>，当 <code>@vben/access</code> 更新后，<code>project-b</code> 会自动使用最新代码，无需手动操作。</li>
+</ul>
+</li>
+<li><p><strong>使用工具进行依赖同步</strong>：</p>
+<ul>
+<li><strong>Yarn Workspaces</strong>：<ul>
+<li><strong>命令</strong>：<code>yarn install</code> 和 <code>yarn upgrade</code> 可以自动同步和更新依赖。</li>
+<li><strong>示例</strong>：运行 <code>yarn install</code> 会确保所有项目的依赖都与最新的包对齐。</li>
+</ul>
+</li>
+<li><strong>pnpm Workspaces</strong>：<ul>
+<li><strong>命令</strong>：<code>pnpm install</code> 和 <code>pnpm update</code> 可以同步更新所有依赖关系。</li>
+<li><strong>示例</strong>：<code>pnpm update</code> 更新 Monorepo 中所有包的依赖版本。</li>
+</ul>
+</li>
+<li><strong>Lerna</strong>：<ul>
+<li><strong>命令</strong>：<code>lerna bootstrap</code> 重新安装依赖，并确保所有项目之间的链接是最新的。</li>
+<li><strong>示例</strong>：运行 <code>lerna bootstrap</code>，会重新链接所有项目，使依赖保持最新。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>使用变动检测工具</strong>：</p>
+<ul>
+<li><strong>Nx</strong>：<ul>
+<li><strong>作用</strong>：Nx 是一个 Monorepo 工具，可以智能检测变动的依赖关系，并触发相关项目的重建。</li>
+<li><strong>示例</strong>：当 <code>shared-library</code> 发生变动，Nx 可以自动触发依赖 <code>shared-library</code> 的所有项目进行重建和测试。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>设置自动化流程</strong>：</p>
+<ul>
+<li><strong>CI&#x2F;CD 集成</strong>：<ul>
+<li><strong>作用</strong>：在 CI&#x2F;CD 中集成依赖更新检测和处理流程，确保每次发布前所有依赖都保持最新。</li>
+<li><strong>示例</strong>：在 CI 流程中，设置脚本检测并安装最新的依赖版本，然后进行构建和测试。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="手动版本管理："><a href="#手动版本管理：" class="headerlink" title="手动版本管理："></a><strong>手动版本管理</strong>：</h4><ol>
+<li><p><strong>手动发布和升级</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：先发布新版本的包，然后在 Monorepo 中运行依赖更新命令，确保所有项目都使用新版本。</li>
+<li><strong>例子</strong>：使用 <code>lerna publish</code> 发布新版本，然后运行 <code>pnpm install</code> 来更新依赖。</li>
+</ul>
+</li>
+<li><p><strong>版本号同步</strong>：</p>
+<ul>
+<li><strong>作用</strong>：在 <code>package.json</code> 中保持一致的版本号，确保手动升级时不会发生版本错乱。</li>
+<li><strong>示例</strong>：所有项目的 <code>package.json</code> 中都引用相同的依赖版本，减少手动维护的工作量。</li>
+</ul>
+</li>
+</ol>
+<h4 id="监控和通知："><a href="#监控和通知：" class="headerlink" title="监控和通知："></a><strong>监控和通知</strong>：</h4><ol>
+<li><p><strong>监控依赖变动</strong>：</p>
+<ul>
+<li><strong>方法</strong>：使用 Git hooks 或 CI 工具监控依赖的变动，并自动触发更新。</li>
+<li><strong>示例</strong>：设置 Git hook，当 Monorepo 中的某个包发生变动时，自动触发依赖更新脚本。</li>
+</ul>
+</li>
+<li><p><strong>通知机制</strong>：</p>
+<ul>
+<li><strong>作用</strong>：配置通知工具，如 Slack 或电子邮件，提醒相关开发者注意依赖包的更新。</li>
+<li><strong>示例</strong>：设置 Slack 通知</li>
+</ul>
+</li>
+</ol>
+<p>，当某个重要依赖包更新时，自动发送通知提醒开发者进行必要的操作。</p>
+<hr>
+<h3 id="4-本地组件的处理方式"><a href="#4-本地组件的处理方式" class="headerlink" title="4. 本地组件的处理方式"></a>4. <strong>本地组件的处理方式</strong></h3><p>在 Monorepo 中，项目之间通常会共享一些本地组件（如 UI 组件库、工具函数库）。这些本地组件如何管理和引用，直接影响到开发效率和项目的维护性。</p>
+<h4 id="处理本地组件的几种方法："><a href="#处理本地组件的几种方法：" class="headerlink" title="处理本地组件的几种方法："></a><strong>处理本地组件的几种方法</strong>：</h4><ol>
+<li><p><strong>提取为子模块（Submodules）</strong>：</p>
+<ul>
+<li><strong>方法</strong>：将本地组件直接放置在 Monorepo 的 <code>packages</code> 目录下，并作为一个独立的包管理。</li>
+<li><strong>优点</strong>：组件可以作为独立的包进行版本管理和发布，也可以在 Monorepo 内被多个项目直接引用。</li>
+<li><strong>缺点</strong>：需要管理版本号和发布流程，适合复杂和常用的组件库。</li>
+</ul>
+<p><strong>示例</strong>：<br>假设有一个共享组件库 <code>shared-ui</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/my-monorepo</span><br><span class="line">  /packages</span><br><span class="line">    /project-a</span><br><span class="line">    /project-b</span><br><span class="line">    /shared-ui  # 本地组件库</span><br><span class="line">      /src</span><br><span class="line">      package.json</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>project-a</code> 中引用 <code>shared-ui</code>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;project-a&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;shared-ui&quot;</span><span class="punctuation">:</span> <span class="string">&quot;workspace:*&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 <code>file:</code> 依赖</strong>：</p>
+<ul>
+<li><strong>方法</strong>：将本地组件打包为 <code>.tgz</code> 文件，并使用 <code>file:</code> 依赖方式在 <code>package.json</code> 中引用。</li>
+<li><strong>优点</strong>：适合临时或私有的组件共享，不需要发布到公共 npm 仓库。</li>
+<li><strong>缺点</strong>：每次组件更新后，需要重新打包并更新引用路径。</li>
+</ul>
+<p><strong>示例</strong>：<br>假设你打包了 <code>shared-ui</code> 组件库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> packages/shared-ui</span><br><span class="line">npm pack  <span class="comment"># 打包为 .tgz 文件</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在 <code>project-b</code> 中引用：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;project-b&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;shared-ui&quot;</span><span class="punctuation">:</span> <span class="string">&quot;file:../shared-ui/shared-ui-1.0.0.tgz&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用符号链接（Symlinks）</strong>：</p>
+<ul>
+<li><strong>方法</strong>：在本地开发时，使用符号链接（如 <code>npm link</code> 或 <code>yarn link</code>）将组件库链接到依赖它的项目中。</li>
+<li><strong>优点</strong>：非常适合本地开发和调试，能快速测试组件更新效果。</li>
+<li><strong>缺点</strong>：符号链接可能在跨平台（如 Windows 和 Unix 系统）或 CI 环境中表现不一致，且生产环境中不推荐使用。</li>
+</ul>
+<p><strong>示例</strong>：<br>使用 <code>npm link</code> 连接 <code>shared-ui</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> packages/shared-ui</span><br><span class="line">npm <span class="built_in">link</span>  <span class="comment"># 创建全局链接</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ../project-a</span><br><span class="line">npm <span class="built_in">link</span> shared-ui  <span class="comment"># 在项目中引用</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>发布到私有 npm 仓库</strong>：</p>
+<ul>
+<li><strong>方法</strong>：将本地组件发布到公司内部的私有 npm 仓库，其他项目通过 npm install 来获取该组件。</li>
+<li><strong>优点</strong>：适合需要严格管理版本的组件，确保每次变更都经过发布流程。</li>
+<li><strong>缺点</strong>：增加了发布和管理的复杂性，需要维护私有 npm 仓库。</li>
+</ul>
+<p><strong>示例</strong>：<br>你可以将 <code>shared-ui</code> 发布到私有 npm 仓库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish --registry http://private-registry.example.com</span><br></pre></td></tr></table></figure>
+
+<p>然后在 <code>project-b</code> 中通过私有仓库安装：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;project-b&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;shared-ui&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;publishConfig&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;registry&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://private-registry.example.com&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<h3 id="5-Turborepo：优化-Monorepo-的构建与开发流程"><a href="#5-Turborepo：优化-Monorepo-的构建与开发流程" class="headerlink" title="5. Turborepo：优化 Monorepo 的构建与开发流程"></a>5. <strong>Turborepo：优化 Monorepo 的构建与开发流程</strong></h3><p><strong>Turborepo</strong> 是一个现代化的构建系统，专门为 Monorepo 环境设计，能够大幅提升构建和开发流程的效率。它通过增量构建、缓存、任务管道和并行执行等机制，优化大型项目的开发体验。</p>
+<h4 id="Turborepo-的核心特性："><a href="#Turborepo-的核心特性：" class="headerlink" title="Turborepo 的核心特性："></a><strong>Turborepo 的核心特性</strong>：</h4><ol>
+<li><p><strong>增量构建</strong>：</p>
+<ul>
+<li><strong>概念</strong>：增量构建意味着只重新构建受影响的部分，而不是整个项目。Turborepo 能智能检测哪些部分需要重建，从而显著减少构建时间。</li>
+<li><strong>例子</strong>：当你在 <code>shared-library</code> 中修改了一些代码，只会触发依赖它的项目进行重新构建，而不影响其他独立的项目。</li>
+</ul>
+</li>
+<li><p><strong>缓存机制</strong>：</p>
+<ul>
+<li><strong>概念</strong>：Turborepo 可以缓存构建结果和测试结果。当代码没有变动时，直接使用缓存结果，避免重复构建。</li>
+<li><strong>例子</strong>：第一次构建可能耗时较长，但第二次构建如果没有代码变动，可以瞬间完成。</li>
+</ul>
+</li>
+<li><p><strong>任务管道</strong>：</p>
+<ul>
+<li><strong>概念</strong>：Turborepo 允许你定义任务的依赖关系，并以最优顺序执行。例如，构建任务可以依赖测试任务，确保所有代码都通过测试后才进行构建。</li>
+<li><strong>例子</strong>：你可以定义一个管道，让所有项目先通过单元测试，然后再进行构建，最后进行发布。</li>
+</ul>
+</li>
+<li><p><strong>并行执行</strong>：</p>
+<ul>
+<li><strong>概念</strong>：Turborepo 能够并行执行任务，充分利用多核 CPU，提升执行效率。</li>
+<li><strong>例子</strong>：当你在多个项目上运行测试时，可以同时进行，而不是一个接一个地执行。</li>
+</ul>
+</li>
+</ol>
+<h4 id="与-Monorepo-的集成："><a href="#与-Monorepo-的集成：" class="headerlink" title="与 Monorepo 的集成："></a><strong>与 Monorepo 的集成</strong>：</h4><p>Turborepo 与 Monorepo 的配合非常紧密，特别是在复杂的项目结构中。通过 Turborepo 的管道配置和缓存管理，可以极大提高 Monorepo 的开发和构建效率。</p>
+<h4 id="配置-Turborepo-的步骤："><a href="#配置-Turborepo-的步骤：" class="headerlink" title="配置 Turborepo 的步骤："></a><strong>配置 Turborepo 的步骤</strong>：</h4><ol>
+<li><p><strong>安装 Turborepo</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：在你的 Monorepo 根目录下安装 Turborepo。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm add turbo -D</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>定义 <code>turbo.json</code> 配置</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：在根目录下创建 <code>turbo.json</code> 配置文件，定义构建和测试的任务管道。<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;$schema&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://turbo.build/schema.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pipeline&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;dependsOn&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;^build&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;outputs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;dist/**&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;dependsOn&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;build&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;outputs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>解释</strong>：上面配置定义了两个任务 <code>build</code> 和 <code>test</code>，其中 <code>build</code> 任务依赖于其他项目的 <code>build</code>，而 <code>test</code> 任务依赖于 <code>build</code> 完成后执行。</li>
+</ul>
+</li>
+<li><p><strong>运行 Turborepo</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：使用 Turborepo 来执行任务，如构建或测试。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm turbo run build</span><br></pre></td></tr></table></figure></li>
+<li><strong>解释</strong>：此命令会按照管道顺序依次构建各个项目，并根据需要并行或串行执行任务。</li>
+</ul>
+</li>
+<li><p><strong>使用缓存</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：配置缓存策略，在重复构建时使用缓存以节省时间。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm turbo run build --force</span><br></pre></td></tr></table></figure></li>
+<li><strong>解释</strong>：通过配置缓存策略，可以跳过不必要的构建任务，直接使用上一次的结果。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="6-pnpm：高效的依赖管理工具"><a href="#6-pnpm：高效的依赖管理工具" class="headerlink" title="6. pnpm：高效的依赖管理工具"></a>6. <strong>pnpm：高效的依赖管理工具</strong></h3><p><strong>pnpm</strong> 是一个高效的包管理工具，特别适合在 Monorepo 环境中使用。相比 npm 和 Yarn，pnpm 的主要优势在于其独特的符号链接机制，极大减少了磁盘空间的占用，并且加快了依赖的安装速度。</p>
+<h4 id="pnpm-的核心特性："><a href="#pnpm-的核心特性：" class="headerlink" title="pnpm 的核心特性："></a><strong>pnpm 的核心特性</strong>：</h4><ol>
+<li><p><strong>符号链接机制</strong>：</p>
+<ul>
+<li><strong>概念</strong>：pnpm 通过将依赖包安装在共享的全局存储中，并在每个项目中使用符号链接指向这些依赖，避免重复安装相同的依赖包。</li>
+<li><strong>优点</strong>：减少磁盘空间占用，加快安装速度。</li>
+<li><strong>例子</strong>：在一个项目中安装了 <code>react</code>，其他项目依赖 <code>react</code> 时，不会再次下载，而是直接链接到全局存储中的 <code>react</code>。</li>
+</ul>
+</li>
+<li><p><strong>工作区支持</strong>：</p>
+<ul>
+<li><strong>概念</strong>：pnpm 支持工作区（Workspaces），允许在 Monorepo 中统一管理多个项目的依赖关系。</li>
+<li><strong>优点</strong>：简化了跨项目的依赖管理，使得 Monorepo 内的各项目能够共享依赖。</li>
+<li>**例子</li>
+</ul>
+</li>
+</ol>
+<p><strong>例子</strong>：在 <code>pnpm-workspace.yaml</code> 中定义工作区，将 Monorepo 中的各个项目统一管理：<br>   <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">packages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;packages/*&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;shared/*&#x27;</span></span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li><strong>快速的依赖安装</strong>：<ul>
+<li><strong>概念</strong>：pnpm 通过并行处理和缓存机制，加快了依赖安装的速度，特别是在大规模项目中表现尤为突出。</li>
+<li><strong>优点</strong>：即使在初次安装时，pnpm 的安装速度也比 npm 和 Yarn 更快，极大提升了开发效率。</li>
+<li><strong>例子</strong>：运行 <code>pnpm install</code> 安装所有依赖包时，比 npm 或 Yarn 快得多，特别是在依赖项复杂或数量庞大时。</li>
+</ul>
+</li>
+</ol>
+<h4 id="pnpm-与-Turborepo-的集成："><a href="#pnpm-与-Turborepo-的集成：" class="headerlink" title="pnpm 与 Turborepo 的集成："></a><strong>pnpm 与 Turborepo 的集成</strong>：</h4><p>pnpm 与 Turborepo 一起使用，可以极大优化 Monorepo 的开发和构建流程。pnpm 负责高效地管理和安装依赖，而 Turborepo 负责优化构建和任务执行，两者结合可以使 Monorepo 的开发体验达到最佳状态。</p>
+<h3 id="构建完整系统的步骤："><a href="#构建完整系统的步骤：" class="headerlink" title="构建完整系统的步骤："></a><strong>构建完整系统的步骤</strong>：</h3><ol>
+<li><p><strong>设置 Monorepo</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：在项目根目录下初始化一个 Monorepo，创建 <code>packages</code> 目录来存放各个子项目。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> my-monorepo</span><br><span class="line"><span class="built_in">cd</span> my-monorepo</span><br><span class="line"><span class="built_in">mkdir</span> packages</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>配置 pnpm 工作区</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：在 Monorepo 根目录下创建 <code>pnpm-workspace.yaml</code>，定义工作区路径。<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">packages:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;packages/*&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>解释</strong>：这个配置将 <code>packages</code> 目录中的所有项目纳入到工作区中，方便统一管理。</li>
+</ul>
+</li>
+<li><p><strong>安装 pnpm 和 Turborepo</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：安装 pnpm 和 Turborepo 作为开发依赖。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm add -D pnpm turbo</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>管理依赖</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：在各个子项目的 <code>package.json</code> 中使用 <code>workspace:*</code> 或直接引用根目录的依赖版本，实现统一管理。<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;project-a&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;shared-library&quot;</span><span class="punctuation">:</span> <span class="string">&quot;workspace:*&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>配置 Turborepo 管道</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：在 Monorepo 根目录下创建 <code>turbo.json</code>，定义任务管道，如构建、测试、发布等。<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;$schema&quot;</span><span class="punctuation">:</span> <span class="string">&quot;https://turbo.build/schema.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pipeline&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;build&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;dependsOn&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;^build&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;outputs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;dist/**&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;dependsOn&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;build&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;outputs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>执行构建与测试</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：使用 Turborepo 的命令来运行构建和测试任务，确保所有项目按依赖顺序执行任务。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm turbo run build</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>优化与维护</strong>：</p>
+<ul>
+<li><strong>步骤</strong>：使用 Turborepo 的缓存和增量构建特性，优化构建速度；使用 pnpm 的工作区和符号链接机制，优化依赖管理。定期更新依赖并使用 <code>pnpm update</code> 确保所有项目使用最新版本的包。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pnpm update --recursive</span><br></pre></td></tr></table></figure>
+<p>这个命令会递归更新 Monorepo 中所有项目的依赖到最新版本。</p>
+</li>
+</ol>
+<hr>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a><strong>总结</strong>：</h3><ul>
+<li><strong>Monorepo</strong> 是一种将多个项目存放在同一个仓库中的策略，具有共享代码、简化依赖管理和提升协作效率的优点。</li>
+<li><code>workspace:*</code> 是 Monorepo 中用来引用本地包的依赖声明，确保所有项目使用最新的代码版本。</li>
+<li><strong>Turborepo</strong> 是一个为 Monorepo 优化的构建工具，支持增量构建、缓存、任务管道和并行执行，极大提升了构建效率。</li>
+<li><strong>pnpm</strong> 是一个高效的包管理工具，特别适合在 Monorepo 中使用，通过符号链接机制节省磁盘空间并加快依赖安装速度。</li>
+<li>通过将 <strong>Monorepo</strong>、<strong>Turborepo</strong> 和 <strong>pnpm</strong> 结合使用，可以构建出一个高效、可扩展且易于维护的开发系统，适合管理复杂的大型项目。</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Monorepo</p><p><a href="http://example.com/2024/10/17/20240816_monorepo/">http://example.com/2024/10/17/20240816_monorepo/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>John Doe</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2024-10-17</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-10-17</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2024/10/17/20240816/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">mask-image</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2024/10/17/20240806_1/"><span class="level-item">Vite 资源路径处理与构建配置</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Yanzx"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Yanzx</p><p class="is-size-6 is-block">Yanzx-Blog</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">15</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:11.117Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/%E8%A1%8C%E5%86%85%E4%B8%8E%E6%A0%B7%E5%BC%8F%E8%A1%A8/">行内样式表与内部样式表</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.916Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/v8%E4%B8%AD%E7%9A%84%E6%A0%88_%E5%A0%86%E5%86%85%E5%AD%98/">V8垃圾回收</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.720Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240823_%E4%BC%AA%E5%85%83%E7%B4%A0/">CSS 伪元素</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.720Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240830_%E4%BA%A4%E6%8D%A2%E6%9C%BA/">交换机与路由器的作用及数据帧处理机制总结</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.527Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240816_unocss/">Unocss</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2024/10/"><span class="level-start"><span class="level-item">十月 2024</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2024 John Doe</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

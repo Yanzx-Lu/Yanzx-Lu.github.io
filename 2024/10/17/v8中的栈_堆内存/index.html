@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>V8垃圾回收 - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="当开始进行垃圾回收时，会检查From空间中的存活对象在垃圾回收过程中，检查对象是否存活的方式通常是通过根集合（Root Set）和可达性分析来完成的。具体步骤如下：  根集合的定义：  根集合包括程序执行期间所有全局变量、栈中的引用、寄存器中的引用等。这些引用可以直接访问到程序中的对象。   可达性分析：  从根集合开始，垃圾回收器会遍历每一个引用，检查这些引用指向的对象。 对于每一个被引用的对象"><meta property="og:type" content="blog"><meta property="og:title" content="V8垃圾回收"><meta property="og:url" content="http://example.com/2024/10/17/v8%E4%B8%AD%E7%9A%84%E6%A0%88_%E5%A0%86%E5%86%85%E5%AD%98/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="当开始进行垃圾回收时，会检查From空间中的存活对象在垃圾回收过程中，检查对象是否存活的方式通常是通过根集合（Root Set）和可达性分析来完成的。具体步骤如下：  根集合的定义：  根集合包括程序执行期间所有全局变量、栈中的引用、寄存器中的引用等。这些引用可以直接访问到程序中的对象。   可达性分析：  从根集合开始，垃圾回收器会遍历每一个引用，检查这些引用指向的对象。 对于每一个被引用的对象"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:published_time" content="2024-10-17T13:25:10.916Z"><meta property="article:modified_time" content="2024-10-17T13:33:56.113Z"><meta property="article:author" content="John Doe"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2024/10/17/v8%E4%B8%AD%E7%9A%84%E6%A0%88_%E5%A0%86%E5%86%85%E5%AD%98/"},"headline":"V8垃圾回收","image":["http://example.com/img/og_image.png"],"datePublished":"2024-10-17T13:25:10.916Z","dateModified":"2024-10-17T13:33:56.113Z","author":{"@type":"Person","name":"John Doe"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"当开始进行垃圾回收时，会检查From空间中的存活对象在垃圾回收过程中，检查对象是否存活的方式通常是通过根集合（Root Set）和可达性分析来完成的。具体步骤如下：  根集合的定义：  根集合包括程序执行期间所有全局变量、栈中的引用、寄存器中的引用等。这些引用可以直接访问到程序中的对象。   可达性分析：  从根集合开始，垃圾回收器会遍历每一个引用，检查这些引用指向的对象。 对于每一个被引用的对象"}</script><link rel="canonical" href="http://example.com/2024/10/17/v8%E4%B8%AD%E7%9A%84%E6%A0%88_%E5%A0%86%E5%86%85%E5%AD%98/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-17T13:25:10.916Z" title="2024/10/17 21:25:10">2024-10-17</time>发表</span><span class="level-item"><time dateTime="2024-10-17T13:33:56.113Z" title="2024/10/17 21:33:56">2024-10-17</time>更新</span><span class="level-item">31 分钟读完 (大约4617个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">V8垃圾回收</h1><div class="content"><h2 id="当开始进行垃圾回收时，会检查From空间中的存活对象"><a href="#当开始进行垃圾回收时，会检查From空间中的存活对象" class="headerlink" title="当开始进行垃圾回收时，会检查From空间中的存活对象"></a>当开始进行垃圾回收时，会检查From空间中的存活对象</h2><p>在垃圾回收过程中，检查对象是否存活的方式通常是通过<strong>根集合（Root Set）</strong>和<strong>可达性分析</strong>来完成的。具体步骤如下：</p>
+<ol>
+<li><p><strong>根集合的定义</strong>：</p>
+<ul>
+<li>根集合包括程序执行期间所有全局变量、栈中的引用、寄存器中的引用等。这些引用可以直接访问到程序中的对象。</li>
+</ul>
+</li>
+<li><p><strong>可达性分析</strong>：</p>
+<ul>
+<li>从根集合开始，垃圾回收器会遍历每一个引用，检查这些引用指向的对象。</li>
+<li>对于每一个被引用的对象，垃圾回收器会递归地检查这些对象引用的其他对象。</li>
+</ul>
+</li>
+<li><p><strong>标记存活对象</strong>：</p>
+<ul>
+<li>在遍历过程中，垃圾回收器会标记所有从根集合出发可以直接或间接到达的对象，认为它们是“存活”的。</li>
+</ul>
+</li>
+<li><p><strong>复制存活对象</strong>：</p>
+<ul>
+<li>在 <code>Scavenge</code> 算法中，所有被标记为存活的对象会被复制到 <code>To</code> 空间，而未被标记的对象则被认为是不可达的，将被自动回收，即它们所占用的内存会被释放。</li>
+</ul>
+</li>
+</ol>
+<p>具体到 <code>Cheney</code> 算法中，垃圾回收器采用<strong>广度优先遍历</strong>的方法进行存活性检查：</p>
+<ul>
+<li>先从根集合中的对象开始，依次把每个存活的对象从 <code>From</code> 空间复制到 <code>To</code> 空间。每当复制一个对象时，它所引用的对象也会被检查并复制到 <code>To</code> 空间。</li>
+<li>这个过程会一直持续到所有存活的对象都被复制完毕。</li>
+</ul>
+<p>通过上述方式，垃圾回收器可以有效地识别哪些对象还在使用，哪些对象可以被安全回收。</p>
+<h2 id="v8中-在代码运行阶段，垃圾回收是在什么时候进行的"><a href="#v8中-在代码运行阶段，垃圾回收是在什么时候进行的" class="headerlink" title="v8中 在代码运行阶段，垃圾回收是在什么时候进行的"></a>v8中 在代码运行阶段，垃圾回收是在什么时候进行的</h2><p>在 V8 引擎中，垃圾回收的触发时机通常与以下几个因素有关：</p>
+<h3 id="1-内存分配触发："><a href="#1-内存分配触发：" class="headerlink" title="1. 内存分配触发："></a>1. <strong>内存分配触发</strong>：</h3><ul>
+<li>当程序请求分配内存时，如果发现当前堆内存空间不足，V8 会尝试触发垃圾回收来释放不再使用的内存。</li>
+<li>特别是在新生代堆区（如 <code>Scavenge</code> 算法所管理的区域），对象创建和分配非常频繁，因此垃圾回收在此区域的触发也是相对频繁的。</li>
+</ul>
+<h3 id="2-内存使用达到阈值："><a href="#2-内存使用达到阈值：" class="headerlink" title="2. 内存使用达到阈值："></a>2. <strong>内存使用达到阈值</strong>：</h3><ul>
+<li>V8 维护着一些内存使用的阈值，当内存使用接近或超过这些阈值时，垃圾回收会被触发。</li>
+<li>这通常包括整个堆空间使用量的阈值，或者某个特定区域（如老生代区域）达到一定的使用量。</li>
+</ul>
+<h3 id="3-代码执行空闲时："><a href="#3-代码执行空闲时：" class="headerlink" title="3. 代码执行空闲时："></a>3. <strong>代码执行空闲时</strong>：</h3><ul>
+<li>在代码执行过程中，V8 会尝试在某些“空闲时间”（Idle Time）触发垃圾回收。所谓的空闲时间指的是在程序没有紧迫任务的间隙，比如在事件循环等待 I&#x2F;O 操作的过程中。</li>
+<li>V8 的垃圾回收器设计成尽可能在这些空闲时段工作，以尽量减少对程序主线程的干扰，提升应用的响应速度。</li>
+</ul>
+<h3 id="4-事件循环："><a href="#4-事件循环：" class="headerlink" title="4. 事件循环："></a>4. <strong>事件循环</strong>：</h3><ul>
+<li>在 JavaScript 的事件循环中，每次事件处理完毕之后，垃圾回收器有机会检查是否需要执行垃圾回收。这样可以在不打断事件处理的情况下，逐步释放不再使用的内存。</li>
+</ul>
+<h3 id="5-显式调用："><a href="#5-显式调用：" class="headerlink" title="5. 显式调用："></a>5. <strong>显式调用</strong>：</h3><ul>
+<li>虽然不推荐，但开发者可以通过调用 <code>gc()</code> 函数来显式触发垃圾回收（前提是在 V8 开启了该功能并允许开发者手动调用）。这在某些调试或测试环境中可能会使用，但在生产代码中很少见。</li>
+</ul>
+<h3 id="6-其他条件："><a href="#6-其他条件：" class="headerlink" title="6. 其他条件："></a>6. <strong>其他条件</strong>：</h3><ul>
+<li>V8 还可能在检测到程序的内存分配模式发生变化时触发垃圾回收，例如突然的大量对象分配或释放。</li>
+<li>此外，V8 还会通过监控垃圾回收的效果（如回收率和回收时间）来动态调整垃圾回收触发的频率和方式。</li>
+</ul>
+<p>总结来说，V8 的垃圾回收机制是一个动态的过程，基于多种因素来决定具体的触发时机，旨在平衡内存管理的效率和程序的运行性能。</p>
+<h2 id="为什么在垃圾回收中只涉及到堆内存"><a href="#为什么在垃圾回收中只涉及到堆内存" class="headerlink" title="为什么在垃圾回收中只涉及到堆内存"></a>为什么在垃圾回收中只涉及到堆内存</h2><p>垃圾回收机制主要针对<strong>堆内存</strong>，而不涉及<strong>栈内存</strong>，原因与堆和栈的内存管理方式及用途有关。以下是其中的关键原因：</p>
+<h3 id="1-堆内存的动态分配："><a href="#1-堆内存的动态分配：" class="headerlink" title="1. 堆内存的动态分配："></a>1. <strong>堆内存的动态分配</strong>：</h3><ul>
+<li><strong>堆内存</strong>用于存储在运行时动态分配的对象。这些对象的生命周期并不确定，可能会在程序的不同部分被引用，需要复杂的内存管理和回收机制来确保不再使用的对象能够被回收，从而释放内存。</li>
+<li>由于对象的创建和销毁是动态的、不确定的，所以需要垃圾回收器来自动管理这些对象的生命周期，避免内存泄漏。</li>
+</ul>
+<h3 id="2-栈内存的自动管理："><a href="#2-栈内存的自动管理：" class="headerlink" title="2. 栈内存的自动管理："></a>2. <strong>栈内存的自动管理</strong>：</h3><ul>
+<li><strong>栈内存</strong>主要用于存储局部变量和函数调用信息（如函数的参数、返回地址、局部变量等）。这些数据的生命周期是非常明确和有序的，即当函数调用结束时，其在栈上的内存会自动释放。</li>
+<li>栈内存的这种“后进先出”（LIFO）管理模式非常简单高效，不需要额外的垃圾回收机制。每当函数返回时，栈指针会自动移回到调用函数的状态，所有在此函数中分配的局部变量都会被自动销毁。</li>
+</ul>
+<h3 id="3-堆内存的复杂结构："><a href="#3-堆内存的复杂结构：" class="headerlink" title="3. 堆内存的复杂结构："></a>3. <strong>堆内存的复杂结构</strong>：</h3><ul>
+<li>堆内存中的对象可以被多个引用所指向，形成复杂的引用图结构（如对象之间的相互引用）。这种复杂性使得简单的栈内存管理策略无法适用，因此需要专门的垃圾回收算法来判断哪些对象仍然存活，哪些对象可以被回收。</li>
+</ul>
+<h3 id="4-性能与效率的考量："><a href="#4-性能与效率的考量：" class="headerlink" title="4. 性能与效率的考量："></a>4. <strong>性能与效率的考量</strong>：</h3><ul>
+<li>栈内存的操作（如分配和释放）非常快速且简单，主要依赖于栈指针的移动，不涉及复杂的内存管理。</li>
+<li>垃圾回收器在堆内存中工作时，需要遍历对象、更新引用、复制对象等操作，这些操作比较耗时，但对于栈内存来说完全不必要，因此只针对堆内存进行垃圾回收更为高效。</li>
+</ul>
+<h3 id="5-内存模型的设计："><a href="#5-内存模型的设计：" class="headerlink" title="5. 内存模型的设计："></a>5. <strong>内存模型的设计</strong>：</h3><ul>
+<li>现代编程语言和虚拟机（如 V8 引擎）的内存模型通常会将内存分为堆和栈两个部分，以便优化内存管理。垃圾回收机制作为这一设计的组成部分，专门负责堆内存的管理，而栈内存则依靠自动化的内存释放机制（如函数调用栈的弹出）来管理。</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>垃圾回收器只管理堆内存，是因为堆内存的动态性和复杂性需要额外的内存管理机制，而栈内存的管理则相对简单，并且已经通过函数调用的生命周期自然管理，无需垃圾回收的介入。这种设计优化了程序的性能和内存利用效率。</p>
+<h2 id="在v8中什么样的数据会放到堆内存中，什么样的数据会放到栈内存中，以及最后他们是如何释放的"><a href="#在v8中什么样的数据会放到堆内存中，什么样的数据会放到栈内存中，以及最后他们是如何释放的" class="headerlink" title="在v8中什么样的数据会放到堆内存中，什么样的数据会放到栈内存中，以及最后他们是如何释放的"></a>在v8中什么样的数据会放到堆内存中，什么样的数据会放到栈内存中，以及最后他们是如何释放的</h2><p>在 V8 引擎（以及大多数现代 JavaScript 引擎）中，内存分为<strong>堆内存</strong>和<strong>栈内存</strong>，不同类型的数据会被存储在这两个区域中。以下是关于堆内存和栈内存中存储的数据类型以及它们的释放机制的详细解释：</p>
+<h3 id="1-栈内存（Stack-Memory）"><a href="#1-栈内存（Stack-Memory）" class="headerlink" title="1. 栈内存（Stack Memory）"></a>1. <strong>栈内存（Stack Memory）</strong></h3><p>栈内存用于存储生命周期较短且大小固定的数据。这些数据通常包括：</p>
+<ul>
+<li><p><strong>原始类型的变量</strong>：</p>
+<ul>
+<li>如 <code>number</code>（数字）、<code>boolean</code>（布尔值）、<code>null</code>、<code>undefined</code>、<code>symbol</code>（符号）等，它们的大小固定，可以直接存储在栈中。</li>
+<li>例如，<code>let x = 42;</code> 中的 <code>x</code> 是一个数字类型，存储在栈内存中。</li>
+</ul>
+</li>
+<li><p><strong>函数调用帧</strong>：</p>
+<ul>
+<li>当函数被调用时，函数的局部变量、参数和返回地址会被存储在栈内存中。</li>
+<li>这些数据随着函数调用的结束而自动释放。</li>
+</ul>
+</li>
+</ul>
+<h4 id="栈内存的释放："><a href="#栈内存的释放：" class="headerlink" title="栈内存的释放："></a>栈内存的释放：</h4><ul>
+<li><strong>自动释放</strong>：栈内存采用后进先出（LIFO）的管理方式，函数调用结束时，栈指针自动回退，相应的局部变量和函数帧会被自动释放。这种自动释放机制非常高效，因为不需要垃圾回收器的介入。</li>
+</ul>
+<h3 id="2-堆内存（Heap-Memory）"><a href="#2-堆内存（Heap-Memory）" class="headerlink" title="2. 堆内存（Heap Memory）"></a>2. <strong>堆内存（Heap Memory）</strong></h3><p>堆内存用于存储大小不固定且生命周期难以预测的数据，这些数据包括：</p>
+<ul>
+<li><p><strong>对象和数组</strong>：</p>
+<ul>
+<li>任何对象（<code>&#123;&#125;</code>）、数组（<code>[]</code>）或函数（也是对象）都被分配在堆内存中，因为它们的大小和结构通常是不固定的。</li>
+<li>例如，<code>let obj = &#123;name: &quot;V8&quot;&#125;;</code> 中的 <code>obj</code> 是一个对象，被存储在堆内存中。</li>
+</ul>
+</li>
+<li><p><strong>复杂的引用类型</strong>：</p>
+<ul>
+<li>引用类型如函数、对象、数组等，它们的引用（即指针）存储在栈内存中，但实际的数据存储在堆内存中。</li>
+<li>例如，<code>let arr = [1, 2, 3];</code> 中的 <code>arr</code> 引用本身存储在栈中，但数组 <code>[1, 2, 3]</code> 的内容则在堆内存中。</li>
+</ul>
+</li>
+</ul>
+<h4 id="堆内存的释放："><a href="#堆内存的释放：" class="headerlink" title="堆内存的释放："></a>堆内存的释放：</h4><ul>
+<li><strong>垃圾回收（Garbage Collection）</strong>：堆内存中的数据需要垃圾回收器（如 V8 中的 Mark-Sweep 或 Mark-Compact 算法）来管理。垃圾回收器会定期扫描堆内存，标记和清理不再被引用的对象，以释放内存空间。<ul>
+<li>当垃圾回收器运行时，它会查找堆中所有不再被程序引用的对象，并释放它们占用的内存。</li>
+<li>这个过程是自动化的，但相对于栈内存的释放来说，通常需要更多的计算资源。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. <strong>总结</strong></h3><ul>
+<li><p><strong>栈内存</strong>：</p>
+<ul>
+<li>存储：原始类型数据、函数的局部变量、函数调用的上下文（如参数）。</li>
+<li>释放：自动通过栈的 LIFO 机制释放，函数调用结束时自动回收。</li>
+</ul>
+</li>
+<li><p><strong>堆内存</strong>：</p>
+<ul>
+<li>存储：对象、数组、函数等引用类型的数据。</li>
+<li>释放：通过垃圾回收器（如 V8 中的 Mark-Sweep、Scavenge 等算法）自动管理释放。</li>
+</ul>
+</li>
+</ul>
+<p>在 V8 引擎中，栈内存的管理非常高效，因为它依赖于函数调用的生命周期。堆内存则需要通过垃圾回收机制来管理，因为其中的数据生命周期复杂且难以预测。这种内存管理策略有助于平衡程序性能和内存利用效率。</p>
+<h2 id="那如果在全局设置一个基本类型值，它是放在栈内存中吗，以及何时被清除"><a href="#那如果在全局设置一个基本类型值，它是放在栈内存中吗，以及何时被清除" class="headerlink" title="那如果在全局设置一个基本类型值，它是放在栈内存中吗，以及何时被清除"></a>那如果在全局设置一个基本类型值，它是放在栈内存中吗，以及何时被清除</h2><p>在V8引擎中，全球设置的基本类型值（如全局变量或常量）实际上是存储在堆内存中，而不是栈内存中。这里是更详细的解释：</p>
+<h3 id="1-存储位置"><a href="#1-存储位置" class="headerlink" title="1. 存储位置"></a>1. <strong>存储位置</strong></h3><ul>
+<li><strong>基本数据类型</strong>：在JavaScript中，即使是基本数据类型（如数字、布尔值、字符等），它们通常也是作为对象属性存储在堆内存中。V8引擎中的全局变量、全局常量以及全局对象的属性都是在堆内存中管理的。这样做的原因是 JavaScript 的全局环境（如 <code>window</code> 对象在浏览器中或 <code>global</code> 对象在Node.js中）是动态的，并且在程序运行时可能会被修改。</li>
+</ul>
+<h3 id="2-内存管理"><a href="#2-内存管理" class="headerlink" title="2. 内存管理"></a>2. <strong>内存管理</strong></h3><ul>
+<li><strong>生命周期</strong>：全局设置的基本类型值的生命周期是与整个程序的运行周期一致的。它们会在程序执行期间一直存在，直到程序结束或全局对象被销毁。</li>
+<li><strong>垃圾回收</strong>：V8引擎的垃圾回收机制负责自动回收不再使用的内存。全局对象和它的属性（包括基本类型值）不会被垃圾回收机制回收，除非整个JavaScript环境（如浏览器窗口或Node.js进程）结束或相关的全局对象被销毁。垃圾回收机制主要用于清理不再被引用的堆内存中的动态数据结构。</li>
+</ul>
+<h3 id="3-全局变量示例"><a href="#3-全局变量示例" class="headerlink" title="3. 全局变量示例"></a>3. <strong>全局变量示例</strong></h3><p>如果你在全局作用域设置一个基本类型的值，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> globalNumber = <span class="number">42</span>;</span><br></pre></td></tr></table></figure>
+<p>在V8中，这个全局变量 <code>globalNumber</code> 会被存储在全局对象的属性中。它并不是直接存储在栈内存中的，而是作为全局对象的属性存储在堆内存中。</p>
+<h3 id="4-清除时机"><a href="#4-清除时机" class="headerlink" title="4. 清除时机"></a>4. <strong>清除时机</strong></h3><p>全局设置的基本类型值会在以下情况被清除：</p>
+<ul>
+<li><strong>程序结束</strong>：当整个JavaScript环境结束（例如用户关闭浏览器标签页或Node.js进程终止），全局对象及其属性会被清理，相关内存会被释放。</li>
+<li><strong>环境销毁</strong>：如果全局对象被销毁（在一些特殊的JavaScript引擎或环境中），全局变量也会被清除。</li>
+</ul>
+<p>总结来说，全局基本类型值在V8中是存储在堆内存中的。它们会在程序运行期间一直存在，直到程序结束或全局环境被销毁。在此过程中，V8的垃圾回收机制不会影响这些全局变量的生命周期。</p>
+<h2 id="栈内存只能用于存储函数的局部变量和基本数据类型吗"><a href="#栈内存只能用于存储函数的局部变量和基本数据类型吗" class="headerlink" title="栈内存只能用于存储函数的局部变量和基本数据类型吗"></a>栈内存只能用于存储函数的局部变量和基本数据类型吗</h2><p>栈内存的主要作用确实是存储函数的局部变量和基本数据类型，但它的使用还包括其他一些重要方面。在现代编程语言的实现中（如JavaScript的V8引擎），栈内存的功能可以扩展到以下几个方面：</p>
+<h3 id="1-函数调用信息"><a href="#1-函数调用信息" class="headerlink" title="1. 函数调用信息"></a>1. <strong>函数调用信息</strong></h3><p>栈内存用于管理函数调用的上下文信息，包括：</p>
+<ul>
+<li><strong>函数参数</strong>：传递给函数的实际参数值。</li>
+<li><strong>局部变量</strong>：函数内部声明的局部变量。</li>
+<li><strong>返回地址</strong>：记录函数调用的位置，以便函数执行完毕后能返回到正确的位置。</li>
+<li><strong>调用栈帧</strong>：每次函数调用都会创建一个新的栈帧，包含上述所有信息。栈帧在函数调用时被压入栈中，在函数返回时被弹出。</li>
+</ul>
+<h3 id="2-控制流信息"><a href="#2-控制流信息" class="headerlink" title="2. 控制流信息"></a>2. <strong>控制流信息</strong></h3><p>栈内存还用于管理程序的控制流，包括：</p>
+<ul>
+<li><strong>条件跳转</strong>：程序在执行条件语句（如 <code>if</code>、<code>switch</code>）时，栈中可能包含有关条件判断的信息。</li>
+<li><strong>循环控制</strong>：在循环结构（如 <code>for</code>、<code>while</code>）中，栈中会保存循环变量及其状态。</li>
+</ul>
+<h3 id="3-函数递归"><a href="#3-函数递归" class="headerlink" title="3. 函数递归"></a>3. <strong>函数递归</strong></h3><p>在递归函数调用中，每个递归调用都会在栈中创建一个新的栈帧。递归的每一层都会在栈内存中占据空间，直到递归结束或栈溢出。</p>
+<h3 id="4-临时存储"><a href="#4-临时存储" class="headerlink" title="4. 临时存储"></a>4. <strong>临时存储</strong></h3><p>栈内存也用于存储一些临时的数据结构或状态，例如：</p>
+<ul>
+<li><strong>中间计算结果</strong>：在函数内部进行计算时产生的中间结果，尤其是局部的临时数据。</li>
+<li><strong>函数调用的中间状态</strong>：比如某些编程语言可能会将某些中间结果或状态暂时存储在栈上。</li>
+</ul>
+<h3 id="5-对象的栈内存部分"><a href="#5-对象的栈内存部分" class="headerlink" title="5. 对象的栈内存部分"></a>5. <strong>对象的栈内存部分</strong></h3><p>尽管对象本身和其属性通常存储在堆内存中，但对象的引用（即指向对象的指针或地址）可以存储在栈内存中。例如：</p>
+<ul>
+<li><strong>局部对象引用</strong>：函数内部对对象的引用（如对数组或对象的引用）会存储在栈上。</li>
+</ul>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h3><p>考虑以下JavaScript代码示例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">process</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> a = <span class="number">5</span>; <span class="comment">// 栈内存：局部变量</span></span><br><span class="line">    <span class="keyword">let</span> b = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]; <span class="comment">// 堆内存：数组对象</span></span><br><span class="line">    <span class="keyword">let</span> obj = &#123; <span class="attr">x</span>: <span class="number">10</span>, <span class="attr">y</span>: <span class="number">20</span> &#125;; <span class="comment">// 堆内存：对象</span></span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123; <span class="comment">// 堆内存：函数对象</span></span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(a); <span class="comment">// 使用栈内存中的局部变量</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">inner</span>(); <span class="comment">// 调用函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个示例中：</p>
+<ul>
+<li><code>a</code> 和 <code>b</code>（即数组引用）以及 <code>obj</code>（即对象引用）都存储在栈内存中。</li>
+<li><code>b</code> 和 <code>obj</code> 对应的数据（数组和对象的实际内容）存储在堆内存中。</li>
+<li><code>inner</code> 函数本身及其相关的闭包数据存储在堆内存中，但 <code>inner</code> 函数的调用上下文信息（如局部变量和参数）会存储在栈内存中。</li>
+</ul>
+<p>总结来说，栈内存不仅用于存储函数的局部变量和基本数据类型，还涉及函数调用的上下文、控制流信息、递归管理、临时数据存储和对象引用等。在现代编程语言中，栈和堆的合理使用对于程序的性能和内存管理至关重要。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>V8垃圾回收</p><p><a href="http://example.com/2024/10/17/v8中的栈_堆内存/">http://example.com/2024/10/17/v8中的栈_堆内存/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>John Doe</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2024-10-17</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-10-17</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2024/10/17/%E8%A1%8C%E5%86%85%E4%B8%8E%E6%A0%B7%E5%BC%8F%E8%A1%A8/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">行内样式表与内部样式表</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2024/10/17/20240823_%E4%BC%AA%E5%85%83%E7%B4%A0/"><span class="level-item">CSS 伪元素</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Yanzx"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Yanzx</p><p class="is-size-6 is-block">Yanzx-Blog</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">15</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:11.117Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/%E8%A1%8C%E5%86%85%E4%B8%8E%E6%A0%B7%E5%BC%8F%E8%A1%A8/">行内样式表与内部样式表</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.916Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/v8%E4%B8%AD%E7%9A%84%E6%A0%88_%E5%A0%86%E5%86%85%E5%AD%98/">V8垃圾回收</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.720Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240823_%E4%BC%AA%E5%85%83%E7%B4%A0/">CSS 伪元素</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.720Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240830_%E4%BA%A4%E6%8D%A2%E6%9C%BA/">交换机与路由器的作用及数据帧处理机制总结</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.527Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240816_unocss/">Unocss</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2024/10/"><span class="level-start"><span class="level-item">十月 2024</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2024 John Doe</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>

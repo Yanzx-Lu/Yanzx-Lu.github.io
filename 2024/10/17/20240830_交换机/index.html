@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>交换机与路由器的作用及数据帧处理机制总结 - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="在计算机网络中，交换机（Switch）和路由器（Router）是两种关键的设备，它们在网络管理和数据传输中发挥着不同的作用。理解它们的功能以及数据帧在网络中的处理过程对于网络运维和设计至关重要。以下是对这些概念的详细总结，并附有相关的例子进行说明。 交换机的作用 数据帧转发：交换机在局域网（LAN）中用于在连接到交换机的设备（如计算机、打印机等）之间转发数据帧。它通过读取数据帧中的MAC地址（媒体"><meta property="og:type" content="blog"><meta property="og:title" content="交换机与路由器的作用及数据帧处理机制总结"><meta property="og:url" content="http://example.com/2024/10/17/20240830_%E4%BA%A4%E6%8D%A2%E6%9C%BA/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="在计算机网络中，交换机（Switch）和路由器（Router）是两种关键的设备，它们在网络管理和数据传输中发挥着不同的作用。理解它们的功能以及数据帧在网络中的处理过程对于网络运维和设计至关重要。以下是对这些概念的详细总结，并附有相关的例子进行说明。 交换机的作用 数据帧转发：交换机在局域网（LAN）中用于在连接到交换机的设备（如计算机、打印机等）之间转发数据帧。它通过读取数据帧中的MAC地址（媒体"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:published_time" content="2024-10-17T13:25:10.720Z"><meta property="article:modified_time" content="2024-10-17T13:32:57.706Z"><meta property="article:author" content="John Doe"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2024/10/17/20240830_%E4%BA%A4%E6%8D%A2%E6%9C%BA/"},"headline":"交换机与路由器的作用及数据帧处理机制总结","image":["http://example.com/img/og_image.png"],"datePublished":"2024-10-17T13:25:10.720Z","dateModified":"2024-10-17T13:32:57.706Z","author":{"@type":"Person","name":"John Doe"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"在计算机网络中，交换机（Switch）和路由器（Router）是两种关键的设备，它们在网络管理和数据传输中发挥着不同的作用。理解它们的功能以及数据帧在网络中的处理过程对于网络运维和设计至关重要。以下是对这些概念的详细总结，并附有相关的例子进行说明。 交换机的作用 数据帧转发：交换机在局域网（LAN）中用于在连接到交换机的设备（如计算机、打印机等）之间转发数据帧。它通过读取数据帧中的MAC地址（媒体"}</script><link rel="canonical" href="http://example.com/2024/10/17/20240830_%E4%BA%A4%E6%8D%A2%E6%9C%BA/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link data-pjax rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link data-pjax rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-10-17T13:25:10.720Z" title="2024/10/17 21:25:10">2024-10-17</time>发表</span><span class="level-item"><time dateTime="2024-10-17T13:32:57.706Z" title="2024/10/17 21:32:57">2024-10-17</time>更新</span><span class="level-item">11 分钟读完 (大约1660个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">交换机与路由器的作用及数据帧处理机制总结</h1><div class="content"><p>在计算机网络中，交换机（Switch）和路由器（Router）是两种关键的设备，它们在网络管理和数据传输中发挥着不同的作用。理解它们的功能以及数据帧在网络中的处理过程对于网络运维和设计至关重要。以下是对这些概念的详细总结，并附有相关的例子进行说明。</p>
+<h4 id="交换机的作用"><a href="#交换机的作用" class="headerlink" title="交换机的作用"></a>交换机的作用</h4><ol>
+<li><p><strong>数据帧转发</strong>：<br>交换机在局域网（LAN）中用于在连接到交换机的设备（如计算机、打印机等）之间转发数据帧。它通过读取数据帧中的MAC地址（媒体访问控制地址），确定将数据帧转发到哪个端口，以确保数据帧准确到达目标设备。</p>
+</li>
+<li><p><strong>创建局域网</strong>：<br>交换机可以将多台设备连接在一起，形成一个局域网，使得这些设备能够相互通信。</p>
+</li>
+<li><p><strong>提高网络效率</strong>：<br>通过全双工通信和MAC地址表管理，交换机能够高效地处理数据，避免网络冲突，提高网络的整体性能。</p>
+</li>
+<li><p><strong>虚拟局域网（VLAN）功能</strong>：<br>高级交换机可以通过VLAN功能，将同一物理交换机上的设备划分为不同的虚拟网络，提高网络的安全性和管理性。</p>
+</li>
+</ol>
+<h4 id="路由器的作用"><a href="#路由器的作用" class="headerlink" title="路由器的作用"></a>路由器的作用</h4><ol>
+<li><p><strong>数据包路由</strong>：<br>路由器工作在网络层，根据目标IP地址将数据包从一个网络路由到另一个网络。它主要用于连接不同的网络（如家庭网络与互联网）并管理它们之间的数据流。</p>
+</li>
+<li><p><strong>连接不同网络</strong>：<br>路由器通常连接到广域网（WAN）和局域网，管理两者之间的通信，使得局域网内的设备能够通过路由器访问互联网。</p>
+</li>
+<li><p><strong>网络地址转换（NAT）</strong>：<br>路由器提供NAT功能，将局域网中的私有IP地址映射为公共IP地址，允许局域网内的设备通过单一公共IP地址访问互联网。</p>
+</li>
+<li><p><strong>网络安全</strong>：<br>路由器可以充当防火墙，过滤进出网络的数据包，保护内部网络免受外部攻击。</p>
+</li>
+<li><p><strong>支持动态路由协议</strong>：<br>路由器能够运行动态路由协议，如OSPF、BGP等，以自动学习网络拓扑结构的变化，并根据网络条件选择最佳路径传输数据。</p>
+</li>
+</ol>
+<h4 id="数据帧处理的详细机制"><a href="#数据帧处理的详细机制" class="headerlink" title="数据帧处理的详细机制"></a>数据帧处理的详细机制</h4><p>在交换机处理数据帧时，源MAC地址和目标MAC地址的获取和管理是关键环节。以下是交换机处理数据帧的详细步骤和机制：</p>
+<h5 id="数据帧结构"><a href="#数据帧结构" class="headerlink" title="数据帧结构"></a>数据帧结构</h5><p>以太网数据帧结构通常包括以下部分：</p>
+<ul>
+<li><strong>前导码（Preamble）</strong>：帮助接收设备同步帧的开始。</li>
+<li><strong>帧开始界定符（SFD）</strong>：指示帧的起始位置。</li>
+<li><strong>目标MAC地址（Destination MAC Address）</strong>：标明数据帧的目标设备的MAC地址。</li>
+<li><strong>源MAC地址（Source MAC Address）</strong>：标明发送数据帧的设备的MAC地址。</li>
+<li><strong>类型&#x2F;长度字段（Type&#x2F;Length）</strong>：表明上层协议类型或数据部分的长度。</li>
+<li><strong>数据字段（Data&#x2F;Payload）</strong>：包含实际传输的数据。</li>
+<li><strong>帧校验序列（FCS）</strong>：用于检测帧在传输过程中是否出错。</li>
+</ul>
+<h5 id="源MAC地址的端口号确定"><a href="#源MAC地址的端口号确定" class="headerlink" title="源MAC地址的端口号确定"></a>源MAC地址的端口号确定</h5><ol>
+<li><p><strong>数据帧进入交换机</strong>：<br>当一个设备发送数据帧时，数据帧通过交换机的某个端口进入交换机。</p>
+</li>
+<li><p><strong>读取源MAC地址</strong>：<br>交换机会读取数据帧中的源MAC地址，并记录该MAC地址对应的端口号。这一信息存储在交换机的MAC地址表中，帮助交换机跟踪哪个MAC地址与哪个端口相连。</p>
+<p>例如，计算机A的MAC地址为<code>00:1A:2B:3C:4D:5E</code>，它通过端口1连接到交换机。交换机会记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MAC地址                端口号</span><br><span class="line">00:1A:2B:3C:4D:5E      1</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h5 id="目标MAC地址的获取"><a href="#目标MAC地址的获取" class="headerlink" title="目标MAC地址的获取"></a>目标MAC地址的获取</h5><p>目标MAC地址的获取分为局域网内通信和局域网外通信两种场景：</p>
+<ol>
+<li><p><strong>局域网内通信</strong>：</p>
+<ul>
+<li><strong>ARP协议</strong>：如果设备A知道设备B的IP地址但不知道其MAC地址，设备A会发送一个ARP请求，询问“谁是这个IP地址的拥有者？请告知你的MAC地址”。</li>
+<li><strong>响应与记录</strong>：设备B回应ARP请求，提供其MAC地址<code>11:22:33:44:55:66</code>。设备A记录该地址，并将其用于后续的通信。</li>
+</ul>
+</li>
+<li><p><strong>局域网外通信</strong>：</p>
+<ul>
+<li>当数据帧需要发送到局域网外时，目标MAC地址通常是网关（路由器）的MAC地址。设备A通过ARP请求获取网关的MAC地址，然后将数据帧发送到网关，由网关转发到目标网络。</li>
+</ul>
+</li>
+</ol>
+<h5 id="数据帧转发的例子"><a href="#数据帧转发的例子" class="headerlink" title="数据帧转发的例子"></a>数据帧转发的例子</h5><p>假设我们有三台设备A、B、C，连接到同一个交换机，A的MAC地址为<code>00:1A:2B:3C:4D:5E</code>，B的MAC地址为<code>11:22:33:44:55:66</code>，C的MAC地址为<code>AA:BB:CC:DD:EE:FF</code>。</p>
+<ol>
+<li><p><strong>设备A发送数据帧</strong>：设备A向设备B发送一个数据帧，帧通过交换机的端口1进入交换机。</p>
+</li>
+<li><p><strong>交换机学习</strong>：交换机读取数据帧的源MAC地址<code>00:1A:2B:3C:4D:5E</code>，记录该MAC地址与端口1的对应关系。</p>
+</li>
+<li><p><strong>交换机检查目标MAC地址</strong>：交换机读取数据帧中的目标MAC地址<code>11:22:33:44:55:66</code>，在其MAC地址表中查找对应的端口号。如果目标MAC地址记录在表中，交换机将数据帧从相应的端口发送出去（如端口2），确保数据帧到达设备B。</p>
+</li>
+<li><p><strong>广播和学习</strong>：如果目标MAC地址不在MAC地址表中，交换机将广播数据帧，直到目标设备响应，然后更新其MAC地址表。</p>
+</li>
+</ol>
+<p>通过这种机制，交换机能够高效地管理和转发数据帧，确保网络中的数据能够准确地传输到目标设备。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>交换机与路由器的作用及数据帧处理机制总结</p><p><a href="http://example.com/2024/10/17/20240830_交换机/">http://example.com/2024/10/17/20240830_交换机/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>John Doe</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2024-10-17</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-10-17</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2024/10/17/20240823_%E4%BC%AA%E5%85%83%E7%B4%A0/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">CSS 伪元素</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2024/10/17/20240816_unocss/"><span class="level-item">Unocss</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card" id="comments"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Yanzx"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Yanzx</p><p class="is-size-6 is-block">Yanzx-Blog</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives/"><p class="title">15</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories/"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags/"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="me noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="me noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:11.117Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/%E8%A1%8C%E5%86%85%E4%B8%8E%E6%A0%B7%E5%BC%8F%E8%A1%A8/">行内样式表与内部样式表</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.916Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/v8%E4%B8%AD%E7%9A%84%E6%A0%88_%E5%A0%86%E5%86%85%E5%AD%98/">V8垃圾回收</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.720Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240823_%E4%BC%AA%E5%85%83%E7%B4%A0/">CSS 伪元素</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.720Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240830_%E4%BA%A4%E6%8D%A2%E6%9C%BA/">交换机与路由器的作用及数据帧处理机制总结</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-10-17T13:25:10.527Z">2024-10-17</time></p><p class="title"><a href="/2024/10/17/20240816_unocss/">Unocss</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2024/10/"><span class="level-start"><span class="level-item">十月 2024</span></span><span class="level-end"><span class="level-item tag">15</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2024 John Doe</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script data-pjax src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script data-pjax src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script src="/js/pjax.js"></script><!--!--><!--!--><!--!--><script data-pjax src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
