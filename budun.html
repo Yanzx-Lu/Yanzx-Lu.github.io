@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不渡</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg: #faf8f5; --fg: #2c2c2c; --muted: #6b6b6b; --accent: #8b3a3a;
+    --accent-light: #c27b7b; --border: #e0dcd6; --card: #ffffff;
+    --toc-bg: #f5f2ed; --shadow: rgba(0,0,0,0.06);
+    --font-body: "Noto Serif SC", "Source Han Serif SC", "思源宋体", "STSong", "SimSun", Georgia, serif;
+    --font-ui: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    --line: 1.9; --max-width: 720px; --radius: 8px;
+}
+:root.dark {
+    --bg: #1a1a1a; --fg: #d4d4d4; --muted: #888888; --accent: #c27b7b;
+    --accent-light: #e0a0a0; --border: #3a3a3a; --card: #252525;
+    --toc-bg: #222222; --shadow: rgba(0,0,0,0.3);
+}
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body); background: var(--bg); color: var(--fg);
+    line-height: var(--line); font-size: 18px;
+    transition: background 0.3s, color 0.3s; overflow-x: hidden;
+}
+.container { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
+.sidebar {
+    width: 280px; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh;
+    background: var(--toc-bg); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; z-index: 100;
+    transition: background 0.3s, transform 0.3s;
+}
+.sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-title { font-family: var(--font-ui); font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.sidebar-subtitle { font-size: 0.75rem; color: var(--muted); font-family: var(--font-ui); }
+.back-home {
+    display: block; padding: 8px 20px; color: var(--accent); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); font-weight: 600;
+    border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.back-home:hover { background: var(--bg); }
+.toc-wrap { flex: 1; overflow-y: auto; padding: 12px 0; }
+.toc-wrap::-webkit-scrollbar { width: 4px; }
+.toc-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.toc-link {
+    display: block; padding: 6px 20px; color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); line-height: 1.5;
+    border-left: 3px solid transparent; transition: all 0.2s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toc-link:hover, .toc-link.active { color: var(--accent); background: var(--bg); border-left-color: var(--accent); }
+.toc-level-1 { font-weight: 700; font-size: 0.95rem; color: var(--fg); }
+.toc-level-2 { font-size: 0.88rem; }
+.toc-level-3 { font-size: 0.82rem; padding-left: 28px !important; }
+.sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.main { margin-left: 280px; flex: 1; padding: 60px 40px 80px; max-width: var(--max-width); min-width: 0; }
+article { background: var(--card); padding: 48px 56px; border-radius: var(--radius); box-shadow: 0 2px 20px var(--shadow); }
+article h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.6em; color: var(--accent); text-align: center; font-family: var(--font-ui); }
+article h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; padding-bottom: 0.3em; border-bottom: 2px solid var(--accent-light); color: var(--accent); font-family: var(--font-ui); }
+article h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.6em; margin-bottom: 0.6em; color: var(--fg); font-family: var(--font-ui); }
+article p { margin-bottom: 1.2em; text-align: justify; text-indent: 2em; }
+article p:first-of-type { text-indent: 0; }
+article blockquote { margin: 1.5em 0; padding: 1em 1.4em; border-left: 4px solid var(--accent-light); background: var(--toc-bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--muted); font-style: italic; }
+article blockquote p { text-indent: 0; margin-bottom: 0.5em; }
+article blockquote p:last-child { margin-bottom: 0; }
+article hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+article strong { color: var(--accent); font-weight: 700; }
+article em { font-style: italic; color: var(--accent-light); }
+article ul, article ol { margin: 1em 0 1em 2em; }
+article li { margin-bottom: 0.5em; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-light); transition: border 0.2s; }
+article a:hover { border-bottom-style: solid; }
+.btn { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; cursor: pointer; color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.progress-bar { position: fixed; top: 0; left: 280px; right: 0; height: 3px; background: var(--border); z-index: 200; }
+.progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent)); width: 0%; transition: width 0.1s; }
+.back-to-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.3s; box-shadow: 0 2px 10px var(--shadow); z-index: 200; font-size: 1.2rem; }
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 300; width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px var(--shadow); font-size: 1.2rem; color: var(--fg); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+.overlay.show { display: block; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-light); }
+::selection { background: var(--accent-light); color: white; }
+@media (max-width: 900px) {
+    .menu-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); box-shadow: 2px 0 20px rgba(0,0,0,0.15); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 60px 20px 40px; }
+    article { padding: 28px 24px; }
+    .progress-bar { left: 0; }
+    .back-to-top { bottom: 20px; right: 20px; }
+}
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+    article h1 { font-size: 1.8rem; }
+    article h2 { font-size: 1.3rem; }
+    article h3 { font-size: 1.1rem; }
+    .main { padding: 50px 14px 30px; }
+    article { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-bar-inner" id="progress"></div></div>
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">不渡</div>
+            <div class="sidebar-subtitle">目录导航</div>
+        </div>
+        <a href="index.html" class="back-home">← 返回书库</a>
+        <div class="toc-wrap" id="tocWrap">
+            <a href="#第001章-旧灯照故人" class="toc-link toc-level-2" style="padding-left:16px">第001章 旧灯照故人</a>
+<a href="#第002章-命契" class="toc-link toc-level-2" style="padding-left:16px">第002章 命契</a>
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn" onclick="toggleTheme()" id="themeBtn">
+                <span id="themeIcon">🌙</span> <span id="themeText">暗色</span>
+            </button>
+        </div>
+    </aside>
+    <main class="main">
+        <article>
+            <h2 id="第001章-旧灯照故人">第001章 旧灯照故人</h2>
+<p>雨下了三天。
+谢无妄站在荒村祠堂的门槛外，鞋尖已经湿透了。
+他低头看了眼手里的灯，灯罩裂了道缝，火光从裂缝里漏出来，在雨幕中晃出一小片昏黄。
+该走了。
+他抬脚跨过门槛，祠堂里蹲着个东西。
+那东西背对着他，肩膀一耸一耸，像是在哭。
+谢无妄把灯往前递了递。
+&quot;哭够了吗。&quot;
+那东西没回头，哭声更大了。
+是个女人的声音，尖细，带着股陈年的怨气，像泡了水的木头。
+谢无妄没再说话。
+他左手托灯，右手捏了个诀，灯芯上的火苗蹿高了半寸。
+火光落在那东西背上，照出一身褪色的红嫁衣。
+执念鬼。
+嫁衣是执念的壳，哭声是引渡的引子。
+他见过太多这种了。
+生前有愿未了，死后缠着一件旧物不肯散。
+渡厄司的差事就是把这些东西一个个挑出来，点灯，引路，送它们去该去的地方。
+谢无妄往前走了两步。
+&quot;你的时辰到了。&quot;
+那东西忽然不哭了。
+祠堂里静了一瞬。
+雨声从门外灌进来，衬得那寂静格外刺耳。
+谢无妄的灯晃了一下，火苗往左边偏了偏，像被什么东西吹了口气。
+他皱了下眉。
+灯柄在他手心里硌着，那道裂纹从灯底爬到灯腰，他不用看也知道。
+八百年了，裂纹只增不减，像某种不肯愈合的伤口。
+那东西缓缓转过身。
+谢无妄瞳孔一缩。
+不是女人。
+那张脸裂成了两半，左半边还是刚才的哭相，右半边却在笑，嘴角一直咧到耳根。
+嫁衣底下伸出四只手，每只手的指甲都长得卷了边，黑泥嵌在甲缝里。
+这不是普通执念鬼。
+谢无妄后退半步，后背抵上门框。
+灯柄上的裂纹硌得掌心生疼，他下意识摩挲了一下，灯芯的火光猛地一暗。
+那东西扑了过来。
+四只手同时张开，指甲刮破空气，发出类似铁器摩擦的尖啸。
+谢无妄侧身，灯焰扫过那东西的侧脸，烧出一股焦糊味。
+那东西尖叫着退开，裂开的脸上笑容更大了。
+&quot;司灯……&quot;它开口，两个声音叠在一起，一个哭一个笑，&quot;你的灯……快灭了……&quot;
+谢无妄没接话。
+他低头看了眼灯，火苗确实在抖，不是风吹的抖，是从灯芯里面往外散的抖。
+裂纹处漏出的光忽明忽暗，像有人在灯罩里呼吸。
+他咬了咬牙，把灯举高。
+&quot;该走了。&quot;
+话音没落，那东西又扑上来。
+这次更快，四只手从四个方向抓向他的灯。
+谢无妄旋身，灯焰划出一道弧线，火光所及之处，那东西的指尖开始冒烟。
+但它不退，裂开的嘴里发出咯咯的笑声，像是骨头在摩擦。
+谢无妄的背撞上了供桌。
+香炉翻倒，香灰撒了一地。
+他手里的灯晃得厉害，裂纹处传来细微的碎裂声，像冰面在脚下开裂。
+不对。
+这不对劲。
+普通执念鬼见了司灯的本命火，只会缩。
+这东西不但不怕，还在笑。
+它在等什么。
+谢无妄的呼吸重了一拍。
+他盯着那东西裂开的脸，忽然意识到——它在看门外。
+祠堂外，雨声变了。
+不是落下来的声音，是某种东西穿过雨幕的声音。
+很轻，但谢无妄听见了。
+他的耳尖动了动，那是多年渡人练就的本能——他能听见执念靠近时空气里细微的震颤。
+有什么东西来了。
+比眼前这个更危险的东西。
+那东西忽然伏低了身子，四只手全部贴在地上，额头抵着地面，像是在跪拜。
+裂开的脸还在笑，但笑声停了，只剩下那种咯咯的骨摩擦声。
+谢无妄顺着它的方向看向门外。
+雨幕里站着一个人。
+黑衣，没撑伞。
+雨水顺着他的衣摆往下淌，在地上汇成一小片深色。
+他站得很直，像一柄插在地里的刀。
+谢无妄的手僵住了。
+灯焰在这一刻彻底熄灭，又在下一秒重新燃起。
+复燃的火光映出来人的侧脸，下颌线条锋利，嘴角挂着一点笑，眼角往下压。
+谢无妄认识那张脸。
+八百年了。
+他认识。
+他的脚后跟又往后退了半步，供桌的边缘硌着腰。
+他想说点什么，喉咙里却像塞了团湿棉花，一个字都挤不出来。
+那人从雨幕里走进来，脚步很轻，但每一步都像踩在谢无妄的耳膜上。
+他经过伏地的执念鬼时，看都没看一眼，那东西却抖得更厉害了，四只手在地上抓出几道泥痕。
+&quot;渡厄司的司灯，&quot;那人开口，声音比谢无妄记忆里低了一些，带着某种潮湿的压迫感，&quot;如今就这点本事？&quot;
+谢无妄的指尖掐进灯柄的裂纹里。
+他该反驳的。
+按他平时的脾气，这时候该说一句&quot;关你屁事&quot;或者&quot;你谁啊&quot;，用那种带刺的懒散把场面搪塞过去。
+但他的舌头像是冻住了，连嘴都张不开。
+那人又近了一步。
+谢无妄闻到一股味道。
+不是雨水的腥，是某种更沉的东西，像烧到尽头的炭，像灰烬被风吹起来之前的最后一丝热。
+他熟悉这个味道。
+八百年前的战场上，到处都是这个味道。
+&quot;沈烬。&quot;
+名字从他嘴里滑出来，不是认出来的，是某种身体记忆，比脑子更快。
+那人笑了。
+眼角往下压得更深，嘴角翘起来，但笑意没到眼睛里。
+&quot;原来你还记得。&quot;沈烬说，&quot;我还以为，八百年够你把什么都忘了。&quot;
+谢无妄的背挺了起来。
+他强迫自己站直，离开供桌的支撑，把灯换到右手，左手垂在身侧，捏了个半成的诀。
+&quot;烬鬼不得入人间。&quot;他说，声音比他自己预想的哑，&quot;这是渡厄司的规矩。&quot;
+&quot;规矩。&quot;沈烬重复了一遍这个词，像是在品什么味道。
+他往前又走了一步，现在两人之间只剩三步的距离。&quot;
+你们渡厄司的规矩，还管得了我？&quot;
+谢无妄没退。
+他盯着沈烬的眼睛，那双眼睛还是黑的，但瞳孔边缘有一圈极淡的红，像烧尽的炭火里最后一点余温。
+&quot;管得了管不了，&quot;他说，&quot;都得管。&quot;
+沈烬低头看了眼他手里的灯。
+&quot;你的灯，&quot;他说，&quot;快灭了。&quot;
+谢无妄的手指收紧。
+灯柄上的裂纹硌着指腹，他不用看也知道那道裂缝又长了多少。
+八百年了，这灯跟着他渡了数不清的执念，裂纹从灯底爬到灯腰，现在正往灯芯的方向蔓延。
+&quot;灭不了。&quot;他说。
+&quot;是吗。&quot;沈烬又笑了一下，这次笑得轻，像羽毛擦过玻璃。
+他抬起右手，指骨上有一道焦黑的痕迹，从手腕一直延伸到中指第二节。
+焚痕。
+谢无妄认识这个痕迹。
+八百年前他亲手烙上去的。
+沈烬的手指伸向灯焰。
+谢无妄想躲，但身体没跟上。
+沈烬的指尖停在火焰上方一寸，没碰，但灯焰猛地往下一缩，像是被什么东西掐住了脖子。
+裂纹处传来更清晰的碎裂声，咔，咔，像有人在灯罩里面敲骨头。
+&quot;你看，&quot;沈烬说，&quot;它怕你。&quot;
+谢无妄的太阳穴跳了一下。
+不是怕。
+是命契。
+他忘了。
+或者说他一直在假装忘了。
+八百年前那个封印不只是封印，是契约，是把两个人的神魂捆在一起的死结。
+灯是契约的锚点，沈烬是契约的另一端。
+灯见到他，当然会抖。
+剧痛来得毫无预兆。
+从胸口正中炸开，像有人把一根烧红的铁丝从心脏穿过去。
+谢无妄的膝盖一软，差点跪下去。
+他咬紧牙，血腥味从牙缝里渗出来，不知道是哪颗牙被咬破了。
+对面，沈烬的肩膀也僵了一下。
+那道焚痕在沈烬的指骨上亮了起来，暗红色的光从皮肤底下透出来，像有火在骨头里烧。
+沈烬的眉头皱了一瞬，但嘴角还挂着笑，甚至更大了。
+&quot;原来你还记得。&quot;他说，声音里带着某种扭曲的快意，&quot;我以为你早就把契约忘了。&quot;
+谢无妄没力气回嘴。
+他单膝跪在地上，左手撑着地，右手还死死攥着灯。
+灯焰在剧痛中忽明忽暗，裂纹处漏出的光把他的手照得惨白。
+他记得。
+他当然记得。
+八百年前他亲手写下的契约，用本命灯做引，把沈烬从魂飞魄散的边缘拽回来。
+代价是两人的神魂从此绑在一起，同生共损，一方重伤另一方感知，灯灭则两人同灭。
+他以为封印能隔绝契约。
+他以为八百年够这东西消散的。
+他错了。
+剧痛持续了大概三息，然后像潮水一样退去。
+谢无妄的额头抵着灯柄，喘了两口气，撑着供桌站起来。
+他的膝盖还在抖，但他把灯举了起来，灯芯对准沈烬的胸口。
+&quot;该走了。&quot;
+这是他第三次说这句话。
+前两次是引渡，这一次是驱逐。
+司灯的本命火对烬鬼有天然的压制，哪怕灯快灭了，这火也能烧穿一个普通烬鬼的魂体。
+沈烬没动。
+他看着那团火苗，嘴角的笑淡了下去，但也没消失。
+他往前走了半步，胸口几乎贴上灯焰。
+&quot;烧我？&quot;他问，声音轻得像是耳语，&quot;你舍得？&quot;
+谢无妄的手抖了一下。
+灯焰跟着晃，在沈烬的衣襟上投下一道晃动的阴影。
+他舍得。
+他当然舍得。
+八百年前的战场上，他亲手把沈烬封进归墟，那时候他眼睛都没眨。
+现在不过是再烧一次。
+灯焰舔上了沈烬的衣襟。
+黑衣没有燃烧，但沈烬的胸口处浮现出一道焦痕，和指骨上的焚痕一样，从心脏的位置往四周蔓延。
+沈烬的眉头终于皱紧了，但身体没退，甚至又往前贴了贴。
+&quot;再烧深点。&quot;他说，声音低哑，&quot;烧到我能感觉到疼为止。&quot;
+谢无妄的指尖在灯柄上打滑。
+裂纹硌着指腹，他忽然意识到自己在出汗，冷汗，从额角往下滑，经过眼尾的旧疤，痒，但他没手去擦。
+灯焰又亮了一寸。
+沈烬胸口处的焚痕也更亮了，暗红色的光从焦黑的痕迹里透出来，像有岩浆在皮肤底下流动。
+他的呼吸重了一拍，谢无妄听见了，那呼吸声和他自己的叠在一起，乱成一片。
+命契在共鸣。
+不是普通的共鸣，是某种更深的东西，像两根被捆在一起的绳子，一根被拉动，另一根必然收紧。
+谢无妄感到胸口处的疼痛又来了，不是刚才那种炸开的剧痛，是某种持续的、绵密的拉扯，像有人在用钝刀割他的肋骨。
+灯焰猛地蹿高。
+不是谢无妄控制的。
+灯自己亮了，裂纹处漏出的光从昏黄变成刺眼的白，把整个祠堂照得如同白昼。
+那伏地的执念鬼发出一声尖叫，四只手捂住裂开的脸，从指缝里冒出黑烟。
+沈烬也被这光罩住了。
+他的黑衣在强光中显出某种透明的质感，边缘处有细小的火星在跳。
+谢无妄看见了他的魂体，不是完整的，是碎的，像一面被打裂的镜子，每一块碎片里都映着不同的画面。
+他看见火。
+八百年前的那种火，烧穿了天幕，烧化了神格。
+他看见沈烬站在火里，回头看了他一眼。
+他看见自己举起灯，灯焰不是引渡的金色，是封印的苍白。
+画面一闪而过。
+灯焰又暗了下去。
+但命契的拉扯没有停。
+谢无妄感到一股力量从胸口往四肢蔓延，不是他的力量，是沈烬的，通过契约的纽带灌进来。
+他的脚不受控制地往前挪了一步。
+沈烬也在往前。
+两人之间的距离从三步变成两步，变成一步。
+谢无妄能闻到沈烬身上那种灰烬的味道了，更浓了，带着某种灼烧后的甜腻，像蜜糖在火上烤焦了。
+&quot;谢无妄。&quot;沈烬叫他的名字，声音贴着耳廓滑进来。
+谢无妄的肩膀僵住了。
+他已经忘了上一次有人这样叫他的名字是什么时候。
+渡厄司的同僚叫他&quot;司灯&quot;，执念鬼叫他&quot;大人&quot;，人间的人叫他&quot;道长&quot;。
+没有人叫他的名字。
+八百年了，没有人。
+沈烬又近了一步。
+现在两人之间只剩半臂的距离。
+沈烬的呼吸落在谢无妄的额头上，温热，但带着某种不属于活人的凉意。
+他低下头，嘴唇几乎贴上谢无妄的耳尖。
+&quot;我回来了。&quot;
+三个字。
+谢无妄的手猛地一抖，灯柄差点脱手。
+他下意识去抓，指腹擦过裂纹，一道细碎的瓷片从灯罩上剥落，掉进灯油里，发出轻微的嗤声。
+灯焰晃了。
+不是刚才那种失控的暴涨，是某种更细微的、几乎难以察觉的晃动。
+火苗往沈烬的方向偏了偏，像被什么东西吸引，又像在辨认什么。
+谢无妄低头看着灯。
+八百年了。
+这盏灯跟着他渡了数不清的执念，见过数不清的魂体，火光明灭过无数次。
+但它从来没有这样晃过。
+不是风吹的。
+不是命契拉扯的。
+是灯自己在晃。
+为了一个人。
+沈烬退开了半步。
+他看着谢无妄的眼睛，嘴角的笑终于完全消失了，变成一种更复杂的东西，但谢无妄没来得及看清。
+沈烬转身，黑衣在雨幕中划出一道弧线，像墨汁滴进水里。
+&quot;明天见，司灯大人。&quot;他说，声音从雨幕里飘回来，轻得像是嘲讽，又重得像是承诺。
+谢无妄站在祠堂里，灯焰恢复了平静，昏黄的光照亮他脚下一小片地面。
+他低头看着灯，裂纹处还冒着一丝极淡的青烟。
+那东西伏在地上，四只手还在抖，但笑声停了。
+它抬起头，裂开的脸上只剩哭泣的那半边，眼泪混着黑泥往下淌。
+&quot;大人……&quot;它说，声音恢复了女人的尖细，&quot;那是……烬主……&quot;
+谢无妄没回答。
+他举起灯，火苗对准那东西的额头。
+这一次，执念鬼没有反抗，它甚至主动仰起脸，让火光落在裂开的脸上。
+嫁衣开始褪色，从红变成灰，再变成透明。
+&quot;该走了。&quot;
+谢无妄第四次说这句话。
+这一次，声音比他自己预想的哑。
+执念鬼散成一缕灰烟，从祠堂的屋顶飘出去，融进雨幕里。
+谢无妄站在原地，灯还举在手里。
+他盯着那缕灰烟消失的方向，看了很久。
+雨声重新填满了祠堂，从破门框里灌进来，打湿了他的半边肩膀。
+他低头看向灯。
+灯焰安静地燃烧着，昏黄，微弱，裂纹处的光漏出来，在灯罩上投下一道细碎的影。
+但火苗的尖端还在晃，极轻微地，往沈烬离开的方向偏着。
+像是不舍得。
+谢无妄的指腹摩挲着灯柄上的裂纹，那道八百年前的伤口。
+他想起沈烬临走前说的那句话，想起他指骨上的焚痕，想起命契共鸣时胸口那种钝痛。
+他该追上去的。
+按渡厄司的规矩，烬鬼入世，司灯必须驱逐。
+他该追上去，点灯，超度，把沈烬送回该去的地方。
+但他的脚没动。
+灯焰又晃了一下，这次更轻，像是叹息。
+谢无妄把灯放低，火苗擦过他的袖口，那截磨出毛边的布料被光照得透亮。
+他转身走出祠堂，雨立刻打湿了头发，顺着额角往下淌，经过眼尾的旧疤，痒，但他还是没擦。
+他沿着荒村的小路往外走，灯在手中晃出一小片昏黄。
+雨幕深处，某个方向传来极轻的笑声，低哑，带着某种他熟悉又陌生的温度。
+谢无妄的脚步顿了一下。
+他没回头。
+灯焰在他手中安静地燃烧着，但火苗的尖端始终偏着，像被一根看不见的线牵着，指向雨幕里某个看不见的背影。</p>
+<hr />
+<blockquote>
+<p>字数：5053 字
+生成时间：2026/06/16</p>
+</blockquote>
+<hr />
+<h2 id="第002章-命契">第002章 命契</h2>
+<p>谢无妄是被疼醒的。</p>
+<p>不是普通的疼，是从骨头缝里往外钻的那种，像有人把他的肋骨一根根拆下来，又一根根插回去，插错了位置。</p>
+<p>他睁开眼。</p>
+<p>屋顶是熟悉的灰黑色瓦片，漏雨的地方用油纸糊着，边缘已经发黄卷边。</p>
+<p>这是渡厄司给他分的房间，在西厢最里头，挨着柴房，夏天有霉味，冬天透风。</p>
+<p>他动了动手指，想撑着床沿坐起来，指尖却碰到了一个东西。</p>
+<p>不是木头。</p>
+<p>是布料，黑色的，带着一点潮湿的凉。</p>
+<p>谢无妄猛地转头。</p>
+<p>沈烬坐在他床边的矮凳上，背靠着墙，一条腿屈起，另一条腿伸得笔直，鞋尖抵着床脚的木框。</p>
+<p>他低着头，正在看自己的右手。</p>
+<p>那只手的指骨上，焚痕还在，暗红色的光从皮肤底下透出来，一跳一跳，像有火在骨头里呼吸。</p>
+<p>谢无妄的视线顺着沈烬的手往下看，然后停住了。</p>
+<p>沈烬的掌心。</p>
+<p>那里有一道新的痕迹，不是焚痕，是某种更复杂的东西，像是一团纠缠在一起的线，从手腕处开始，往掌心中间爬，最后聚成一个他认得的形状。</p>
+<p>灯焰。</p>
+<p>和他灯芯上的火焰一模一样的形状。</p>
+<p>谢无妄下意识低头看自己的左手。</p>
+<p>掌心朝上，那道痕迹也在。</p>
+<p>从手腕爬到掌心，纹路和沈烬掌心的那一道完全对称，像同一枚印章盖出来的两半。</p>
+<p>命契纹。</p>
+<p>谢无妄的指尖抖了一下。</p>
+<p>他想起八百年前的那个晚上，归墟裂开的口子像一张吃人的嘴，沈烬站在裂口边缘，回头看了他一眼。</p>
+<p>那一眼里没有恨，只有某种他花了八百年也没想明白的东西。</p>
+<p>然后他举起灯，把沈烬封了进去。</p>
+<p>契约就是在那时候烙下的。</p>
+<p>他以为封印会隔断契约。</p>
+<p>他错了。</p>
+<p>&quot;醒了？&quot;</p>
+<p>沈烬的声音从床边飘过来，低沉，带着一点刚睡醒的沙哑，但谢无妄知道这人根本不用睡觉。</p>
+<p>他没回答。</p>
+<p>他试着把左手攥成拳，掌心的命契纹被压在指节下面，疼，但不是刚才那种拆骨头的疼，是某种更绵密的、持续的东西，像有一根线从掌心穿进去，一直连到胸口。</p>
+<p>连到某个他看不见的人身上。</p>
+<p>&quot;你的房间，&quot;沈烬又说，声音里带着一点笑，&quot;比我想象的还破。&quot;</p>
+<p>谢无妄终于坐了起来。</p>
+<p>被子滑到腰际，他低头看了眼自己的衣服，还是昨天那身，袖口磨出的毛边沾着泥，是荒村祠堂里的泥。</p>
+<p>他记得自己是怎么回来的。</p>
+<p>不记得了。</p>
+<p>最后一段记忆是祠堂里的灯焰暴涨，然后胸口炸开剧痛，然后……</p>
+<p>然后沈烬接住了他。</p>
+<p>这个认知让谢无妄的后颈绷紧了。</p>
+<p>他掀开被子，脚往床下伸，鞋还在，一只在床底，一只被踢到了门边。</p>
+<p>他弯腰去够床底那只，后背的肌肉扯了一下，疼得他吸了口气。</p>
+<p>&quot;别乱动。&quot;沈烬说。</p>
+<p>谢无妄没理他。</p>
+<p>他够到鞋，往脚上套，动作很快，带着某种刻意的麻利，像是要证明什么。</p>
+<p>鞋跟卡住了，他用力一蹬，脚踝处传来一阵钝痛。</p>
+<p>不是他的脚踝。</p>
+<p>是命契。</p>
+<p>他僵住了。</p>
+<p>对面，沈烬也皱了下眉，屈起的那条腿放平了，右手按在膝盖上，指节发白。</p>
+<p>&quot;感觉到了？&quot;沈烬问，嘴角翘起来，但笑意没到眼睛里，&quot;这才刚开始。&quot;</p>
+<p>谢无妄把鞋穿好，站起来。</p>
+<p>房间很小，从他床到门口只有六步，从门口到窗边只有三步。</p>
+<p>沈烬坐在床边，堵住了他往门口走的路。</p>
+<p>他没绕，他往窗边走了两步，背对着沈烬，假装在看窗外。</p>
+<p>窗外是渡厄司的院子，一棵枯了半边的老槐树，树下有个石臼，里头积着雨水，水面上漂着几片烂叶子。</p>
+<p>&quot;渡厄司的司灯，&quot;沈烬的声音从背后贴上来，&quot;就住这种地方？&quot;</p>
+<p>&quot;嫌破你可以走。&quot;谢无妄说。</p>
+<p>他声音比他自己预想的哑，喉咙里像是塞了团东西，不是湿棉花，是干的，带着血腥味。</p>
+<p>&quot;走？&quot;沈烬笑了，这次笑出了声，低哑，像砂纸擦过木头，&quot;往哪走？&quot;</p>
+<p>谢无妄转过身。</p>
+<p>沈烬已经站了起来，就站在他身后半步的地方，比他高了半个头，黑衣的领口敞着，露出锁骨下方一道旧疤。</p>
+<p>谢无妄认识那道疤。</p>
+<p>八百年前他亲手划上去的，用灯焰，为了标记契约的位置。</p>
+<p>他移开视线。</p>
+<p>&quot;命契可以解。&quot;他说。</p>
+<p>&quot;是吗。&quot;沈烬往前迈了半步。</p>
+<p>谢无妄往后退，后背抵上了窗框，木头硌着肩胛骨，疼。</p>
+<p>&quot;我查过了，&quot;他说，语速很快，像是在赶时间，&quot;命契与神魂相连，只要找到契约的原文，用本命灯重烧一遍，就能——&quot;</p>
+<p>&quot;就能什么？&quot;沈烬又近了一步。</p>
+<p>现在两人之间只剩一拳的距离。</p>
+<p>谢无妄能闻到沈烬身上的味道了，灰烬，烧到尽头的炭，还有某种更沉的东西，像古墓里翻出来的旧书页。</p>
+<p>他屏住呼吸。</p>
+<p>&quot;就能断开。&quot;他说。</p>
+<p>&quot;断开。&quot;沈烬重复了一遍这个词，和昨天在祠堂里重复&quot;规矩&quot;时一样的语气，像是在品什么味道，&quot;你想断开。&quot;</p>
+<p>谢无妄没回答。</p>
+<p>他盯着沈烬的领口，那道旧疤在晨光里显出浅粉色，八百年的疤痕，早就该淡了，但还在，像某种不肯愈合的东西。</p>
+<p>掌心的命契纹忽然烫了一下。</p>
+<p>不是普通的烫，是从皮肤底下往外烧的那种，像有人把一块炭按在他手心里。</p>
+<p>谢无妄的手指蜷了一下。</p>
+<p>对面，沈烬的瞳孔缩了一瞬，肩膀也绷紧了，但嘴角还挂着笑。</p>
+<p>&quot;感觉到了？&quot;沈烬说，声音低下去，几乎贴着谢无妄的耳廓，&quot;我的心跳。&quot;</p>
+<p>谢无妄僵住了。</p>
+<p>他确实感觉到了。</p>
+<p>不是用耳朵，是用某种更奇怪的方式，从掌心的命契纹传过来的，一下，一下，沉稳，有力，比他自己的心跳慢半拍，但更重，像有人在胸腔里敲鼓。</p>
+<p>沈烬的心跳。</p>
+<p>通过命契，传到了他身上。</p>
+<p>&quot;别碰我。&quot;谢无妄说。</p>
+<p>他声音发紧，不是命令，是某种更接近恳求的东西，这让他更烦躁了。</p>
+<p>沈烬没退。</p>
+<p>他反而又近了一点，鼻尖几乎蹭上谢无妄的额角。</p>
+<p>&quot;为什么？&quot;他问，呼吸落在谢无妄的耳廓上，温热，但带着凉意，&quot;你怕什么？&quot;</p>
+<p>谢无妄的手抬了起来。</p>
+<p>他本意是想推开沈烬，但手掌贴上沈烬胸口的那一刻，命契纹猛地一亮，两道纹路同时发出暗红色的光，从两人的掌心透出来，在空气中交缠成一根细线，一闪而逝。</p>
+<p>心跳声更清楚了。</p>
+<p>不是沈烬一个人的，是两个人的，叠在一起，乱成一片。</p>
+<p>谢无妄猛地缩回手。</p>
+<p>他侧过脸，避开沈烬的呼吸，往旁边挪了一步，从窗框和沈烬之间的缝隙里挤出去。</p>
+<p>动作太快，膝盖撞上了床沿，疼得他弯了下腰。</p>
+<p>&quot;呵。&quot;沈烬笑了一声。</p>
+<p>谢无妄没回头。</p>
+<p>他走到房间另一头，蹲下去，从床底拖出一个木箱子。</p>
+<p>箱子很旧，边角磨圆了，铜扣生锈，他掰了两下才打开。</p>
+<p>里头是一摞发黄的册子，渡厄司的档案，记录着他这八百年渡过的每一个执念。</p>
+<p>他翻了最上面一本，纸页发出脆响，像干树叶被踩碎。</p>
+<p>&quot;你在找解契之法？&quot;沈烬问。</p>
+<p>他没动，还站在窗边，背对着光，黑衣的边缘被晨光描出一道模糊的轮廓。</p>
+<p>&quot;不关你的事。&quot;谢无妄说。</p>
+<p>&quot;怎么不关我的事。&quot;沈烬说，&quot;命契是两个人的事。&quot;</p>
+<p>谢无妄的手指停在纸页上。</p>
+<p>他找到那一页了，关于命契的记载，只有寥寥几行，墨迹已经淡了，像是被人反复翻阅过。</p>
+<p>&quot;命契者，神魂相连，同生共损，&quot;他念出声，声音干巴巴的，&quot;一方殒，另一方亦殒。解契之法，需寻契约原文，以本命灯重燃，方可……&quot;</p>
+<p>纸页在这里断了。</p>
+<p>后半页被人撕掉了，只留下参差不齐的纸边，和一点发黑的痕迹，像是被火烧过。</p>
+<p>谢无妄盯着那道纸边，看了很久。</p>
+<p>&quot;方可什么？&quot;沈烬问。</p>
+<p>谢无妄没回答。</p>
+<p>他把册子合上，塞回箱子，盖上盖子，铜扣咔哒一声扣上。</p>
+<p>他站起来，腿有点麻，他扶着床沿站了一会儿，等那阵麻劲过去。</p>
+<p>&quot;找不到的。&quot;沈烬说。</p>
+<p>谢无妄转头看他。</p>
+<p>沈烬还站在窗边，但姿势变了，两只手插进袖子里，下巴微微抬着，看着窗外的老槐树。</p>
+<p>&quot;契约原文在归墟，&quot;他说，声音平淡，像是在说一件和自己无关的事，&quot;八百年前的归墟，现在早就被填平了。&quot;</p>
+<p>谢无妄的指尖掐进掌心。</p>
+<p>命契纹被压在指节下面，烫，但他没松手。</p>
+<p>&quot;那也得找。&quot;他说。</p>
+<p>沈烬转过头看他。</p>
+<p>晨光从他背后照过来，把他的脸衬得半明半暗，眼角下压，嘴角却翘着。</p>
+<p>&quot;八百年了，&quot;沈烬说，&quot;你还是这样。&quot;</p>
+<p>&quot;哪样？&quot;</p>
+<p>&quot;死不认错。&quot;</p>
+<p>谢无妄的肩膀绷紧了。</p>
+<p>他想反驳，但话到嘴边，变成了一声咳嗽，干，哑，带着血腥味。</p>
+<p>他转过身，往门口走。</p>
+<p>沈烬没拦他。</p>
+<p>但他走到门口，手刚碰到门闩，门外就传来一阵窸窣声。</p>
+<p>很轻，是布料摩擦的声音，还有刻意压低的呼吸。</p>
+<p>有人在门外偷听。</p>
+<p>谢无妄猛地拉开门。</p>
+<p>门外蹲着两个穿灰袍的文吏，渡厄司的杂役，平时负责扫院子、倒香灰、整理档案。</p>
+<p>其中一个手里还拿着扫帚，扫帚头抵着门槛，被门一带，差点戳到谢无妄的脚。</p>
+<p>两人同时抬头，脸上的表情僵在半空。</p>
+<p>&quot;司、司灯大人……&quot;其中一个结巴着开口。</p>
+<p>谢无妄没说话。</p>
+<p>他盯着两人，眼尾的旧疤在晨光里显出浅白色，让他的眼神看起来比实际上更冷。</p>
+<p>两个文吏互相看了一眼，同时往后缩。</p>
+<p>&quot;我们、我们就是路过……&quot;</p>
+<p>&quot;对，路过，扫院子，扫到这边……&quot;</p>
+<p>谢无妄往前迈了一步。</p>
+<p>两人同时跳起来，扫帚和簸箕掉在地上，发出一连串脆响，然后连滚带爬地往院子那头跑。</p>
+<p>灰袍在晨风里翻飞，像两只受惊的麻雀。</p>
+<p>谢无妄站在门口，看着他们的背影消失在柴房后面。</p>
+<p>他皱了下眉。</p>
+<p>他知道他们在传什么。</p>
+<p>渡厄司就这么大，消息传得比鬼还快，昨天他在祠堂昏过去，是沈烬把他背回来的，一路上不知道被多少人看见了。</p>
+<p>&quot;你的同僚，&quot;沈烬的声音从房间里飘出来，&quot;挺活泼的。&quot;</p>
+<p>谢无妄没回头。</p>
+<p>他站在门口，手还扶着门框，掌心的命契纹又烫了一下，这次是从另一个方向传过来的，像有人在很远的地方拨了一下琴弦。</p>
+<p>他下意识转头看向院子那头。</p>
+<p>老槐树后面转出一个人影。</p>
+<p>是个女人，穿着深青色的长袍，衣摆绣着暗红色的花纹，像是某种古老的符咒。</p>
+<p>她手里端着一碗汤，热气从碗沿冒出来，在晨风里散成一缕白烟。</p>
+<p>孟婆。</p>
+<p>渡厄司的司命，谢无妄的引路人，从他还是个毛头小子的时候就带着他，教他点灯，教他引渡，教他把&quot;渡人&quot;当成一种赎罪。</p>
+<p>她走过来了，脚步很轻，但每一步都带着某种沉稳的东西，像是踩在某种看不见的节律上。</p>
+<p>&quot;醒了？&quot;孟婆问。</p>
+<p>她把汤碗递过来，碗沿烫手，谢无妄接过来，没喝，只是捧着。</p>
+<p>&quot;嗯。&quot;他说。</p>
+<p>孟婆的视线越过他的肩膀，看向房间里。</p>
+<p>谢无妄没挡。</p>
+<p>他知道挡不住。</p>
+<p>孟婆的眼睛不好，瞳孔是灰白色的，像蒙了一层翳，但她能看见的东西比谁都多。</p>
+<p>&quot;烬主。&quot;孟婆开口，声音平稳，带着一点只有谢无妄能听出来的紧绷。</p>
+<p>&quot;司命大人。&quot;沈烬的声音从房间里传出来，懒洋洋的，带着一点笑，&quot;久仰。&quot;</p>
+<p>孟婆没接话。</p>
+<p>她往前走了两步，跨过门槛，站在房间中央。</p>
+<p>她的视线落在沈烬的右手上，落在那道指骨上的焚痕上，然后往下，落在沈烬的掌心。</p>
+<p>命契纹还在发光，暗红色的，一跳一跳，像有生命。</p>
+<p>孟婆的表情变了。</p>
+<p>不是惊讶，是某种更复杂的东西，像是看到了一件她以为永远不会再见到的旧物。</p>
+<p>&quot;这契，&quot;她说，声音低下去，几乎像是在自言自语，&quot;八百年了，终于醒了。&quot;</p>
+<p>谢无妄的手指收紧。</p>
+<p>碗沿烫着掌心，和命契纹的烫叠在一起，分不清哪个更热。</p>
+<p>&quot;司命大人知道解契之法？&quot;他问。</p>
+<p>孟婆转过头看他。</p>
+<p>灰白色的瞳孔里映着晨光，但没有焦点，像是在看某个很远的地方。</p>
+<p>&quot;知道。&quot;她说。</p>
+<p>谢无妄的心跳快了一拍。</p>
+<p>&quot;但我不说。&quot;</p>
+<p>心跳又落回去了。</p>
+<p>&quot;为什么？&quot;谢无妄问。</p>
+<p>孟婆没回答。</p>
+<p>她转过身，把手里的托盘放在桌上，托盘上还有两碗汤，一碗是给谢无妄的，一碗是给……</p>
+<p>她看向沈烬。</p>
+<p>&quot;烬主喝吗？&quot;她问，&quot;渡厄司的引魂汤，对魂体有好处。&quot;</p>
+<p>沈烬从窗边走过来，脚步很轻，但每一步都让谢无妄的掌心跳一下。</p>
+<p>命契在共鸣。</p>
+<p>距离越近，共鸣越强。</p>
+<p>沈烬走到桌边，低头看了眼那碗汤，乳白色的，表面浮着一层细碎的油花。</p>
+<p>&quot;谢谢。&quot;他说，端起碗，喝了一口，&quot;味道不错。&quot;</p>
+<p>孟婆的嘴角动了一下，像是想笑，但没笑出来。</p>
+<p>&quot;司灯，&quot;她说，转向谢无妄，&quot;新任务。&quot;</p>
+<p>谢无妄把碗放下。</p>
+<p>&quot;什么任务？&quot;</p>
+<p>&quot;画皮鬼。&quot;孟婆说，&quot;城东，醉仙楼，三天内死了三个客人，皮被剥了，魂没散，在楼里游荡。&quot;</p>
+<p>谢无妄皱了下眉。</p>
+<p>画皮鬼不是普通执念，是恶鬼，有意识的恶鬼，会挑人下手，会躲，会跑，不好对付。</p>
+<p>&quot;我一个人？&quot;他问。</p>
+<p>&quot;不。&quot;孟婆说。</p>
+<p>她的视线在谢无妄和沈烬之间转了一圈，最后停在两人掌心的命契纹上。</p>
+<p>&quot;你们一起。&quot;</p>
+<p>谢无妄的手指僵住了。</p>
+<p>&quot;他是烬鬼，&quot;他说，&quot;不能参与渡厄司的任务。&quot;</p>
+<p>&quot;他现在不是普通的烬鬼。&quot;孟婆说。</p>
+<p>她抬起手，指尖点在空气中，画出一道看不见的线，从谢无妄的掌心连到沈烬的掌心。</p>
+<p>&quot;命契不解，你们同生共损。&quot;她说，&quot;你受伤，他感知。他出事，你陪葬。你们分不开了。&quot;</p>
+<p>谢无妄的嘴唇抿成一条线。</p>
+<p>他想说&quot;我不需要他&quot;，想说&quot;我自己能行&quot;，但话到嘴边，变成了一声沉默。</p>
+<p>因为他知道孟婆说的是真的。</p>
+<p>掌心的命契纹还在烫，一跳一跳，和某个人的心跳同步。</p>
+<p>&quot;新搭档。&quot;沈烬忽然开口。</p>
+<p>谢无妄转头看他。</p>
+<p>沈烬端着碗，嘴角翘着，眼角下压，那副表情谢无妄太熟悉了，八百年前的战场上，沈烬每次要做什么危险的事之前，都是这副表情。</p>
+<p>&quot;我是谢司灯的新搭档。&quot;沈烬说，声音里带着笑，但眼睛没笑，&quot;对吧，司灯大人？&quot;</p>
+<p>谢无妄没回答。</p>
+<p>他没法回答。</p>
+<p>因为沈烬说的是事实。</p>
+<p>命契把他们绑在一起，像两根缠在一起的绳子，一根被拉动，另一根必然收紧。</p>
+<p>他转身走到床边，从枕头底下摸出灯。</p>
+<p>灯柄上的裂纹还在，从灯底爬到灯腰，像某种不肯愈合的伤口。</p>
+<p>他的指腹摩挲着那道裂纹，一下，一下，这是他紧张时的习惯，八百年了，改不掉。</p>
+<p>孟婆看着他的动作，灰白色的瞳孔里闪过什么，但很快消失了。</p>
+<p>&quot;三天。&quot;她说，&quot;醉仙楼，画皮鬼。&quot;</p>
+<p>她转身往门口走，深青色的袍角扫过门槛，发出轻微的摩擦声。</p>
+<p>走到门口，她停了一下。</p>
+<p>&quot;司灯。&quot;她叫。</p>
+<p>谢无妄抬起头。</p>
+<p>孟婆没回头，背对着他，晨光把她的轮廓描成一道深色的剪影。</p>
+<p>&quot;你们分不开了。&quot;她说，声音低下去，像是从很远的地方飘过来的，&quot;这契，是死契。&quot;</p>
+<p>门在她身后合上，发出一声闷响。</p>
+<p>房间里安静下来。</p>
+<p>谢无妄还坐在床边，灯在手里，指腹摩挲着裂纹。</p>
+<p>他盯着灯芯，火苗安静地燃烧着，昏黄，微弱，裂纹处的光漏出来，在灯罩上投下一道细碎的影。</p>
+<p>但火苗的尖端在晃。</p>
+<p>不是风吹的。</p>
+<p>他转头看向窗边。</p>
+<p>沈烬站在窗前，背对着他，一只手撑在窗台上，另一只手垂在身侧，指骨上的焚痕暗了下去，火星在皮肤边缘跳了一下，然后消失了。</p>
+<p>他在收敛鬼焰。</p>
+<p>谢无妄看见了。</p>
+<p>无意识的那种收敛，像呼吸一样自然，不需要刻意控制。</p>
+<p>沈烬的侧脸在晨光里显出某种锋利的轮廓，下颌线条紧绷，嘴角没有笑，是一种谢无妄很少见到的表情。</p>
+<p>安静。</p>
+<p>太安静了。</p>
+<p>谢无妄低下头，继续摩挲灯柄上的裂纹。</p>
+<p>八百年了，这盏灯跟着他渡了数不清的执念，裂纹从灯底爬到灯腰，现在正往灯芯的方向蔓延。</p>
+<p>他想起孟婆说的话。</p>
+<p>&quot;你们分不开了。&quot;</p>
+<p>&quot;这契，是死契。&quot;</p>
+<p>灯焰晃了一下，往沈烬的方向偏了偏，像被什么东西吸引，又像在辨认什么。</p>
+<p>谢无妄把灯放低，火苗擦过他的袖口，那截磨出毛边的布料被光照得透亮。</p>
+<p>窗外，沈烬忽然转过头。</p>
+<p>两人的视线在空中碰了一下，又同时移开。</p>
+<p>掌心的命契纹同时烫了一下，像某种无声的回应。</p>
+<p>谢无妄把灯攥紧，裂纹硌着指腹，疼，但他没松手。</p>
+<p>他想起八百年前的那个晚上，沈烬站在归墟裂口边缘，回头看了他一眼。</p>
+<p>那一眼里没有恨。</p>
+<p>现在他知道了，那是什么。</p>
+<p>但他不想知道。</p>
+<hr />
+<blockquote>
+<p>字数：3024 字
+生成时间：2026/06/16</p>
+</blockquote>
+
+        </article>
+    </main>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0)">↑</button>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+function loadTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        html.classList.add('dark');
+        themeIcon.textContent = '☀';
+        themeText.textContent = '亮色';
+    }
+}
+function toggleTheme() {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeIcon.textContent = isDark ? '☀' : '🌙';
+    themeText.textContent = isDark ? '亮色' : '暗色';
+}
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+}
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progress.style.width = pct + '%';
+    const backToTop = document.getElementById('backToTop');
+    backToTop.classList.toggle('visible', scrollTop > 300);
+});
+const headings = document.querySelectorAll('article h1, article h2, article h3');
+const tocLinks = document.querySelectorAll('.toc-link');
+function updateActiveTOC() {
+    let current = '';
+    for (const h of headings) {
+        if (h.getBoundingClientRect().top <= 100) {
+            current = h.id;
+        }
+    }
+    tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        if (link.getAttribute('href') === '#' + current) {
+            link.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        }
+    });
+}
+window.addEventListener('scroll', () => requestAnimationFrame(updateActiveTOC));
+window.addEventListener('hashchange', () => {
+    const el = document.getElementById(location.hash.slice(1));
+    if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo(0, y);
+    }
+});
+loadTheme();
+updateActiveTOC();
+</script>
+</body>
+</html>
