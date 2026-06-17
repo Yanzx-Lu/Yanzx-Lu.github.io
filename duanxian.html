@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>断弦照影</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg: #faf8f5; --fg: #2c2c2c; --muted: #6b6b6b; --accent: #8b3a3a;
+    --accent-light: #c27b7b; --border: #e0dcd6; --card: #ffffff;
+    --toc-bg: #f5f2ed; --shadow: rgba(0,0,0,0.06);
+    --font-body: "Noto Serif SC", "Source Han Serif SC", "思源宋体", "STSong", "SimSun", Georgia, serif;
+    --font-ui: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    --line: 1.9; --max-width: 720px; --radius: 8px;
+}
+:root.dark {
+    --bg: #1a1a1a; --fg: #d4d4d4; --muted: #888888; --accent: #c27b7b;
+    --accent-light: #e0a0a0; --border: #3a3a3a; --card: #252525;
+    --toc-bg: #222222; --shadow: rgba(0,0,0,0.3);
+}
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body); background: var(--bg); color: var(--fg);
+    line-height: var(--line); font-size: 18px;
+    transition: background 0.3s, color 0.3s; overflow-x: hidden;
+}
+.container { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
+.sidebar {
+    width: 280px; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh;
+    background: var(--toc-bg); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; z-index: 100;
+    transition: background 0.3s, transform 0.3s;
+}
+.sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-title { font-family: var(--font-ui); font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.sidebar-subtitle { font-size: 0.75rem; color: var(--muted); font-family: var(--font-ui); }
+.back-home {
+    display: block; padding: 8px 20px; color: var(--accent); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); font-weight: 600;
+    border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.back-home:hover { background: var(--bg); }
+.toc-wrap { flex: 1; overflow-y: auto; padding: 12px 0; }
+.toc-wrap::-webkit-scrollbar { width: 4px; }
+.toc-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.toc-link {
+    display: block; padding: 6px 20px; color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); line-height: 1.5;
+    border-left: 3px solid transparent; transition: all 0.2s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toc-link:hover, .toc-link.active { color: var(--accent); background: var(--bg); border-left-color: var(--accent); }
+.toc-level-1 { font-weight: 700; font-size: 0.95rem; color: var(--fg); }
+.toc-level-2 { font-size: 0.88rem; }
+.toc-level-3 { font-size: 0.82rem; padding-left: 28px !important; }
+.sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.main { margin-left: 280px; flex: 1; padding: 60px 40px 80px; max-width: var(--max-width); min-width: 0; }
+article { background: var(--card); padding: 48px 56px; border-radius: var(--radius); box-shadow: 0 2px 20px var(--shadow); }
+article h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.6em; color: var(--accent); text-align: center; font-family: var(--font-ui); }
+article h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; padding-bottom: 0.3em; border-bottom: 2px solid var(--accent-light); color: var(--accent); font-family: var(--font-ui); }
+article h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.6em; margin-bottom: 0.6em; color: var(--fg); font-family: var(--font-ui); }
+article p { margin-bottom: 1.2em; text-align: justify; text-indent: 2em; }
+article p:first-of-type { text-indent: 0; }
+article blockquote { margin: 1.5em 0; padding: 1em 1.4em; border-left: 4px solid var(--accent-light); background: var(--toc-bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--muted); font-style: italic; }
+article blockquote p { text-indent: 0; margin-bottom: 0.5em; }
+article blockquote p:last-child { margin-bottom: 0; }
+article hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+article strong { color: var(--accent); font-weight: 700; }
+article em { font-style: italic; color: var(--accent-light); }
+article ul, article ol { margin: 1em 0 1em 2em; }
+article li { margin-bottom: 0.5em; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-light); transition: border 0.2s; }
+article a:hover { border-bottom-style: solid; }
+.btn { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; cursor: pointer; color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.progress-bar { position: fixed; top: 0; left: 280px; right: 0; height: 3px; background: var(--border); z-index: 200; }
+.progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent)); width: 0%; transition: width 0.1s; }
+.back-to-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.3s; box-shadow: 0 2px 10px var(--shadow); z-index: 200; font-size: 1.2rem; }
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 300; width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px var(--shadow); font-size: 1.2rem; color: var(--fg); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+.overlay.show { display: block; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-light); }
+::selection { background: var(--accent-light); color: white; }
+@media (max-width: 900px) {
+    .menu-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); box-shadow: 2px 0 20px rgba(0,0,0,0.15); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 60px 20px 40px; }
+    article { padding: 28px 24px; }
+    .progress-bar { left: 0; }
+    .back-to-top { bottom: 20px; right: 20px; }
+}
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+    article h1 { font-size: 1.8rem; }
+    article h2 { font-size: 1.3rem; }
+    article h3 { font-size: 1.1rem; }
+    .main { padding: 50px 14px 30px; }
+    article { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-bar-inner" id="progress"></div></div>
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">断弦照影</div>
+            <div class="sidebar-subtitle">目录导航</div>
+        </div>
+        <a href="index.html" class="back-home">← 返回书库</a>
+        <div class="toc-wrap" id="tocWrap">
+            <a href="#第-1-章-重生" class="toc-link toc-level-1" style="padding-left:0px">第 1 章 重生</a>
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn" onclick="toggleTheme()" id="themeBtn">
+                <span id="themeIcon">🌙</span> <span id="themeText">暗色</span>
+            </button>
+        </div>
+    </aside>
+    <main class="main">
+        <article>
+            <h1 id="第-1-章-重生">第 1 章 重生</h1>
+<p>沈折玉醒来的第一件事，是闻到了尸臭。</p>
+<p>那味道腥甜、腐败，混着泥土被雨水泡透后的腥气，一股脑儿往鼻腔里钻。他本能地想偏过头，脖子却像生了锈的铁栓，动一下都扯着筋骨发疼。</p>
+<p>眼前没有光。</p>
+<p>不是夜晚那种黑，是浓稠的、压在眼皮上的黑暗，带着一点黏腻的湿意。他躺在一块凹凸不平的地面上，后背抵着硬冷的石头，身侧有什么东西抵着他的胳膊，又冷又僵。</p>
+<p>沈折玉花了三息时间，才确认那是一具尸体。</p>
+<p>他的手就搭在尸体的手腕上。皮肤已经凉透，指节僵硬地曲着，像是要抓住什么。沈折玉抽回手，指腹蹭到一片黏腻。他闻了闻，是血，已经半干。</p>
+<p>“……操。”</p>
+<p>声音从喉咙里挤出来，嘶哑得不像人声。沈折玉被自己的嗓音吓了一跳。这声音太年轻了，带着少年人独有的清亮，却又被折磨得气息虚浮。</p>
+<p>不是他的声音。</p>
+<p>三年前，谢长离那一剑穿心时，他听到的最后一声叹息，是自己喉咙里涌出来的血泡声。他的嗓音早就该随那具身体烂透了。</p>
+<p>沈折玉猛地睁开眼。</p>
+<p>黑暗散开了一点。不是天亮了，是他的眼睛适应了这片暗。头顶是灰蒙蒙的天，云层压得很低，像一块泡过水的脏布。几只乌鸦蹲在枯枝上，歪着头看他，眼珠黑亮。</p>
+<p>他撑着地面坐起来。动作牵动了胸口某处，一阵剧痛从肋骨缝里炸开，疼得他弯下腰，半晌没喘上气。</p>
+<p>等那阵疼过去，沈折玉低头，扯开身上那件灰扑扑的短褐。</p>
+<p>胸口正中央，心脏的位置，有一道疤。</p>
+<p>疤已经结痂，颜色暗红，边缘凹凸不平，像一条蜈蚣趴在那里。沈折玉用手指按上去，指尖下的皮肉还在发烫，疼意顺着脊椎往上爬。</p>
+<p>这个位置，他认得。</p>
+<p>三年前，谢长离的剑就是从这里穿过去的。</p>
+<p>沈折玉记得很清楚。那把剑叫“照影”，剑身清寒，刺进来的时候他低头看了一眼，只看见半截剑尖从自己背后露出来，血顺着刃口往下淌。</p>
+<p>谢长离当时说什么来着？</p>
+<p>沈折玉闭了闭眼。记忆里有风声，有悬崖，有谢长离那双看不出情绪的眼睛。然后他往后倒，摔进无底深渊。</p>
+<p>他以为自己死透了。</p>
+<p>可现在他又坐了起来，胸口顶着一道同样的疤，躺在一堆尸体中间。</p>
+<p>沈折玉环顾四周。</p>
+<p>这是一片乱葬岗。大大小小的土包 scattered 在荒野里，有的塌了半边，露出里面森白的骨头。枯树歪歪斜斜地立着，枝桠像人手一样朝天上抓。地上躺着七八具尸体，有男有女，穿着粗布衣裳，死状各异。有的胸口破了个大洞，有的脖子歪成诡异的角度。</p>
+<p>他身下的这具尸体最年轻，十六七岁的样子，面目已经发青，嘴角还凝着血。</p>
+<p>沈折玉盯着那张脸看了很久。</p>
+<p>这张脸和他从前的脸没有半分相似。眉尾有一颗小痣，嘴唇薄，下颌尖尖的，是一副很普通、很卑微的长相。可沈折玉抬起自己的手，看见的手掌却属于这具尸体。</p>
+<p>纤细，苍白，指节处有茧。</p>
+<p>不是他的手。</p>
+<p>他试着运转灵力。丹田里空荡荡的，像一口枯井。好不容易挤出一丝游气，刚走到手肘就散了。</p>
+<p>“废物。”</p>
+<p>沈折玉低声骂了一句。不是骂这具身体，是骂自己。堂堂夷陵剑修，天赋最好的关门弟子，如今竟落到一个连炼气都未稳固的躯壳里。</p>
+<p>他撑着膝盖站起来。腿在抖，站不太稳。胸口那道疤随着呼吸一抽一抽地疼。</p>
+<p>地上那具年轻尸体的腰间挂着一块木牌。沈折玉弯腰扯下来，木牌上刻着两个字：林远。</p>
+<p>名字旁边还有一行小字：外门杂役。</p>
+<p>沈折玉把木牌翻过来，背面贴着一张泛黄的纸，像是被人仓促塞进去的。他展开看了，纸上是歪歪扭扭的几行字：</p>
+<p>“他们说我看到了不该看的东西。我不会说的。我真的不会说的。”</p>
+<p>字迹潦草，最后一笔拖得很长，像是写字的人手在发抖。</p>
+<p>沈折玉把纸揉成一团，塞回木牌里。</p>
+<p>远处传来脚步声。</p>
+<p>他反应很快，立刻矮下身，躲进旁边一处塌了半边的土坡后。土坡后面堆着几具半腐烂的尸体，臭气熏天，正好遮住他的气息。</p>
+<p>两个穿着灰衣的杂役走过来，手里提着灯笼，一边走一边抱怨。</p>
+<p>“这个月第几个了？”</p>
+<p>“第三个了吧。外门弟子命贱，死就死了，管事连名册都懒得翻。”</p>
+<p>“也是。尤其是这种没背景的，死在山下都没人问。”</p>
+<p>“欸，你说最近谢长老怎么总往山下跑？往日他一年也出不了几次执法殿。”</p>
+<p>“谁知道。许是追查三年前那桩案子？沈折玉那个叛徒的余党？”</p>
+<p>“别说了，谢长离的名字也是我们能提的？快走快走，收完尸赶紧回去。”</p>
+<p>沈折玉蹲在土坡后面，听着那两个名字从杂役嘴里说出来。</p>
+<p>谢长离。</p>
+<p>沈折玉。</p>
+<p>三年过去了。他的名字还挂在别人嘴里，像个耻辱的记号。而谢长离，那个亲手杀了他的师兄，如今已经是执法长老。</p>
+<p>沈折玉低头看了看自己的手。</p>
+<p>这双手现在叫林远，是外门一个杂役弟子，没背景，没修为，死在山下也不会有人多问。</p>
+<p>他摸了摸胸口的疤。</p>
+<p>那里还在发烫。</p>
+<p>沈折玉扯了扯嘴角，露出一个没什么温度的笑。他贴着土坡站起身，朝着与杂役相反的方向走去。</p>
+<p>乱葬岗外是一条泥泞的小路，通向山脚。云层越来越低，风里带着雨前的土腥味。</p>
+<p>沈折玉走得很慢。这具身体虚得厉害，走几步就要停下来喘口气。他一边走，一边在脑子里整理已知的信息。</p>
+<p>他死了三年。</p>
+<p>谢长离活着，还成了执法长老。</p>
+<p>他现在在一个叫林远的外门弟子身体里，胸口有道和前世一模一样的疤。</p>
+<p>沈折玉停下脚步，又扯开衣襟看了一眼。那道疤不是新伤，已经结痂愈合，但位置和形状精确得可怕。像是有人按照他前世的致命伤，在这具身体上复刻了一遍。</p>
+<p>这不可能是巧合。</p>
+<p>他想起临死前谢长离看他的眼神。没有恨，没有怒，只有一片深不见底的平静。那平静下面是藏了十几年的东西，沈折玉以前看不懂，后来没机会再看。</p>
+<p>现在他回来了。</p>
+<p>胸口这道疤，就是最好的证据。</p>
+<p>沈折玉重新拢好衣襟，抬头看向山路尽头。那里有一片灰白色的建筑群，隐在云雾里，飞檐翘角，肃穆庄严。</p>
+<p>那是他前世待了十几年的地方。</p>
+<p>也是他被一剑穿心的地方。</p>
+<p>风大了，吹得他单薄的短褐猎猎作响。沈折玉眯起眼，把木牌塞进怀里，一步一步朝山上走去。</p>
+<p>雨开始下了。</p>
+
+        </article>
+    </main>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0)">↑</button>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+function loadTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        html.classList.add('dark');
+        themeIcon.textContent = '☀';
+        themeText.textContent = '亮色';
+    }
+}
+function toggleTheme() {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeIcon.textContent = isDark ? '☀' : '🌙';
+    themeText.textContent = isDark ? '亮色' : '暗色';
+}
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+}
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progress.style.width = pct + '%';
+    const backToTop = document.getElementById('backToTop');
+    backToTop.classList.toggle('visible', scrollTop > 300);
+});
+const headings = document.querySelectorAll('article h1, article h2, article h3');
+const tocLinks = document.querySelectorAll('.toc-link');
+function updateActiveTOC() {
+    let current = '';
+    for (const h of headings) {
+        if (h.getBoundingClientRect().top <= 100) {
+            current = h.id;
+        }
+    }
+    tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        if (link.getAttribute('href') === '#' + current) {
+            link.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        }
+    });
+}
+window.addEventListener('scroll', () => requestAnimationFrame(updateActiveTOC));
+window.addEventListener('hashchange', () => {
+    const el = document.getElementById(location.hash.slice(1));
+    if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo(0, y);
+    }
+});
+loadTheme();
+updateActiveTOC();
+</script>
+</body>
+</html>
