@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星期三的茶</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg: #faf8f5; --fg: #2c2c2c; --muted: #6b6b6b; --accent: #8b3a3a;
+    --accent-light: #c27b7b; --border: #e0dcd6; --card: #ffffff;
+    --toc-bg: #f5f2ed; --shadow: rgba(0,0,0,0.06);
+    --font-body: "Noto Serif SC", "Source Han Serif SC", "思源宋体", "STSong", "SimSun", Georgia, serif;
+    --font-ui: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    --line: 1.9; --max-width: 720px; --radius: 8px;
+}
+:root.dark {
+    --bg: #1a1a1a; --fg: #d4d4d4; --muted: #888888; --accent: #c27b7b;
+    --accent-light: #e0a0a0; --border: #3a3a3a; --card: #252525;
+    --toc-bg: #222222; --shadow: rgba(0,0,0,0.3);
+}
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body); background: var(--bg); color: var(--fg);
+    line-height: var(--line); font-size: 18px;
+    transition: background 0.3s, color 0.3s; overflow-x: hidden;
+}
+.container { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
+.sidebar {
+    width: 280px; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh;
+    background: var(--toc-bg); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; z-index: 100;
+    transition: background 0.3s, transform 0.3s;
+}
+.sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-title { font-family: var(--font-ui); font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.sidebar-subtitle { font-size: 0.75rem; color: var(--muted); font-family: var(--font-ui); }
+.back-home {
+    display: block; padding: 8px 20px; color: var(--accent); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); font-weight: 600;
+    border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.back-home:hover { background: var(--bg); }
+.toc-wrap { flex: 1; overflow-y: auto; padding: 12px 0; }
+.toc-wrap::-webkit-scrollbar { width: 4px; }
+.toc-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.toc-link {
+    display: block; padding: 6px 20px; color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); line-height: 1.5;
+    border-left: 3px solid transparent; transition: all 0.2s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toc-link:hover, .toc-link.active { color: var(--accent); background: var(--bg); border-left-color: var(--accent); }
+.toc-level-1 { font-weight: 700; font-size: 0.95rem; color: var(--fg); }
+.toc-level-2 { font-size: 0.88rem; }
+.toc-level-3 { font-size: 0.82rem; padding-left: 28px !important; }
+.sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.main { margin-left: 280px; flex: 1; padding: 60px 40px 80px; max-width: var(--max-width); min-width: 0; }
+article { background: var(--card); padding: 48px 56px; border-radius: var(--radius); box-shadow: 0 2px 20px var(--shadow); }
+article h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.6em; color: var(--accent); text-align: center; font-family: var(--font-ui); }
+article h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; padding-bottom: 0.3em; border-bottom: 2px solid var(--accent-light); color: var(--accent); font-family: var(--font-ui); }
+article h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.6em; margin-bottom: 0.6em; color: var(--fg); font-family: var(--font-ui); }
+article p { margin-bottom: 1.2em; text-align: justify; text-indent: 2em; }
+article p:first-of-type { text-indent: 0; }
+article blockquote { margin: 1.5em 0; padding: 1em 1.4em; border-left: 4px solid var(--accent-light); background: var(--toc-bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--muted); font-style: italic; }
+article blockquote p { text-indent: 0; margin-bottom: 0.5em; }
+article blockquote p:last-child { margin-bottom: 0; }
+article hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+article strong { color: var(--accent); font-weight: 700; }
+article em { font-style: italic; color: var(--accent-light); }
+article ul, article ol { margin: 1em 0 1em 2em; }
+article li { margin-bottom: 0.5em; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-light); transition: border 0.2s; }
+article a:hover { border-bottom-style: solid; }
+.btn { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; cursor: pointer; color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.progress-bar { position: fixed; top: 0; left: 280px; right: 0; height: 3px; background: var(--border); z-index: 200; }
+.progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent)); width: 0%; transition: width 0.1s; }
+.back-to-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.3s; box-shadow: 0 2px 10px var(--shadow); z-index: 200; font-size: 1.2rem; }
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 300; width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px var(--shadow); font-size: 1.2rem; color: var(--fg); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+.overlay.show { display: block; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-light); }
+::selection { background: var(--accent-light); color: white; }
+@media (max-width: 900px) {
+    .menu-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); box-shadow: 2px 0 20px rgba(0,0,0,0.15); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 60px 20px 40px; }
+    article { padding: 28px 24px; }
+    .progress-bar { left: 0; }
+    .back-to-top { bottom: 20px; right: 20px; }
+}
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+    article h1 { font-size: 1.8rem; }
+    article h2 { font-size: 1.3rem; }
+    article h3 { font-size: 1.1rem; }
+    .main { padding: 50px 14px 30px; }
+    article { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-bar-inner" id="progress"></div></div>
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">星期三的茶</div>
+            <div class="sidebar-subtitle">目录导航</div>
+        </div>
+        <a href="index.html" class="back-home">← 返回书库</a>
+        <div class="toc-wrap" id="tocWrap">
+            <a href="#星期三的茶" class="toc-link toc-level-1" style="padding-left:0px">星期三的茶</a>
+<a href="#1-猎食" class="toc-link toc-level-2" style="padding-left:16px">1. 猎食</a>
+<a href="#2-周三的客人" class="toc-link toc-level-2" style="padding-left:16px">2. 周三的客人</a>
+<a href="#3-茶" class="toc-link toc-level-2" style="padding-left:16px">3. 茶</a>
+<a href="#4-习惯" class="toc-link toc-level-2" style="padding-left:16px">4. 习惯</a>
+<a href="#5-挑食" class="toc-link toc-level-2" style="padding-left:16px">5. 挑食</a>
+<a href="#6-杯子的对白" class="toc-link toc-level-2" style="padding-left:16px">6. 杯子的对白</a>
+<a href="#7-失眠" class="toc-link toc-level-2" style="padding-left:16px">7. 失眠</a>
+<a href="#8-陈默的问题" class="toc-link toc-level-2" style="padding-left:16px">8. 陈默的问题</a>
+<a href="#9-他知道" class="toc-link toc-level-2" style="padding-left:16px">9. 他知道</a>
+<a href="#10-为什么" class="toc-link toc-level-2" style="padding-left:16px">10. 为什么</a>
+<a href="#11-长出心的瞬间" class="toc-link toc-level-2" style="padding-left:16px">11. 长出心的瞬间</a>
+<a href="#12-最后一只杯" class="toc-link toc-level-2" style="padding-left:16px">12. 最后一只杯</a>
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn" onclick="toggleTheme()" id="themeBtn">
+                <span id="themeIcon">🌙</span> <span id="themeText">暗色</span>
+            </button>
+        </div>
+    </aside>
+    <main class="main">
+        <article>
+            <h1 id="星期三的茶">星期三的茶</h1>
+<blockquote>
+<p>一个不该有心的异类和一个人人都能看见他心的心理医生。</p>
+</blockquote>
+<hr />
+<h2 id="1-猎食">1. 猎食</h2>
+<p>我在这个城市里找了三年的食物。
+超市里卖的那种我不吃。我吃的是人的情绪。最浓的、最新鲜的那一层。不需要咀嚼，吸入身体就可以了。菜市场的大妈永远在烦躁。那种情绪是酸腐的，带着隔夜油腥味，咽下去胃里会泛酸水。学校门口的家长身上是焦虑，甜的，腻腻的，像化掉的廉价糖果，吃完以后嘴里一层黏糊糊的东西。网吧里的少年是燥热的空虚，地铁上的上班族是一股塑料味。我都能吃，但我最喜欢干净的。
+干净的情绪不好找。大多数人身上都是混的。烦躁底下压着焦虑，焦虑底下埋着恐惧，恐惧再往下是别的什么，一层一层叠在一起，像没洗干净的调色盘。我必须先吃掉面层的、不好吃的部分，才能碰到底下那一点干净的。
+所以我总在饿。是一种说不清道不明的，有什么东西在胸腔里磨。
+那天下午我路过一栋灰色的楼。楼不大，夹在药店和便利店之间，门边挂着一块褪色的铜牌，市立医院心理科门诊。我本来已经走过去了，但走出去三步之后我停了下来。是我感受到了一种从来没遇到过的情绪。是凉的，干净的，像一杯放在桌上忘了喝的水，表面落了一层薄薄的灰，但水是清的。
+我站在那栋楼门口，闭了一下眼睛，仔细地辨认。
+孤独。
+干净的孤独。
+我吃过很多种孤独。合租的人一个人过生日的那种是酸腐的。深夜加班的上班族站在便利店门口抽烟的那种是发苦的。老人坐在公园长椅上看别人遛狗的那种是又涩又闷的，咽下去以后卡在胸口半天化不开。
+但没吃过这种。
+这种孤独没有怨气，没有自怜。是他选择了这样待着。像深水，表面平静，底下有流动。我站在门口没有马上进去。是我在犹豫要不要这么快就把他吃完。这么干净的东西应该留着。慢慢吃，分很多次吃。
+那天我没有进去。我看了一眼那扇半掩的门，转身走了。
+三天后我站在了同一个位置，深深吸了一口气，推开了那扇门。如果知道后来会发生什么，我可能就不会走进去了。但异类不会有这种假设。异类只有直觉。那扇门里面坐着一个彩色世界里唯一无色的人。我当时还不知道这意味着什么。我当时只是饿了。饿了就去找食物。这个故事就是这么开始的。</p>
+<h2 id="2-周三的客人">2. 周三的客人</h2>
+<p>诊室在一楼，门半开着。我假装走错了，站在门口看了一眼，里面的陈设很简单：一张办公桌，一台电脑，几把椅子，墙角有一盆绿萝。靠窗的沙发上坐着一个人。
+&quot;抱歉，我找——&quot;
+他抬起了头。我的话卡在了喉咙里。他确实好看，偏深的五官，不笑的时候有一点疏离。我在城市里见过无数张脸，但我从没见过一个颜色这么干净的人。
+&quot;找谁？&quot;
+他的声音比长相温和。
+&quot;三楼抽血——走错了。&quot;我说。
+&quot;二楼抽血。三楼是妇科。&quot;
+&quot;哦，谢谢。&quot;
+正常的对话到这里就结束了。一个走错门的陌生人，一个好心指路的人。我应该转身离开。但我没有走。我走到他对面的位置坐了下来。
+他没有赶我走。他看了我一眼，就一眼，没有不耐烦也没有好奇，然后他把目光落回膝盖上的那本书。那是一本旧书，封面磨得发白，看不清书名。他翻页的动作很慢，不慌不忙的。
+我坐在那里，安静地吃。
+七分钟。够了。七分钟足够我吃掉一个普通人攒了一周的坏情绪。而他的情绪质量比我想象的还要好。他的情绪不浓。是淡的、凉的、清透的。像冷泡茶，咽下去以后喉咙里还在回甘。我差点多坐了一会儿。但我控制住了，不能一次吃完。好东西要留着。
+我站起来。
+&quot;谢谢。&quot;
+我也不知道我谢他什么，谢他指路？谢他没赶我走？谢他提供了一顿好饭？他没抬头，说了声&quot;不客气&quot;，声音低低的，被翻页的声音盖过去了。
+我走到门口的时候他在我身后说了一句：
+&quot;你下次可以周三来。我周三下午休息。&quot;
+我回头看他。他已经继续看书了，那句话只是自然而然地流出去了，不需要确认反应。
+&quot;好。&quot;
+我推开门走出去。站在外面的街上，我发现自己忘了一件事。我没有确认他是不是看出了什么。我说走错了诊室，但三楼是妇科，我是一个看起来二十四五岁的单身男人。正常人的第一反应是&quot;你走错了&quot;，而不是告诉他二楼是抽血的。
+他真的信了吗？还是他看出来我是故意走进来的？
+我在街边站了几秒，决定不管那么多。不管他信没信，我周三都来。我后来常常想起这个决定——它是错的，还是对的？我没有答案。</p>
+<h2 id="3-茶">3. 茶</h2>
+<p>敲门声响起的时候我正坐在床垫上看天花板。我刚看了一眼手机，下午三点，准时。
+我打开门。
+他站在门口，灰色的薄外套，手里拎着一罐茶叶。是普通的透明罐子，里面装着一片一片卷曲的深绿色叶子。他站在门槛外面，没有着急迈进来，等一个明确的邀请。
+&quot;我不知道你喝不喝茶。&quot;他说。&quot;但做客的时候不带东西，我会不太自在。&quot;
+我没有让客人来过这间屋子。这个城市里我没有需要招待的人。一个月退房一次的工作不会有朋友。我侧开身。
+&quot;进来。&quot;
+他环顾了一圈。桌上一只白瓷杯。一把椅子。墙角一张床垫，铺得平整但没有被褥的褶皱，因为没有人在上面真正睡过觉。墙角空荡荡的，没有衣柜，没有行李，一间还没租出去的样板间。
+他没问。他把茶叶放在桌上，脱了外套搭在椅背上。
+&quot;杯子？&quot;
+我看了一眼桌上那只白瓷杯，我唯一的一只。他走过去拿起来看了一眼，&quot;够大，泡茶正好&quot;。他烧了热水，把茶叶放进杯子里，注水。干枯的叶子在热水里慢慢舒展开来，沉到杯底。他端起杯子，吹了吹浮面的热气，嘴唇碰到杯沿，喝了一口。
+我坐在床垫上看着他，看着他喝水的喉结上下滚动了一下，看着他嘴唇压过的那道杯沿上留下了一圈浅浅的水痕。
+我没有移开视线。
+他放下杯子，抬起头。他的表情很平静。
+&quot;你不喝？&quot;
+我端起面前那一杯，我忘了我的杯子也在桌上。但我没有喝。我端着那杯茶，隔着上升的白色热气，安静地&quot;吃&quot;他。
+这次的味道和上一次不一样了。
+还是凉的，清透的，但底下多了一层东西。不浓，杯底化开的一点点甜。我不知道那是什么。是他在放松？还是我也在变？我只是知道他坐在我对面的这十几分钟里，他的孤独没有变少，但也没有变重。它只是稳稳地停在那里，被他接住了。
+&quot;好喝吗？&quot;
+他忽然问。
+我反应过来他在问茶。我看着杯子里淡黄色的液体，端起来喝了一口。温的，微微的涩，咽下去以后舌根有一点回甘。我尝到了。是第一次尝到了茶叶本身的味道，一种我从没花时间注意过的味道。
+&quot;好喝。&quot;
+他嘴角弯了一下。那是一个很小的弧度，但足够让他的整张脸变得不一样。
+他说那是他老家山上的野茶。他妈妈在山坡上随便种了几棵，每年清明前摘一茬，炒了寄过来。他说这些的时候语气很轻，提一件很小的事。但我注意到他说起他妈妈的时候，他的孤独颜色底下透出了一层薄薄的 warmth，像冷水里化开了一滴墨，慢慢扩散。
+&quot;你一个人住？&quot;
+他问。终于问了第一个关于我的问题。
+&quot;嗯。&quot;
+&quot;住了多久？&quot;
+&quot;三个月。半年。我记不太清。&quot;
+他&quot;嗯&quot;了一声，没有追问。他把喝完的杯子放回桌上，杯底碰到桌面发出一声轻响。
+&quot;周三下午我休息。如果不忙的话——我过来坐坐。&quot;
+是一个声明。他给了我拒绝的时间，大约三秒，然后他站起来，拿起外套。
+&quot;茶留给你了。&quot;
+他走了。门在他身后轻轻合上。我坐在床垫上，听着他的脚步声沿着楼梯一层一层往下，直到消失。然后我站起来，走到桌前。他留下的那只杯子，杯沿上有一道浅浅的水痕，已经半干了。但我记得那个位置。
+我没有洗那只杯子。
+我把它放回了桌上原来的位置，和另一只空杯子并排。</p>
+<h2 id="4-习惯">4. 习惯</h2>
+<p>第四周周三，我发现自己醒来看了一眼日历。
+我不需要看日历。我不需要知道今天是周几，因为每一天对我来说都是一样的。觅食，等待，再觅食。时间在异类身上没有刻度。但我看了一眼日历。看到那三个字，星期三，的时候，我心里有一个地方动了一下。我告诉自己：那是因为陈默的情绪质量高。
+他准时来了。
+他进门的时候我已经烧好了水。他看了一眼桌上冒着热气的水壶，没有说什么，坐下来，自己放茶叶，注水，等。我坐在他对面。窗外的光从窗帘缝隙里照进来，落在他手指上。他的指节很长，握着杯子的姿势很自然，捧着什么暖和的东西。
+&quot;你的工作怎么样？&quot;
+我听到自己问。
+问完我就愣住了。这不是一个必要的问题。我不需要知道他的工作怎么样。我需要的只是他的情绪。但话已经出口了。
+他抬眼看我。那一眼是确认式的，确认我刚才是不是真的问了一个问题。
+&quot;还好。&quot;他说。
+&quot;哦。&quot;
+对话到这里就可以停了。但它停在空气里的方式让我不太舒服，一段没有放完的音乐忽然卡住了。
+&quot;你呢？&quot;
+他反问。
+&quot;什么？&quot;
+&quot;你的工作。&quot;
+&quot;我没有工作。&quot;
+他没有露出同情或好奇的表情。他只是&quot;嗯&quot;了一声，喝了一口茶。
+&quot;那平时做什么？&quot;
+他问得很自然，聊天的语气。我发现自己没有准备过这个问题的答案。三年了，没有人问过我平时做什么。我需要编一个答案吗？他看起来并不期待一个精确的答案。他只是想说话。
+&quot;没什么。&quot;我说。
+&quot;没什么也挺好的。&quot;
+他说这句话的时候低头喝了一口茶，嘴角有一点弧度。那个弧度是一种&quot;我不知道该说什么但我不想让对话冷掉&quot;的表情。我盯着那个弧度看了一会儿。然后我做了一件很奇怪的事。我把自己的那杯茶端起来，喝了一口。
+茶叶有点涩。但我咽下去了。
+他走之后我坐在床垫上，回想刚才的对话。我意识到一件事。我回答了问题。我回答了，是因为我不想让那段对话冷掉。我不想让那段对话冷掉，这件事本身是不正常的。异类不需要对话。异类不需要&quot;聊天&quot;。异类只需要吃。
+但我今天没有怎么吃他。因为他的孤独变浅了。薄薄的一层，水面飘着一层油花。还是干净的，但不够了。
+我应该找下一个食物了。但我没有。我坐在床垫上，等下一个周三。</p>
+<h2 id="5-挑食">5. 挑食</h2>
+<p>第五周的周三我没有去出租屋。
+我做了一个实验。我想证明一件事：我想证明我可以换一个人吃。没有谁是必须的。
+我去了菜市场。下午三点，平时陈默坐在楼下台阶上的时间，我站在菜市场门口，深吸了一口那里面你的情绪。菜市场大妈的烦躁。隔夜的油腥味。我咽下去了。胃里翻了一下。但我可以吃。我没有离开。我又站在了网吧门口。那个经常坐在角落里打游戏的少年今天似乎输了，满身的燥热和愤怒，脏红色的，铺天盖地。我站在他身后不远处，安静地吸入。咽下去了。喉咙里吞了一块砂纸。但我可以吃。
+我沿着街道走了一圈，吃了六个人。不同的情绪，不同的味道，一个比一个难吃。但我证明了一件事：我是可以吃别人的。
+下午六点。我发现自己站在了一条熟悉的街道上，离陈默住的地方只隔了两条街。我告诉自己，我只是路过。我没有往前走。我坐在路边的一把长椅上，看着那条通向陈默家的路。天色暗下来，路灯亮了。我在那里坐了很久。久到路灯把我的影子从一边挪到了另一边。
+我心里有一个声音在说：回去看看。
+另一个声音说：看什么？你有病吗？
+我坐在长椅上，手插在口袋里，摸到了口袋里的钥匙。那把钥匙上贴着一个小标签，是我刚租这间屋子的时候贴的，写的是地址。但地址下面还有一行小字，我差点忘了：是中介写给我的门禁密码，后面画了个笑脸。笑脸已经磨花了，但那个圆圆的轮廓还在。我看着那行模糊的字迹，忽然觉得我是那把钥匙，挂在一个不属于自己的地方，被摸得光滑了，但谁也不知道它原来开的是哪把锁。
+我没有回去。我回到出租屋的时候天已经全黑了。楼道里的灯坏了，我摸黑上了楼，掏出钥匙的时候踢到了门槛边的什么东西。我弯腰摸了一下，一盒东西。我拿进屋里，打开灯。
+是那罐茶叶。茶叶底下压着一张纸条。纸条上的字迹很淡，笔划干净，没有用力。
+&quot;茶泡好了。在桌上。晾了有点久，可能凉了。&quot;
+我站在灯下把那行字看了三遍。然后把纸条折好，放进了口袋里。
+桌上的白瓷杯里泡着茶。我端起来喝了一口，凉的。但我喝完了。
+那天晚上我做了一件从来没有做过的事。我烧了一壶新的水，自己放了茶叶，注水。我端着那只热气腾腾的杯子坐在床垫上，看着窗外。楼下的路灯亮着，街上没有人。我不知道自己为什么要泡这杯茶。我又不喝茶。
+但我还是喝了。</p>
+<h2 id="6-杯子的对白">6. 杯子的对白</h2>
+<p>我去商场买了一只白瓷杯。
+我在卖杯子的货架前站了很久，久到导购过来问我要不要帮忙。我说不用。我只是不知道选哪一只。我之前那只杯子是租房配的。不知道上一任租客留下的，还是房东统一买的。我没有在意过它。但这次我买了一样的。白瓷，光面，没有花纹，和桌上那一只一模一样。
+我把它带回家，放在桌上。两只杯子并排放着。
+陈默下一次来的时候一眼就看到了。他进门的时候停了一下，不仔细看就注意不到。他盯着那两只杯子看了大概两秒钟，然后把外套脱了，坐下来。
+他用自己惯用的那只，但拿起杯子之前指了一下另一只。
+&quot;新的？&quot;
+&quot;嗯。&quot;
+他没有问我为什么买。他低着头泡茶，热水注入杯子的时候茶叶翻上来又沉下去，有一瞬间的混乱。
+&quot;谢谢。&quot;
+他说这两个字的时候没有抬头。
+但他低头喝茶的时候我看到了他嘴角的弧度，比上次的大了一点。那个弧度让我的胸口有一个奇怪的感觉。是另一种，有什么东西在胸腔里往外顶，顶得我呼吸慢了半拍。我告诉自己那是吃多了。但我今天还没有吃任何东西。事实上，我已经连续好几周没有正经进食了。他的情绪变薄了，是因为在他身边的时候孤独不再那么浓了。我应该找别的食物了。正常人不会让自己饿着。但我不正常。我是一个异类。异类没有理由让自己饿着。可我坐在他对面，看着他把那只新的白瓷杯放回桌上，杯沿和他的那一只并排。我没有觉得饿。我甚至没有想起来饿这件事。
+&quot;你下周还来吗？&quot;
+我听到自己问。
+他抬起头看着我。那一眼是认真的、直接的、不加掩饰的。
+&quot;你希望我来吗？&quot;
+问题被抛回来了。我张了张嘴，没能立刻回答。
+&quot;来不来是你的事。&quot;
+我说。
+他没有追问。他把那杯茶喝完，站起来，&quot;下周见。&quot;
+他走后我坐在桌边，面前两只并排的白瓷杯。一只他用过，杯沿上有一道浅浅的水痕。一只新的，干净的，没有被动过。我拿起那只新的杯子看了看。然后把它放回去了，和他那只靠在一起。
+下周见。
+我在心里重复了这三个字。如同一个学说话的孩子第一次学会了一个词，反复念，怕忘。怕忘了。怕再也没有机会说了。</p>
+<h2 id="7-失眠">7. 失眠</h2>
+<p>我站在陈默家楼下那棵银杏树底下的时候是凌晨三点十七分。
+我看了手机上的时间。我知道这个时间不正常。凌晨三点，一个正常人不会在这个时候站在别人家楼下。但我在床上躺了两个小时没有躺住。我不需要睡觉，但我通常会躺下装睡，装给自己看，自我欺骗的仪式。但今晚这个仪式失效了。我爬起来出了门，等我意识到自己在往哪走的时候，我已经站在了这里。
+银杏树很老了，树干粗得合抱不住。初夏的叶子是绿色的，但在路灯下看起来蒙了一层黄。我站在树底下，抬头看陈默的窗户。灯是黑的。他应该在睡觉。正常人凌晨三点都在睡觉。
+我跟我自己说：该走了。
+我的脚没有动。
+我又站了一会儿。夜风把银杏叶子吹得沙沙响，有一片叶子落在我肩膀上。我没有拂掉它。我看着那扇黑色的窗户，心里有一个问题：我来这里干什么？
+我不饿。没有一条必经之路会经过别人家楼下。我只是想来。这个答案从心底浮上来的时候，我感到了恐惧，是因为我给不出理由。我做的每一件事都有理由。觅食，躲避，伪装。但这件事没有理由。我做了一件没有理由的事。
+他住几楼？我抬头数了一下亮着灯的窗户。三楼有四扇窗，四楼有三扇。我不知道哪一扇是他的。我从没问过他住在几楼。我甚至不知道他的全名。我只知道他叫陈默，是一个心理医生，每周三下午休息，泡茶的时候不着急。三年了，这是我第一次想到。我对他一无所知，却站在了他家楼下。
+我在树底下站了多久？时间变得很黏。路灯的光把银杏叶的影子印在地上，风一吹就碎一次，然后再拼回来。我不知道我数了多少次叶影碎了又拼。我想到一件事。如果陈默现在醒了，拉开窗帘，会看到楼下站着一个人，而那个人是我。他会怎么想？他会害怕吗？还是会认出我？我会希望他认出来吗？
+这些问题我都没有答案。我只知道我没有离开。腿被钉在那块地砖上一样。我靠着银杏树干，感觉到粗粝的树皮隔着衣服硌在后背上。有一点凉。但我没有换姿势。
+等我终于转身往回走的时候，银杏叶子落了我一肩。我没有拍掉它们。我知道这听起来没有意义。但有些动作不是因为有用才做的。</p>
+<h2 id="8-陈默的问题">8. 陈默的问题</h2>
+<p>&quot;你从来不问我问题。&quot;
+陈默把茶杯放在桌上，没有端起来喝。他坐在我对面，表情和平时不一样。他说这句话的时候没有看我，在看那只杯子。
+我拿着手里那只杯，没有回答。他说得对，我从来不问他问题。
+我不知道他家里有几口人。不知道他为什么学心理。不知道他住在哪一栋楼，虽然我凌晨三点已经站在那栋楼下过了。我不知道他有没有谈过恋爱。我不知道他几点睡觉。我不知道他为什么每个星期三下午都来。
+&quot;你不问我在想什么。你不好奇我为什么来。&quot;
+他的声音不大，语气也不重，在陈述一件他想了很久的事。
+&quot;你甚至没叫过我。&quot;
+我张了张嘴。他的名字，我应该说他的名字。但我叫不出来。八个星期了，我从来没有叫过他。我意识到这件事的时候，后背有一层薄薄的凉意。我发现我不知道是不敢叫，还是不想叫。不敢和不想之间有一道很细的线，我站在线上，不知道该往哪边走。
+&quot;我不是在指责你。&quot;
+他终于端起了茶杯。但没有喝。他低头看着杯子里的茶汤，琥珀色的，在午后的光线里微微泛光。
+&quot;我只是在想——&quot;
+他把茶杯放回去了。
+&quot;你如果真的不在乎，为什么要买那只杯子。&quot;
+我没有回答。我看着桌上并排放着的两只一模一样的白瓷杯。一只他惯用的，带着一道细小的水渍。一只我买的，干净的，还没被人碰过。我坐在那里，发现我的回答卡在喉咙里。我知道答案。那个答案一旦说出来，事情就变了。是我自己对自己的看法会变。如果我承认我买那只杯子是因为我想让他来，那我就不纯粹了。异类不会&quot;想&quot;一个人来。异类只会判断，这个人好不好吃，值不值得留下来。但他很久以前就不再是食物了。久到我记不清是哪一次周三之后发生的事。也许根本就没有一个明确的时间点。他只是某一天开始，不再是食物了。
+但我没有说。他也没有逼我说。他提起茶壶，往我杯子里续了热水。
+&quot;茶凉了。&quot;
+他说。
+我端起那杯重新注满热水的茶，喝了一口。温的，涩的。咽下去了。
+我放下杯子的时候，看到他低头看着地面。地板缝里夹着一片干枯的银杏叶——不知道什么时候从我衣摆上落下来的。他没有捡起来，只是伸出一根手指，把它拨正了。</p>
+<h2 id="9-他知道">9. 他知道</h2>
+<p>第八周的周三下了雨。是那种细密的、不太出声的雨，落在皮肤上一层凉雾。我走到楼下的时候袖口已经湿了半截。
+他坐在老位置，床垫上，但今天他没泡茶。桌上放着他带来的那罐茶叶，盖子拧开了，但杯子里是空的。
+我坐下来。水汽从窗缝里渗进来，房间里有一股潮湿的气味。
+我看着他。他也看着我。隔着桌面上那段没有热气的距离。
+&quot;你是不是一直在喂我。&quot;
+那不是问句。我说出口的时候就知道答案了。他看着我，没有点头，没有摇头。
+&quot;是。&quot;
+&quot;你是不是从一开始就知道——&quot;
+&quot;是。&quot;
+我掐进掌心里。我没有觉得自己有什么表情。我的脸应该和平时一样空。但他看着我的眼神变了。是一种我从没见过的东西，他在我脸上终于找到了一样他等了很多年的东西。
+&quot;你在害怕。&quot;
+他说。
+&quot;我第一次在你身上看到颜色。&quot;
+房间安静了两秒。我听到了雨声。
+&quot;什么颜色？&quot;
+&quot;我说不上来。混的——可能是灰的。也可能是浅的蓝。&quot;
+我低下头，看着自己的手。掌心有四道月牙形的掐痕。我没有感觉到疼。
+&quot;你不怕我？&quot;
+&quot;不怕。&quot;
+&quot;我可以吃了你。我现在就可以。&quot;
+&quot;你不会。&quot;
+他的语气很平静。是真的相信。他不知道他凭什么相信我。但他是对的。我不会。我从来没有想过要吃掉他，连&quot;吃完&quot;这个概念都没有过。
+我看着他的眼睛。
+&quot;你为什么不问我是谁？&quot;
+&quot;你是谁不重要。&quot;
+他端起他面前那只空杯子，像端着一杯看不见的茶。然后他低头对着那只看不见的茶，说了一句：
+&quot;你坐在我对面的时候，我三十一年来第一次觉得安静。&quot;
+我低头看着面前那杯空杯子。手指在杯沿上慢慢滑过，凉的，光滑的。我忽然想问他一个问题。但问题在我心里转了三圈，没有说出口。因为我不知道我有没有资格问。
+&quot;想说什么？&quot;
+他看出来了。
+我抬起眼。
+&quot;你什么时候知道的。&quot;
+&quot;第一次。&quot;
+我愣住了。第一次。我走进那间诊室，说了三句话，坐下七分钟。他那个时候就知道了。
+&quot;那你为什么还要让我来。&quot;
+他没有回答。他伸手拿过那只白瓷杯，他惯用的那一只，放在手心里转了转，看着杯沿上那道细小的、积了许久的茶渍。
+&quot;我第一次看到你的时候，你坐在我对面，七分钟一句话都没说。你只是坐在那里。&quot;
+他顿了一下。
+&quot;我三十一年来看过无数种情绪，快乐、悲伤、愤怒、恐惧，每一种都有颜色，每一种都很吵。但你坐在那里的七分钟，我什么都没看到。你是空的。你知道那对一个从来看得到东西的人来说是什么感觉吗？&quot;
+我不知道。但我在听。
+&quot;像噪音了一辈子的人，忽然听到了安静。&quot;
+茶凉了。雨还在下。没有人续水。我们隔着桌上那一段没有热气的距离坐着。谁也没有再说一句话。</p>
+<h2 id="10-为什么">10. 为什么</h2>
+<p>那天我没有吃他的情绪。
+我回到出租屋之后蹲在墙角，把手按在自己胸口。没有心跳。从来就没有过。我知道。异类是没有心的。但我蹲在那里的时候，发现了一件让我害怕的事：我的眼眶是湿的。
+我用手背擦了一下。透明的液体。我用舌尖碰了一下指尖上那一滴——什么味道都没有。异类的眼泪是没有味道的。因为没有心。
+不是雨水。雨水是凉的，而这个我不知道它是什么。我从来不会流泪。异类不会流泪。我看着指尖上那一小片水光，第一个念头是：我坏了。我的身体背叛了我。它开始做一件不属于它的事。我把它擦掉了。但眼眶又湿了。我又擦了一次。然后又湿了。第三次的时候我没有再擦。我蹲在那里，让那不知道是什么的液体顺着脸颊往下淌。没有声音，没有抽泣，只是流。
+我不明白那是什么。我不觉得痛。我没有难过的理由。我只是蹲在那里，发现我活着的年头里第一次不知道用什么词来形容自己正在经历什么。
+后来我想了很久。那可能就是&quot;难过&quot;。异类学会难过了。这不是一件值得高兴的事。异类学会难过，如同一只杯子出现了裂纹。你还能用，但你不一样了。我蹲了很久，久到窗外的天色从灰蓝变成浅灰，从浅灰变成白。我站起来，走到桌边。两只白瓷杯还放在原来的位置上。我拿起他那只有裂纹的，对着晨光转了一圈。光从裂纹中间穿过来，在桌面上投下一道细细的亮线。我放回去了。杯底碰到桌面，发出一声轻响，和他每次放杯子时一样。我以前从来没注意听过这个声音。但以后可能会一直记得，因为我第一次发现，有些声音是想被记住的。异类的记忆是用来辨认食物和危险的。但这个声音不一样。这个声音没有用。但我记住了。我站了一会儿，握着那只杯子没有松手。心里有一个问题。如果异类学会了难过，那他还会不会学会别的？会不会有一天，他发现自己不只是难过了？那个想法让我握着杯子的手指紧了一下。但杯子没有碎。裂纹还在原来的地方，没有变长，没有加深。不是所有的裂纹都会扩散的。我把杯子放回桌上，和另一只并排靠着。两只杯子靠在一起的样子，看起来从来都是这样并排放着的。</p>
+<h2 id="11-长出心的瞬间">11. 长出心的瞬间</h2>
+<p>那周周三他没来。
+我等了一下午。水烧了三次，凉了三次。茶叶还剩大半罐，但我不想一个人泡。桌上两只白瓷杯整整齐齐地放着。一只他用过无数次，杯沿上有一道洗不掉的茶渍；一只我买的，依然干净，刚拆封的样子。我一个人坐在床垫上，看着窗外的光从正午的白变成下午的黄，再变成黄昏的灰。
+他没有来。没有纸条。没有消息。我甚至没有他的联系方式。三年了，我们只靠&quot;周三下午&quot;连接。除此之外没有任何线。
+第二天我去医院门口站了一会儿。门关着。周三是他休息日，周四他应该上班的。但我没有进去。我不知道自己为什么去。我只是想知道那间诊室里还有没有那种干净的、凉凉的、清水一样的孤独。我站在马路对面，隔着玻璃门看向走廊。太远了，看不清。
+第三天。第四天。第五天。
+周三出现在日历上的时候，我才发现我每天都在等周三。
+他来了。下午三点，准时。他推门进来的时候身上还带着外面的冷气。入秋了，风开始变凉。他手里没有拿外套，也没有拿茶叶。他坐下来。什么话都没说。
+我也没有说话。
+我烧了水。用我那只杯子，不是他惯用的那只，泡了茶，推到他面前。
+他接过去的时候低头看着那段上升的热气。
+&quot;我要调去别的城市了。&quot;
+水壶还握在我手里。我把它放下来。
+&quot;分院。两年。调令下来了。&quot;
+他顿了一下。&quot;那边没人接手。主任问我，我说不出不去。&quot;
+我看着他。他没有回避我的目光。
+&quot;周三下午三点的茶。&quot;他说。&quot;我会记得的。&quot;
+他拿出那只白瓷杯，他惯用的那一只，放在桌上。他放得很轻，但杯底碰到桌面的时候还是发出了一声脆响。然后他指了一下杯沿，那里多了一道细小的裂纹，不知道什么时候磕的。
+&quot;这个留给你。&quot;
+他站起来。我坐在那里，握着手里那杯还温着的茶。他的脚步声往门口去。
+&quot;陈默。&quot;
+我叫了。三年我第一次叫了他的名字。他停下了。但没有回头。
+&quot;你什么时候走。&quot;
+&quot;下周三。&quot;
+他没有回头。门在他身后合上了。我听着他的脚步声一层一层往下。手掌按在桌面上。我不知道什么时候站起来的。我也不知道我站起来是为了追出去，还是为了确认他真的走了。脚步声在楼道的尽头消失了。然后是单元门开合的声音。然后是安静，那种和以前不一样的安静。他走了之后安静变得很重。我在桌边站了很久，久到那杯茶彻底凉透。我端起来喝了一口，凉的，涩的。但我咽下去了。我以前不知道凉了的茶这么难喝。现在我知道了。</p>
+<h2 id="12-最后一只杯">12. 最后一只杯</h2>
+<p>最后一个周三。我提前烧好了水，把两只杯子都摆上了桌。他惯用的那只，我买的那只。裂纹的那只放在他面前。他没有换位置。他坐下来，往自己那只杯子里倒了热水。裂纹被热水一冲，在杯身上拉出一道细细的线。水从裂缝里渗出来，一滴，落在桌面上。
+我们都没有说话。
+他端起杯子喝了一口。放下。杯底那滴水在桌面上晕开了一个小小的圆。
+&quot;你给自己泡一杯。&quot;
+他说。
+我拿起自己那只杯子，我买的、干净的、没有被裂纹穿过的那只，倒了水。我端起来。隔着白瓷杯沿的触感，我第一次发现杯子的形状是被设计成贴合手心的弧度的。三年了，我第一次注意这件事。
+我们隔着两张桌子，不，隔着一段距离，喝了一口茶。
+他没有喝完。他站起来。
+&quot;我走了。&quot;
+他说这三个字的时候语气很平静。在说&quot;我去买包烟&quot;或者&quot;明天见&quot;。但我听得出那平静下面是空的，和他第一次见我时一样，干净地、什么都不剩地空了。
+他没有回头。脚步声沿着楼梯一层一层往下，越来越远，直到消失。
+我一个人坐在桌边。面前两只白瓷杯。一只空的。一只剩一口茶，裂纹的那只。
+我端起来。杯沿上那道裂纹正好对着我的嘴唇。我把它转了一下，把嘴唇压在陈默每次放杯子的那个位置。压了很久。久到杯壁从温热变成温热再变成凉。
+我没有吃到任何东西。没有情绪。没有颜色。没有干净的水。什么都没有。他走的时候把一切都带走了，包括他自己留给我的孤独。
+干净的。
+和第一次见他时一样干净。
+我把那只裂纹的杯子握在手里。没有松。窗外的风把空了的茶叶罐吹得翻了一下，在桌面上滚了半圈，停住了。我没有去看它。我只是握着那只杯子，裂的，冷的，什么味道都没有了。
+后来我搬了家。那只白瓷杯我用报纸包了三层，放在箱子最底下。到了新住处我打开箱子，拆开报纸。裂纹在灯光下像一道细细的线，一个记号。我把它放在新的桌子上。桌子不一样了，杯子还是那只。
+我有时候会烧一壶水。把那只裂了的杯子放在桌上，倒满热水。热气升上来的时候，裂纹会变深一点，像一条被唤醒的线。我不喝。我只是看着热气慢慢变淡，水慢慢变凉。然后倒掉。把杯子放回原处。我不再吃人的情绪了。是不饿了。
+我不知道这意味着什么。是一个异类在学会难过之后，顺便学会了别的什么吗？我不知道。我也不想知道答案。
+我只在每周三下午烧一壶水。把那只裂了的白瓷杯放在桌上，倒满热水。等它凉透。然后倒掉。
+我不喝茶。
+我只是还记得那个动作。</p>
+
+        </article>
+    </main>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0)">↑</button>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+function loadTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        html.classList.add('dark');
+        themeIcon.textContent = '☀';
+        themeText.textContent = '亮色';
+    }
+}
+function toggleTheme() {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeIcon.textContent = isDark ? '☀' : '🌙';
+    themeText.textContent = isDark ? '亮色' : '暗色';
+}
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+}
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progress.style.width = pct + '%';
+    const backToTop = document.getElementById('backToTop');
+    backToTop.classList.toggle('visible', scrollTop > 300);
+});
+const headings = document.querySelectorAll('article h1, article h2, article h3');
+const tocLinks = document.querySelectorAll('.toc-link');
+function updateActiveTOC() {
+    let current = '';
+    for (const h of headings) {
+        if (h.getBoundingClientRect().top <= 100) {
+            current = h.id;
+        }
+    }
+    tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        if (link.getAttribute('href') === '#' + current) {
+            link.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        }
+    });
+}
+window.addEventListener('scroll', () => requestAnimationFrame(updateActiveTOC));
+window.addEventListener('hashchange', () => {
+    const el = document.getElementById(location.hash.slice(1));
+    if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo(0, y);
+    }
+});
+loadTheme();
+updateActiveTOC();
+</script>
+</body>
+</html>
