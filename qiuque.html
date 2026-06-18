@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>囚雀</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg: #faf8f5; --fg: #2c2c2c; --muted: #6b6b6b; --accent: #8b3a3a;
+    --accent-light: #c27b7b; --border: #e0dcd6; --card: #ffffff;
+    --toc-bg: #f5f2ed; --shadow: rgba(0,0,0,0.06);
+    --font-body: "Noto Serif SC", "Source Han Serif SC", "思源宋体", "STSong", "SimSun", Georgia, serif;
+    --font-ui: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    --line: 1.9; --max-width: 720px; --radius: 8px;
+}
+:root.dark {
+    --bg: #1a1a1a; --fg: #d4d4d4; --muted: #888888; --accent: #c27b7b;
+    --accent-light: #e0a0a0; --border: #3a3a3a; --card: #252525;
+    --toc-bg: #222222; --shadow: rgba(0,0,0,0.3);
+}
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body); background: var(--bg); color: var(--fg);
+    line-height: var(--line); font-size: 18px;
+    transition: background 0.3s, color 0.3s; overflow-x: hidden;
+}
+.container { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
+.sidebar {
+    width: 280px; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh;
+    background: var(--toc-bg); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; z-index: 100;
+    transition: background 0.3s, transform 0.3s;
+}
+.sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-title { font-family: var(--font-ui); font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.sidebar-subtitle { font-size: 0.75rem; color: var(--muted); font-family: var(--font-ui); }
+.back-home {
+    display: block; padding: 8px 20px; color: var(--accent); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); font-weight: 600;
+    border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.back-home:hover { background: var(--bg); }
+.toc-wrap { flex: 1; overflow-y: auto; padding: 12px 0; }
+.toc-wrap::-webkit-scrollbar { width: 4px; }
+.toc-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.toc-link {
+    display: block; padding: 6px 20px; color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); line-height: 1.5;
+    border-left: 3px solid transparent; transition: all 0.2s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toc-link:hover, .toc-link.active { color: var(--accent); background: var(--bg); border-left-color: var(--accent); }
+.toc-level-1 { font-weight: 700; font-size: 0.95rem; color: var(--fg); }
+.toc-level-2 { font-size: 0.88rem; }
+.toc-level-3 { font-size: 0.82rem; padding-left: 28px !important; }
+.sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.main { margin-left: 280px; flex: 1; padding: 60px 40px 80px; max-width: var(--max-width); min-width: 0; }
+article { background: var(--card); padding: 48px 56px; border-radius: var(--radius); box-shadow: 0 2px 20px var(--shadow); }
+article h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.6em; color: var(--accent); text-align: center; font-family: var(--font-ui); }
+article h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; padding-bottom: 0.3em; border-bottom: 2px solid var(--accent-light); color: var(--accent); font-family: var(--font-ui); }
+article h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.6em; margin-bottom: 0.6em; color: var(--fg); font-family: var(--font-ui); }
+article p { margin-bottom: 1.2em; text-align: justify; text-indent: 2em; }
+article p:first-of-type { text-indent: 0; }
+article blockquote { margin: 1.5em 0; padding: 1em 1.4em; border-left: 4px solid var(--accent-light); background: var(--toc-bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--muted); font-style: italic; }
+article blockquote p { text-indent: 0; margin-bottom: 0.5em; }
+article blockquote p:last-child { margin-bottom: 0; }
+article hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+article strong { color: var(--accent); font-weight: 700; }
+article em { font-style: italic; color: var(--accent-light); }
+article ul, article ol { margin: 1em 0 1em 2em; }
+article li { margin-bottom: 0.5em; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-light); transition: border 0.2s; }
+article a:hover { border-bottom-style: solid; }
+.btn { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; cursor: pointer; color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.progress-bar { position: fixed; top: 0; left: 280px; right: 0; height: 3px; background: var(--border); z-index: 200; }
+.progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent)); width: 0%; transition: width 0.1s; }
+.back-to-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.3s; box-shadow: 0 2px 10px var(--shadow); z-index: 200; font-size: 1.2rem; }
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 300; width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px var(--shadow); font-size: 1.2rem; color: var(--fg); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+.overlay.show { display: block; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-light); }
+::selection { background: var(--accent-light); color: white; }
+@media (max-width: 900px) {
+    .menu-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); box-shadow: 2px 0 20px rgba(0,0,0,0.15); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 60px 20px 40px; }
+    article { padding: 28px 24px; }
+    .progress-bar { left: 0; }
+    .back-to-top { bottom: 20px; right: 20px; }
+}
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+    article h1 { font-size: 1.8rem; }
+    article h2 { font-size: 1.3rem; }
+    article h3 { font-size: 1.1rem; }
+    .main { padding: 50px 14px 30px; }
+    article { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-bar-inner" id="progress"></div></div>
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">囚雀</div>
+            <div class="sidebar-subtitle">目录导航</div>
+        </div>
+        <a href="index.html" class="back-home">← 返回书库</a>
+        <div class="toc-wrap" id="tocWrap">
+            <a href="#设定文档-囚雀" class="toc-link toc-level-1" style="padding-left:0px">设定文档：《囚雀》</a>
+<a href="#核心框架" class="toc-link toc-level-2" style="padding-left:16px">核心框架</a>
+<a href="#基本信息" class="toc-link toc-level-3" style="padding-left:32px">基本信息</a>
+<a href="#世界观-abo-设定说明" class="toc-link toc-level-3" style="padding-left:32px">世界观·ABO 设定说明</a>
+<a href="#一句话梗概" class="toc-link toc-level-3" style="padding-left:32px">一句话梗概</a>
+<a href="#核心反转" class="toc-link toc-level-3" style="padding-left:32px">核心反转</a>
+<a href="#情绪设计" class="toc-link toc-level-3" style="padding-left:32px">情绪设计</a>
+<a href="#人设速写" class="toc-link toc-level-3" style="padding-left:32px">人设速写</a>
+<a href="#结构物件追踪表" class="toc-link toc-level-2" style="padding-left:16px">结构物件追踪表</a>
+<a href="#反转信息差验证" class="toc-link toc-level-2" style="padding-left:16px">反转信息差验证</a>
+<a href="#伏笔回查清单" class="toc-link toc-level-2" style="padding-left:16px">伏笔回查清单</a>
+<a href="#1-信期-结契夜" class="toc-link toc-level-2" style="padding-left:16px">1. 信期·结契夜</a>
+<a href="#2-灭国-初入王府" class="toc-link toc-level-2" style="padding-left:16px">2. 灭国·初入王府</a>
+<a href="#3-寒冬罚跪" class="toc-link toc-level-2" style="padding-left:16px">3. 寒冬罚跪</a>
+<a href="#4-府中-暗线初布" class="toc-link toc-level-2" style="padding-left:16px">4. 府中·暗线初布</a>
+<a href="#5-第二次信期-升级" class="toc-link toc-level-2" style="padding-left:16px">5. 第二次信期·升级</a>
+<a href="#6-囚笼-病中守夜" class="toc-link toc-level-2" style="padding-left:16px">6. 囚笼·病中守夜</a>
+<a href="#7-暗线全面启动" class="toc-link toc-level-2" style="padding-left:16px">7. 暗线全面启动</a>
+<a href="#8-身份暴露" class="toc-link toc-level-2" style="padding-left:16px">8. 身份暴露</a>
+<a href="#9-废契" class="toc-link toc-level-2" style="padding-left:16px">9. 废契</a>
+<a href="#10-笼空" class="toc-link toc-level-2" style="padding-left:16px">10. 笼空</a>
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn" onclick="toggleTheme()" id="themeBtn">
+                <span id="themeIcon">🌙</span> <span id="themeText">暗色</span>
+            </button>
+        </div>
+    </aside>
+    <main class="main">
+        <article>
+            <h1 id="设定文档-囚雀">设定文档：《囚雀》</h1>
+<hr />
+<h2 id="核心框架">核心框架</h2>
+<h3 id="基本信息">基本信息</h3>
+<ul>
+<li>标题：《囚雀》</li>
+<li>目标字数：10000-12000 字（10 节）</li>
+<li>情绪目标：爆虐 + 意难平 + 钝痛感动</li>
+<li>视角：第一人称（Omega 沈念）</li>
+<li>设定：古风架空，ABO 体质制度（无信息素/气味设定）</li>
+</ul>
+<h3 id="世界观-abo-设定说明">世界观·ABO 设定说明</h3>
+<p>本作 ABO 为纯体质制度，不涉及信息素、气味、腺体散发等元素：</p>
+<ul>
+<li><strong>Alpha</strong>：天生力量、耐力、速度远超常人，后颈有<strong>结契腺</strong>（能通过咬合完成标记绑定），在体质上处于统治地位。通常为将领、权贵。</li>
+<li><strong>Omega</strong>：体质偏阴柔，后颈有<strong>契口</strong>（接受标记的生理位置），18 岁后出现周期性<strong>信期</strong>（潮热/三到七日不等，期间体质虚弱，本能渴望 Alpha 的安抚和标记）。可受孕。</li>
+<li><strong>Beta</strong>：普通人，无结契能力，无信期，占人口绝大多数。</li>
+<li><strong>结契</strong>：Alpha 咬破 Omega 后颈契口，完成身心层面的强制连接。结契后 Omega 在生理和心理上对标记他的 Alpha 产生依赖倾向。结契非永久——可废，但极痛苦且会留下永久性器质损伤。</li>
+<li><strong>废契</strong>：通过外力破坏后颈结契腺/契口，使标记失效。施术者须在 Omega 清醒状态下将特制针具刺入契口正中三寸，搅碎结契点。术后 Omega 永久失去被结契能力，信期紊乱，元气大伤。</li>
+</ul>
+<h3 id="一句话梗概">一句话梗概</h3>
+<blockquote>
+<p>镇北王陆沉灭了南国，把敌国的 Omega 太子沈念带回府中做了禁脔。三年里极尽羞辱——百宴上让他斟酒、寒冬罚跪整夜、信期时强行结契。Alpha 以为自己在驯一只鸟，直到鸟宁可用白玉簪刺穿自己的后颈废掉结契，也不愿再被关在笼子里。</p>
+</blockquote>
+<h3 id="核心反转">核心反转</h3>
+<p><strong>反转类型</strong>：认知反转</p>
+<p><strong>反转内容</strong>：陆沉一直以为沈念在忍辱等他施舍一点温情，以为沈念的顺从是因为 Omega 对被标记的 Alpha 的本能依附。但沈念的顺从全是假象——他是南国旧部安插的棋子，三年的隐忍和乖顺是精心扮演。而陆沉以为自己只是占有欲作祟，实际上他早已爱上了这只被他关在笼子里的鸟——但发现的时候，鸟已经用废契的方式，把自己永远放走了。</p>
+<p><strong>铺垫线索</strong>（≥3 条）：</p>
+<ol>
+<li>沈念学北朔口音学得&quot;太快了&quot;（第2节）——受过南国死士的基本训练</li>
+<li>沈念手指上的茧在指尖而非指腹（第3节）——握笔/暗器的痕迹，陆沉注意过但被沈念以&quot;习琴&quot;搪塞</li>
+<li>沈念对王府巡逻换岗时间异常熟悉（第4节）——他以&quot;散步&quot;为名记下了布防</li>
+<li>陆沉愈演愈烈的占有欲（第5-7节）——表面是控制欲，实际是因逐渐意识到留不住沈念的恐惧</li>
+</ol>
+<h3 id="情绪设计">情绪设计</h3>
+<p>| 段 | 节 | 情绪 | 强度 |
+|----|-----|------|------|
+| 开头 | 第1节 信期·结契夜 | 窒息·屈辱·麻木 | 8/10 |
+| 铺垫 | 第2节 灭国·初见 | 破碎·压抑·隐忍 | 5/10 |
+| 铺垫 | 第3节 寒冬罚跪 | 冷·烧·麻木 | 7/10 |
+| 铺垫 | 第4节 府中·暗线 | 紧绷·伪装·警惕 | 6/10 |
+| 升级 | 第5节 第二次信期 | 恐惧·屈辱升级·冷 | 8/10 |
+| 升级 | 第6节 病中守夜 | 紧张·自毁·微妙 | 7/10 |
+| 升级 | 第7节 暗线启动·对峙 | 紧绷·对峙·决绝 | 9/10 |
+| 反转 | 第8节 暴露 | 崩塌·暴怒→奇异的平静 | 10/10 |
+| 反转 | 第9节 废契 | 绝望暴击→麻 | 10/10 |
+| 结尾 | 第10节 笼空 | 空·钝痛·苍凉 | 8/10 |</p>
+<h3 id="人设速写">人设速写</h3>
+<p><strong>沈念（Omega）</strong></p>
+<ul>
+<li>年岁：19 岁（初入府 16 岁，三年后 19 岁）</li>
+<li>身份：南国太子，国破后被充入镇北王府</li>
+<li>外貌：偏瘦，眉目清淡，瞳色浅褐。后颈契口处有三年来反复结契留下的厚痂</li>
+<li>性格：表面温顺乖觉，极善察言观色，从不违逆或求饶。实际上有南国死士训练底子，韧性远超外表</li>
+<li>弧线：期待（初入府时对陆沉尚有微弱的幻想）→ 隐忍（意识到自己只是战利品）→ 伪装（用三年的顺从当盔甲）→ 决绝（宁废契不求全）</li>
+<li>语言特征：在人前恭敬寡言，回答用&quot;是&quot;&quot;臣遵命&quot;；内心独白略带书卷气（太子教育底子），偶尔刻薄</li>
+</ul>
+<p><strong>陆沉（Alpha）</strong></p>
+<ul>
+<li>年岁：27 岁的镇北王</li>
+<li>身份：北朔镇北王，灭了南国的铁血将军</li>
+<li>外貌：身形颀长，眉目凌厉，手上有常年握刀的茧</li>
+<li>性格：对外是铁血悍将、杀伐果断。对沈念是矛盾的综合体——用羞辱掩饰心动，用镇压伪装在乎。不敢直视自己的感情，因为承认爱上一个亡国太子等于承认自己输给了本能</li>
+<li>弧线：蔑视（初见时当沈念是战利品）→ 占有欲（不许别人碰/看/接近）→ 困惑（不明白为什么越来越在意）→ 恐慌（发现沈念要走了）→ 愤怒（因恐惧而暴怒）→ 来不及</li>
+<li>语言特征：话少，命令式短句，对沈念用&quot;你&quot;（不用敬称，刻意贬低）；情绪上涌时反而沉默</li>
+</ul>
+<p><strong>配角</strong></p>
+<ul>
+<li>老张：王府采买的杂役，被沈念用佛珠收买，负责内外通信。在第8节被陆沉处决</li>
+<li>南国旧部：暗线接应，仅在信和传话中出现</li>
+<li>暗卫（陆沉手下）：负责监视沈念，发现暗线行动</li>
+</ul>
+<hr />
+<h2 id="结构物件追踪表">结构物件追踪表</h2>
+<p><strong>物件</strong>：白玉簪（沈念母后遗物）</p>
+<p>| 出现 | 时机 | 场景 | 含义 |
+|------|------|------|------|
+| 第1现 | 第2节·铺垫段 | 百官宴后，陆沉从沈念发髻上抽走白玉簪打量，&quot;南国就这点家底？&quot;随手扔回桌上 | 亡国的物证，也是沈念仅剩的故国羁绊。陆沉的态度是轻蔑和不屑 |
+| 第2现 | 第8·9节·反转段 | 身份暴露后，沈念用白玉簪抵住自己喉咙→趁陆沉不备刺入后颈废契 | 同一支簪，从发饰→凶器→自由代价。意义被彻底颠覆 |
+| 第3现 | 第10节·结尾 | 陆沉在空床下找到断成两截的白玉簪，断口扎进掌心，血渗出来 | 物是人非。簪断了两截，人再也回不来了 |</p>
+<hr />
+<h2 id="反转信息差验证">反转信息差验证</h2>
+<ul>
+<li><strong>读者在第几节知道真相？</strong> 第8节（身份暴露）。全文10节，揭穿位置 = 80%</li>
+<li><strong>位置 &gt; 60% → 反转位置合理</strong>（读者等得够久，前面积累的认知被翻转时冲击力最大化）</li>
+<li><strong>误导线索</strong>：前7节通过沈念的顺从、不反抗、甚至偶尔的&quot;温顺&quot;（第6节病中陆沉守夜时沈念的装睡）让读者以为他真的认命了</li>
+<li><strong>≥3条正确线索</strong>：4条铺垫线索已埋入第2-7节</li>
+<li><strong>反推验证</strong>：只看outline能否在反转前猜到？→ 不会，因为沈念视角是第一人称限制视角，读者看到的是他&quot;想让你看到&quot;的样子</li>
+</ul>
+<h2 id="伏笔回查清单">伏笔回查清单</h2>
+<p>| 结尾元素 | 前文铺垫 | 状态 |
+|---------|---------|------|
+| 白玉簪断裂 | 第2节出现→第8节作为凶器→第9节废契→第10节断在床下 | ✅ 三现完整 |
+| 沈念废契 | 第6节跳水自毁倾向暗示（他对自己下得了狠手） | ✅ 间距3节 |
+| 沈念被救走 | 第4节佛珠串暗线→第6节密信→第7节接应信号 | ✅ 逐步递进 |
+| 陆沉的悔恨 | 第3节深夜探望→第5节失控→第6节守夜→第8节下不了手 | ✅ 4次铺垫 |
+| 陆沉最后一句话&quot;不说&quot; | 贯穿全文的&quot;话少&quot;语言特征 + 第6节他守夜时轻声说了句什么（未揭示内容） | ✅ 呼应留白 |</p>
+<hr />
+<h2 id="1-信期-结契夜">1. 信期·结契夜</h2>
+<p>信期又来了。我的身体比我的脑子先知道。骨头缝里渗出一层一层的热，小腹像坠着一块烧红的铁。我蜷在床榻上，掐着掌心，数自己的呼吸。</p>
+<p>脚步声从回廊那头传过来。是靴子踩在石板上叩出的声响。一下，一下，不急不缓。陆沉的脚步声，我听了三年，合上眼就知道他离我还有几道门。</p>
+<p>门被推开了。冬天的风跟着他灌进来，吹得床帐子飘了一下。</p>
+<p>他没说话。他从来不在这个时候说话。</p>
+<p>床榻陷下去一块。他坐在了床沿上，视线落在我身上，从颈后一路碾到腰线。那目光是有重量的，像一把刀在比划从哪里下刀最合适。</p>
+<p>&quot;转过来。&quot;</p>
+<p>我没动。我在等指节不再发抖。潮热烧得我四肢百骸都在发软，用尽三息才把自己撑起来，面对他。</p>
+<p>他的眸光在烛火里很暗。</p>
+<p>他伸手掐住我的下巴，拇指按在我的唇上，用力往下一压。我顺从地张开嘴，让他检查。每次信期他都要做这个，确认我没有在嘴里藏东西，确认我不会在结契时咬他。</p>
+<p>确认完了，他松开手。</p>
+<p>然后他俯下身，咬住了我的颈项间。</p>
+<p>他在咬我。牙齿刺入契口的感觉我永远无法习惯。那是一种从尾椎骨炸开的疼，又疼又麻，一路窜到四肢。我的身体想蜷起来，但他的手摁着我的腰，把我压进床褥里。</p>
+<p>我不出声。这是最后的，唯一能做的事。</p>
+<p>他的舌头舔过伤口，血腥味在齿间化开。潮热被结契推得更高了，一层一层涌上来。我咬住下唇，把喉咙里的声音咽回去。</p>
+<p>他咬得比上次更深了一点。或者说，持续得更久了一点。我数他的呼吸。一下，两下，三下，到第九下他松开了牙齿。</p>
+<p>伤处在往外渗血，浸湿了领口。他没有帮我处理，只是看了一眼我掐出血痕的掌心，顿了一下。</p>
+<p>然后他站起来，走了。</p>
+<p>门被带上。脚步声沿着回廊远去。风又灌进来一次，帐子又飘了一下。</p>
+<p>房间重新安静下来的时候，我慢慢松开掐了一夜的手。左手心四道月牙印，右手心五道。有两道见了血。</p>
+<p>我把掌心贴在被面上，把血迹蹭掉。</p>
+<p>潮热退了大半，剩下的是被掏空之后的麻木。伤处还在突突地跳着疼，我蜷回床榻上，把被子裹紧。</p>
+<p>天快亮了。</p>
+<p>我睁着眼，等着天亮。</p>
+<h2 id="2-灭国-初入王府">2. 灭国·初入王府</h2>
+<p>我第一次见到陆沉，是在南国的王宫里。</p>
+<p>那天的太阳很大，大得刺眼。母后自焚之前把白玉簪插进我的发髻里，动作不急不慢，像往常替我梳头一样。她指尖的温度还留在我头皮上。&quot;念念，这是南境的白玉竹，你别看它细，芯子是实的。跟人一样。&quot;</p>
+<p>我没听懂那句话的意思。我当时才十六岁。</p>
+<p>然后她就走进火里了。</p>
+<p>亲卫拽着我从密道往外跑，后面是北朔军队破城的喊杀声。密道出口在城外三里的一处乱石坡，我爬到一半的时候被人从后面拽住了衣领。</p>
+<p>一匹马。马上坐着一个男人，逆着光，我看不清他的脸。</p>
+<p>他低头看了我一眼。那一眼里没有杀意，没有怜悯。只有一种确认式的打量，像在清点战利品。他把我拽上马背，一句话都没说。</p>
+<p>那就是陆沉。</p>
+<p>到了北朔我才知道，他不杀我，不是因为仁慈。南国的太子活着比死了有用。他可以拿我在朝堂上做人质，可以拿我羞辱南国的旧臣，可以在庆功宴上让我斟酒来证明他的胜利有多彻底。</p>
+<p>百官宴那一晚，是我第一次以&quot;镇北王的俘虏&quot;这个身份出现在北朔的朝臣面前。</p>
+<p>大殿里烧着地龙，热得我后背出了一层薄汗。我还穿着南国的旧服，是我没换。那是我仅剩的一点骨气，现在想来愚蠢至极。</p>
+<p>陆沉坐在主位上，我跪在他席位旁边，负责给他斟酒。</p>
+<p>满殿的视线扎在我身上。有人在笑，有人交头接耳，有人在打量我的身段。那种让我想把皮肤剥下来的视线。</p>
+<p>&quot;这就是南国的太子？&quot;有人问。</p>
+<p>陆沉没回答。他端起我斟的酒喝了一口，放下，打量了我片刻。然后他伸出手，从我发髻上抽走了那根白玉簪。</p>
+<p>他捏着簪子转了转，对着烛火看了看上面的纹路。</p>
+<p>&quot;南国就这点家底？&quot;</p>
+<p>满堂哄笑。</p>
+<p>我垂着眼，盯着他靴子上的云纹，不说话。他把簪子随手扔回桌上，白玉落在木桌面上发出一声脆响，磕掉了一小块边角。</p>
+<p>那声脆响和母后指尖的温度，是我对故国最后的记忆。</p>
+<p>宴会散了之后，他带我回了王府。穿过七道门，绕过三处回廊，把我带进了一间偏院。院子不大，有一棵光秃秃的槐树，一扇朝北的窗。窗外面是王府后墙，墙外面是北朔灰蒙蒙的天。</p>
+<p>他站在门口，没有进来。</p>
+<p>&quot;住这里。没有我的准许，不准出府。&quot;</p>
+<p>我说是。</p>
+<p>他看了我一眼，又是那种确认式的打量，在检查一件器物有没有磕碰。</p>
+<p>然后他转身走了。</p>
+<p>我站在那间陌生的屋子里，四面墙都是灰的。桌上有一盏油灯，一碟凉透的糕点。窗外那棵槐树的枝丫在风里刮着窗纸，沙沙的响。</p>
+<p>我站了很久。久到腿都麻了。</p>
+<p>然后我坐下来，把碟子里凉透的糕点掰了一块放进嘴里。嚼了，咽下去。</p>
+<p>我对自己说，要活下去。</p>
+<p>我学北朔的口音学得很快。快得连自己都有些意外。不过是一个亡国太子求生的本能。舌头的位置变一下，声调压一压，三个月后连府里的管事都听不出我南边的腔调了。这件事我没跟任何人提起过，但我知道陆沉注意到了。有几次他听我回话的时候，眼神会在我脸上多停一瞬。他没问过。他没问，我就不解释。</p>
+<h2 id="3-寒冬罚跪">3. 寒冬罚跪</h2>
+<p>北朔的冬天冷得不讲道理。那是我在北朔度过的第一个冬天，还没习惯这边的气候。南国的冬天是湿润的凉，这里的冬天是带刀子的风，刮在脸上跟刀片刮过似的。</p>
+<p>那天黄昏，我蹲在廊下。院子里的积雪没过脚踝，我蹲在那儿看檐下的冰棱子。一个十四五岁的小丫头端着一碗热汤走过来，脸冻得通红，双手把碗捧到我面前。</p>
+<p>&quot;殿下……南边厨子做的，您尝尝。&quot;</p>
+<p>我愣了一下。有多久没有人用&quot;您&quot;称呼我了？在王府里，下人们私下叫我&quot;南边那个&quot;，当着面叫我&quot;公子&quot;，不带姓氏，不带温度。</p>
+<p>我接过碗的时候手指碰到了碗壁，烫的，烫得我一颤。</p>
+<p>然后陆沉的声音从背后传来。</p>
+<p>&quot;谁准你给他送东西的？&quot;</p>
+<p>那小丫头当场就跪下了。碗碎在地上，热汤洒了一地，浸进雪里化出一个浑浊的窟窿。</p>
+<p>我端着那个已经不存在的碗的姿势，维持了整整三息。然后我慢慢把手放下来，垂着眼站起来，退到一边。</p>
+<p>陆沉没有看我。他盯着那个伏在地上发抖的小丫头。他身后的副将一言不发地站在那里，铁铸一般。</p>
+<p>&quot;拖下去。&quot;</p>
+<p>小丫头没哭也没喊，连求饶都没有。她知道求饶没有用。她被拖走的时候在地上留下一道拖行的痕迹，在雪地里深深的一道。</p>
+<p>院子里重新安静下来。</p>
+<p>陆沉转过来。他看着我，沉默了很久，然后说了一句话，语气甚至算得上平静。</p>
+<p>&quot;跪到明天早上。&quot;</p>
+<p>我没问为什么。我走到院子正中，在雪地里跪了下去。雪没过我的膝盖，凉意先是一阵刺骨的疼，然后很快就麻了。</p>
+<p>我跪在那里，看着面前那滩热汤在雪里冻成冰。天一点一点黑下去，廊下的灯笼亮了。</p>
+<p>很冷。是真的冷。冷到骨头里去了。</p>
+<p>我低着头，看到自己的指端从红变白，从白变紫。脚已经没有知觉了。</p>
+<p>但是我一直没有倒下去。是怕倒下去就再也起不来了。</p>
+<p>我抬起眼，看向陆沉书房的窗户。</p>
+<p>灯亮着。他还没有睡。</p>
+<p>我不知道自己为什么看那扇窗。也许是希望他会走出来说&quot;够了&quot;，也许什么都不是。那扇窗户一直亮着。我跪了多久，它就亮了多久。没有人来，没有话说。</p>
+<p>到后半夜开始下雪，雪花落在我眉毛上、睫毛上，积了薄薄一层。我的意识开始模糊，身体从里到外都凉透了。</p>
+<p>天蒙蒙亮的时候，我听见有人走近的脚步声。是府里的管事。他在我面前站了一会儿，说了一句&quot;王爷让您回房&quot;，然后就走了。</p>
+<p>我想站起来，腿不听使唤。我用手撑着地面试了三次，前两次膝盖刚离地就摔了回去。第三次我抓住了廊柱的边角，才把自己拽起来。</p>
+<p>那天夜里我发起了高烧。烧得浑身发烫，骨头缝里都是烫的。我缩在被子里，牙齿磕得咯咯响，汗把中衣湿透了一遍又一遍。</p>
+<p>没有人来。没有人敢来。</p>
+<p>第二天下午，管事送了一碗药过来。&quot;王爷让的。&quot;</p>
+<p>他说完就走了。药碗搁在桌上，冒着热气。</p>
+<p>我盯着那碗药看了很久。褐色的汤药里沉着药渣，热气一缕一缕往上飘。我端起来的时候手还在抖。不知道是发烧的抖还是别的什么。药很苦。我一口一口喝完，把碗放回桌上。</p>
+<p>那天之后我再没见过那个小丫头。</p>
+<p>陆沉也没有再提过这件事。他把那个黄昏、那碗洒掉的汤、雪地里跪了一夜的我，从记忆里删掉了。</p>
+<p>但我知道那扇窗亮了一整夜。</p>
+<p>我只是不知道那意味着什么。</p>
+<h2 id="4-府中-暗线初布">4. 府中·暗线初布</h2>
+<p>春天来的时候，陆沉开始允许我在王府里走动。范围不大，前院到花园，花园到后廊，三步见方的一个圈。但对我来说够了。</p>
+<p>我每天都在&quot;散步&quot;。</p>
+<p>卯时府兵换防，辰时后门送菜，午时巡逻的人最少，酉时交班会有半炷香的间隙。我用了半个月把这些摸清楚，记在脑子里，不写一个字。</p>
+<p>我蹲在花园的假山石上看池塘里的锦鲤，余光里数着从月洞门经过的卫兵。一个领队带十二个人，三班倒，每班四哨。后墙狗洞被封了但没封死，用砖头垒的，扒开三块就能过。东角门的锁是旧式的，我只看了一眼就知道用一根铁丝能捅开。</p>
+<p>但这些没用。我需要外面的人。我一个人出得了这个王府也活不了。北朔的地界上，一个落单的南国太子，被抓回来是死，不被抓也是死。</p>
+<p>我需要有人在外面接我。</p>
+<p>我开始留意进出王府的人。采买的、送菜的、修花木的、倒夜香的。每个人都可能是我的路。</p>
+<p>第三个月，我找到了。</p>
+<p>一个叫老张的杂役，负责每天清早从后门运菜进来。年纪五十上下，沉默寡言，每次路过我住的院子时脚步会放慢一点，是下意识的。这个下意识的慢，让我觉得他可能是个能说话的人。</p>
+<p>我用了三天时间制造了一场偶遇。</p>
+<p>那天清早我在后廊&quot;恰好&quot;碰见他推着菜车进来。我蹲在廊下装成在系鞋带。等他走近了，我直起身，从袖子里摸出一颗佛珠递过去。</p>
+<p>&quot;张伯，这串珠子多了一颗，您拿去给小辈玩吧。&quot;</p>
+<p>他看了我一眼。那一眼里有打量、有警惕、但更多的是某种我说不上来的东西。也许是一个普通人对亡国太子那点本能的同情。</p>
+<p>他接过去了。</p>
+<p>&quot;多谢公子。&quot;</p>
+<p>就三个字。但他收下了。</p>
+<p>从那以后，我每天清早都在后廊&quot;系鞋带&quot;。有时候他经过时会低声说一句&quot;外面起风了&quot;或者&quot;东巷的桂花开了&quot;。这些都不是信息，但它们在告诉我一件事。他记得我，他没有把我的佛珠扔掉。</p>
+<p>第四个月，他说了一句不一样的话。</p>
+<p>&quot;公子有什么想要的吗？老奴下回去东市可以捎。&quot;</p>
+<p>我的心跳顿了一下。但我没有马上回答。我看着地面上自己的影子在晨曦里拉得很长，沉默了几息。</p>
+<p>&quot;张伯，南边的桂花糕，能捎一块吗？&quot;</p>
+<p>他点了点头。</p>
+<p>桂花糕。南边的。这两个词连在一起，就是暗号。</p>
+<p>我不知道他懂不懂这个暗号的意思。也许他只是一个心软的老头，也许他是南国旧部安插的人。我不需要知道。我只需要这条线通着。</p>
+<p>那天晚上陆沉回来了。</p>
+<p>他进来的时候我正在桌前坐着。桌上有管事刚送来的晚饭，我还没动筷子。他在我对面坐下来，我沉默地给他摆了一副碗筷，斟了酒。</p>
+<p>他看着我，忽然说了一句。</p>
+<p>&quot;府里有什么不习惯的？&quot;</p>
+<p>我握着酒壶的手没有停顿。壶口对准杯沿，酒线细细地注入杯中，一滴都没有洒。</p>
+<p>&quot;王爷厚待，臣没有不习惯的。&quot;</p>
+<p>他端起酒杯喝了一口，放下。手指在桌面上敲了两下，他在想事情。</p>
+<p>下一句话让我后背一紧。</p>
+<p>&quot;听说你这几天总去后廊。那边有什么好看的？&quot;</p>
+<p>来之前他已经问过话了。我知道。他在等我露出马脚。</p>
+<p>&quot;后廊有一窝野猫。&quot;我说，&quot;春日里下了崽，臣去看了几次。&quot;</p>
+<p>他盯着我看了很久。久到我数了自己的七次呼吸。</p>
+<p>然后他放下酒杯，起身走了。</p>
+<p>我坐在那里，手搁在膝盖上，指腹按着旧伤疤。那道月牙形的疤还没完全长好，掐上去隐隐作痛。</p>
+<p>第二天傍晚，我回到房间的时候，桌上多了一盒东西。</p>
+<p>油纸包着，系着麻绳。</p>
+<p>我拆开。桂花糕。是从东市买来的，城南那家老字号的。我以前在宴席上吃过一次，记得那个味道。</p>
+<p>他今天出门了。他专门去东市买的。</p>
+<p>我捧着那盒桂花糕站了很久。窗外的风把油纸吹得哗哗响。我慢慢坐下来，把桂花糕一块一块掰碎，扔进炭火盆里。碎糕在炭火上慢慢焦化，冒出一缕甜的烟。甜的里面带着苦。</p>
+<p>我不需要桂花糕。我需要的是走出这扇门。</p>
+<p>我把油纸也扔了进去，看着它卷曲、发黑、烧成灰。</p>
+<p>然后我坐下来，拆开枕芯，把里面的东西摸出来。那根白玉簪。</p>
+<p>我攥着它在黑暗里坐了一会儿。窗外的月光照进来，在簪子上镀了一层薄薄的银。母后把它插进我头发里的那一天，阳光很大，南国的王宫还没有烧成灰。</p>
+<p>我把簪子重新藏好，躺下来，合上眼。</p>
+<h2 id="5-第二次信期-升级">5. 第二次信期·升级</h2>
+<p>我的信期乱了。</p>
+<p>北朔的气候跟南国完全不同。南国潮湿温暖，一年四季都是润的。北朔干燥，春天的风刮过来带着沙子和干草屑，每一次呼吸都像在吞刀子。我的身体适应不了。</p>
+<p>信期提前了十二天。</p>
+<p>那天早上我醒来的时候就知道不对。小腹有一团火在慢慢烧起来，契口在发烫。是有人拿烙铁隔着皮肉在烤那块骨头。我蜷在被子里，汗一层一层地出，中衣湿透了贴在身上。</p>
+<p>我闭上眼，算时间。陆沉今天在城外大营阅兵，晚上才回来。我还有几个时辰。</p>
+<p>我没叫人。叫人也没有用。王府里的人不会管我信期来不来。他们只管在陆沉不在的时候把我锁在院子里。</p>
+<p>我用冷水浸了帕子敷在契口上，凉意渗进皮肤里的那一瞬间舒服得我浑身一颤。但很快帕子就被体温捂热了，我再浸一次，再敷。反反复复，直到井水也压不住那股从骨头缝里往外渗的热。</p>
+<p>太阳从东边挪到西边。我数着光在墙上的影子，一格一格地挪。</p>
+<p>黄昏的时候，他的脚步声从回廊那头传过来了。</p>
+<p>这次不是不紧不慢的。比平时快。靴子踩在石板上，一下接一下，他在赶路。我听到自己心跳的声音，契口跟着心跳一起一伏地跳着疼。</p>
+<p>门被踹开的。</p>
+<p>他站在门口，逆着光，我看不清他的表情。但他的呼吸比平时重。</p>
+<p>&quot;什么时候来的？&quot;</p>
+<p>&quot;早上。&quot;</p>
+<p>他走进来，脚步声在房间里震得我耳膜发胀。他一把掀开被子。我蜷在床榻上，中衣湿透了黏在身上，睫毛都是湿的。他看了我一眼，那一眼里有怒气。
+是因为我的信期来了。这件事本身让他愤怒。</p>
+<p>他俯下身掐住我的腰，把我从床榻上提起来翻过去，让我跪趴在床褥上。动作粗暴，像在搬一件挡路的家具。他的指节按在我的契口上。发烫的皮肤被冰凉的指腹一碰，我整个人弹了一下。</p>
+<p>&quot;忍了一天？不叫人？&quot;</p>
+<p>我没说话。他不需要我回答。</p>
+<p>他解开了我的衣领，露出后领。然后他俯下身，咬了下去。</p>
+<p>这次比任何一次都疼。</p>
+<p>是他咬下去之前没有等我准备好。契口还是凉的，肌肉还绷着，牙齿刺进来的时候我听到了自己皮肉撕裂的声音。血顺着脊背往下淌，渗进衣领里，在前襟上洇开一团深色的印记。</p>
+<p>我咬住自己的手背，把声音吞回去。</p>
+<p>他越咬越深。我的手背被牙齿磕破了，尝到铁锈一样的血腥味。但我没有松口。他的手滑下来扣住我的手腕。指腹擦过我掌心的茧，在那个位置停了一下。我知道他在想什么。习琴的人茧在指腹，我的茧在指根和虎口。但他什么都没说。</p>
+<p>他的呼吸喷在我颈项间，滚烫的。他松了一下牙齿。我以为结束了，但我错了。他只是换了个角度，重新咬了下去。</p>
+<p>第二次。他从来没有连续咬过两次。</p>
+<p>疼到我眼前发白。我的指甲掐进他的手腕里。这是第一次，我对他做出了反击式的动作。他低头看了一眼自己手腕上那几道血痕。</p>
+<p>然后他掐住了我的下巴。</p>
+<p>&quot;出声。&quot;</p>
+<p>他掐着我下巴的手指用力，把我的嘴捏开。我的下唇上还沾着手背蹭上去的血。</p>
+<p>&quot;我叫你出声。&quot;</p>
+<p>我直视他的目光。他的瞳孔里有恐惧。他在怕。怕什么？怕我？怕他自己？怕他的失控？</p>
+<p>我突然不想再沉默了。</p>
+<p>是因为他的恐惧让我觉得好笑。他一个灭了南国的将军、北朔最年轻的异姓王，他在怕一个连信期都控制不住的Omega。</p>
+<p>我扯了一下嘴角。</p>
+<p>我知道不该笑。三年都过来了，不该在这一刻破功。但我太累了。就这一下，够了。</p>
+<p>那个动作激怒了他。他掐着我下巴的手收紧。力道大到我以为下颌骨会被他捏碎，然后他低下头，再次咬了下来。</p>
+<p>这次我出了声。</p>
+<p>是闷在喉咙里的半声笑。不是叫，也不是哭。</p>
+<p>他僵住了。</p>
+<p>牙齿还嵌在我的皮肉里，血还在往外渗。但他不动了。</p>
+<p>过了一会儿，他慢慢松开了牙齿。他放开我，站了起来。烛火把他的影子投在墙上，无声晃动着。</p>
+<p>他看了我一眼。我趴在床榻上，伤处还在渗血，中衣被汗和血浸透了贴在身上。狼狈到极点。脸上却带着一个极淡的笑。</p>
+<p>他转身走了出去，门在身后重重带上。脚步声沿着回廊远去，比来的时候更快。</p>
+<p>我一个人趴在床榻上，维持着那个姿势很久。伤处在慢慢地凝固，血痂黏在领子上，每动一下都扯着皮肉。</p>
+<p>我把那个笑收了。</p>
+<p>然后慢慢松开咬了一整天的牙关，吐出一口气。气是烫的，但心里是冷的。</p>
+<h2 id="6-囚笼-病中守夜">6. 囚笼·病中守夜</h2>
+<p>密信是裹在菜叶子里送进来的。</p>
+<p>老张把菜筐搬进厨房的时候，把那片裹着纸条的菜叶单独放在了最上面。我按往常经过厨房门口，他又恰好擦着汗在门口歇脚。我弯腰系了一下鞋带，那片菜叶就到了我袖子里。</p>
+<p>纸条上用炭画了一个符号。南国暗桩用的那种，在不起眼的角落画一笔，只有自己人看得懂。符号的意思是：到了。</p>
+<p>南国旧部已经到了北朔边境。</p>
+<p>我把纸条在手心里攥成一团，塞进嘴里嚼烂了咽下去。纸的纤维很粗，梗在喉咙里咽了好几次才下去。</p>
+<p>比我预想的快。比我预想的顺利。</p>
+<p>但第二天，陆沉的副将，姓周，一个长着鹰钩鼻的沉默男人，在午时匆匆进了王府，直接去了书房。我蹲在花园的假山后面假装看鱼，看到他的靴子上沾着泥。城外进来的。有急事。</p>
+<p>半个时辰后陆沉从书房出来，穿过花园往里走。</p>
+<p>他经过我身边时脚步没有停顿，但走出了三五步，他停下来了。</p>
+<p>他回头看了我一眼。</p>
+<p>就一眼。不带有任何表情，只是转头，视线在我脸上停留了两息，然后转回去继续走。</p>
+<p>但那一眼让我后背窜上一股凉意。</p>
+<p>那是在看一个可疑之人。</p>
+<p>他知道了什么？还是仅仅是警觉？</p>
+<p>我不知道。但我不能赌。</p>
+<p>当天晚上，我趁黑摸到了后院的井边。井水冰凉，春天化冻不久，水面还漂着碎冰碴子。我站在井沿上往下看了一眼。黑洞洞的，看不见底。</p>
+<p>我没有犹豫太久。</p>
+<p>我跳下去了，是&quot;失足落水&quot;。井不深，我的脚够到了井壁上一个凸起的砖沿，水没到胸口。但四月的井水冷得超出我的想象。入水的瞬间冰水从头顶灌下来，肺里的空气全被挤了出来。</p>
+<p>我抓住井绳，没有往上爬。我在水里待着，直到身体开始不受控制地发抖，直到嘴唇麻了说不出话。</p>
+<p>然后我喊了救命。</p>
+<p>声音不大，太大了会显得假，但足以让值夜的府兵听见。</p>
+<p>我被捞上来的时候已经说不出一句完整的话。嘴唇乌紫，牙齿磕得咯咯响，整个人缩在湿透的衣服里瑟瑟发抖。</p>
+<p>府兵把我架回房间，裹了被子，生了炭火。有人去通报了陆沉。</p>
+<p>我在被子里发抖，一半是因为冷，一半是因为后怕。但我知道这一跳有用。不管陆沉在怀疑什么，一个&quot;半夜失足落水差点淹死&quot;的人，不可能同时在密谋逃跑。</p>
+<p>发烧来得比我想象的快。还没到半夜我就烧起来了，整个人烧得昏沉，每一寸皮肤都在发烫。一会儿冷一会儿热。冷的时候牙齿磕得咯咯响，热的时候汗把被子湿透。</p>
+<p>我半昏迷的时候，感觉到有人进来了。</p>
+<p>不是府兵，不是管事。那个人的脚步声很轻，但他走进来的时候整个房间的空气都变了。我不用睁眼就知道是谁。</p>
+<p>床沿陷下去一点。他坐下来了。</p>
+<p>我很想睁眼看看他是什么表情，但我不敢。我维持着昏迷的姿态，呼吸尽量放平。心跳声大得我怕他听见。</p>
+<p>然后我感觉到一只手，碰了碰我的额头。</p>
+<p>那只手是凉的。指腹上有常年握刀的茧，粗糙，干燥。碰在我滚烫的额头上，像一块冰贴上来。</p>
+<p>他碰了一下就收回去了。</p>
+<p>然后他坐在那里。没有说话，没有动作，就是坐着。</p>
+<p>过了很久，他忽然说了一句话。声音很低，低似自言自语。我没听清说了什么。大概是烧糊涂了产生的错觉。</p>
+<p>我烧得迷迷糊糊，意识断断续续。有时候清醒一下，发现他还坐在那里；有时候又沉下去，不知道过了多久，醒来的时候他还在。</p>
+<p>窗外的天从黑变灰，从灰变亮。</p>
+<p>他在我床边坐了一整夜。</p>
+<p>天蒙蒙亮的时候，他站了起来。我感觉到他在我枕边放了一个东西。瓷器碰到木头的声音。然后他走了。</p>
+<p>等他走远了，我才慢慢睁开眼。</p>
+<p>枕边放着一碗药。还温着。</p>
+<h2 id="7-暗线全面启动">7. 暗线全面启动</h2>
+<p>第三天的傍晚，城东的灯笼铺子挂出了一盏白灯笼。</p>
+<p>我站在后廊看到了它。暮色里那盏白灯笼在风里摇晃，烛火透过白绢，白蒙蒙的一团。信号来了。明天入夜，城外汇合。</p>
+<p>我回到房间，把门窗关好。从枕芯里掏出老张今早塞进来的第二张纸条，上面只有四个字：明夜·南门。我对着纸条看了很久，把每一个笔画都记进脑子里，然后把纸条凑到油灯上。火舌舔过纸边，慢慢往上卷，黑色的灰落进灯盏里。</p>
+<p>就在这时候，门被推开了。</p>
+<p>陆沉站在门口，风从他身后灌进来。他的视线落在我手上。我手上那张纸条已经烧成了最后一角，火光映在他的瞳孔里。</p>
+<p>我迎着他的目光，没有动。</p>
+<p>他也没有动。我们隔着那一点将灭未灭的火光对视。纸角烧完了，火舔到我的指尖。我一松手，最后一撮黑灰落进灯油里，噗地一声熄了。</p>
+<p>房间里安静得能听见灯油在滋滋响。</p>
+<p>他走进来，步伐不快不慢。我起身行了一个礼。标准的，从南国学的，从来没有荒废过的那一种。</p>
+<p>&quot;王爷。&quot;</p>
+<p>他没回话。他在桌边坐下，给自己倒了一杯茶，喝了一口，然后把茶杯放下。杯底碰到桌面发出一声脆响。</p>
+<p>&quot;你房间里有一股烧纸的味道。&quot;</p>
+<p>我的手垂在身侧，指腹还残留着纸张燃烧后的温度。我看着他，他的视线也落在我身上。</p>
+<p>&quot;天冷，烧了几张废纸取暖。&quot;</p>
+<p>&quot;是么。&quot;</p>
+<p>他说这两个字的时候没有在问。他知道了。或者他在试探。我没有办法判断。我能做的只有继续把这出戏演完。</p>
+<p>我走过去，提起茶壶，把他杯子里的凉茶倒了，续上热的。他的视线跟着我的手。我的手很稳，没有抖一下。</p>
+<p>&quot;王爷今日回来得早。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>他端起我斟的茶，没有喝。在手里转了转，看着茶汤里的涟漪慢慢平静下来。</p>
+<p>然后他忽然说了一句话，让我全身的血液一瞬间凝固了。</p>
+<p>&quot;老张今天下午出府的时候，多带了一包东西。&quot;</p>
+<p>我握着茶壶的手没有停。我把茶壶放回桌上，壶嘴对准了原来的角度，分毫不差。</p>
+<p>&quot;是吗。&quot;</p>
+<p>&quot;是。&quot;他把茶杯放下了。&quot;他平时从不带东西出府。&quot;</p>
+<p>我站在原地，垂下眼睛。心跳声在耳膜里轰轰地响。但我没有慌。慌的人已经死了，死在南国的那场大火里了。</p>
+<p>&quot;王爷怀疑他偷了府上的东西？&quot;</p>
+<p>陆沉没有回答。他站起来，走到我面前。他比我高半个头，居高临下地看着我。他没有说话。他只是那样站着。</p>
+<p>长久的沉默。</p>
+<p>我抬起头，看着他。我没有躲开他的视线。</p>
+<p>&quot;王爷。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>&quot;您怀疑臣什么？&quot;</p>
+<p>他没有回答。他的目光从我的眼睛移到我的嘴唇，从我的嘴唇移到我的颈项。那里还缠着上次结契后换药的纱布，白色的，在领口露出一截边缘。</p>
+<p>他看了很久。然后他抬起手，用手背碰了一下我的脸颊。</p>
+<p>很轻的动作。像在确认我是真的，不是一个他想象出来的人。</p>
+<p>我站在那里，没有躲。</p>
+<p>他收回手，转过身朝门口走去。走到门口时他停住了。</p>
+<p>&quot;你最好不要骗我。&quot;</p>
+<p>声音很平静。但我听得出那平静底下压着什么。</p>
+<p>我跪了下去。是一种直觉。这一刻我的姿态必须比任何时候都低。我跪在地上，额头贴着冰凉的砖面。</p>
+<p>&quot;臣不敢。&quot;</p>
+<p>他回过头，低头看着我。我伏在地上，能看到他靴子上的云纹，和百官宴那一晚一模一样的云纹。</p>
+<p>他看了很久。久到我伤口都在突突地跳。</p>
+<p>然后他走了。</p>
+<p>门被带上。</p>
+<p>我从地上慢慢直起身，跪在那里，看着那扇关上的门。他走的时候没有摔门，只是把门带上了。这个动作比任何怒吼都让我害怕。</p>
+<p>他从来不这样关门。</p>
+<p>我在原地跪了很久，才慢慢站起来。腿有些发麻，我扶着桌沿站了一会儿，等血气重新流过四肢。窗外的月亮从云层后面露出半边，照在桌面上那杯他碰都没碰过的茶上。茶已经凉透了，水面结了一层薄薄的膜。</p>
+<p>我坐下来，把那杯凉茶端起来喝了一口。茶梗子在舌尖上涩涩地化开。</p>
+<p>他没有发现。或者说，他选择了不发现。不管是哪一种，我赌赢了。</p>
+<p>我把杯子放下，开始收拾东西。其实没什么好收拾的。南国的东西在北朔三年里早就丢光了，剩下的只有那根簪子，和藏在枕头底下的一件旧衣。那是南国制的料子，袖口已经磨出了线头，但料子还是软的。我把旧衣叠好，和簪子放在一起，用包袱皮裹上，塞进床底下。</p>
+<p>然后我吹了灯，在黑暗里躺下来。</p>
+<p>明天。明天就能走了。</p>
+<p>我睁着眼，嘴角不自觉地弯了一下。三年了，终于。</p>
+<p>第二天日出的时候，我去后廊。老张不在。</p>
+<p>我等了一炷香。他没来。</p>
+<p>第二炷香。没来。</p>
+<p>第三炷香。</p>
+<p>我知道了。</p>
+<h2 id="8-身份暴露">8. 身份暴露</h2>
+<p>陆沉提着剑来找我的时候，我正在桌前研磨。</p>
+<p>门被撞开的声音很大。但我没有抬头。我的手腕继续转动，墨锭在砚台上画着圆，一圈一圈，均匀得没有一星晃动。</p>
+<p>&quot;出去。&quot;</p>
+<p>这句话是对房间里外的府兵说的。脚步声齐刷刷地退远，门被从外面带上了。</p>
+<p>我抬起眼。</p>
+<p>陆沉站在门口，全副甲胄。他是直接从军营回来的。他的剑鞘上还有没擦干净的血，他握着剑的那只手骨节发白。他的身后，院子里拖着一道长长的痕迹。还有人正在用沙土掩盖那道痕迹。</p>
+<p>我不用问也知道那是谁留下的。</p>
+<p>我回视他，把墨锭放下，把袖口理好。然后我站起来，整了整衣冠。南国的旧礼，见君王时需衣冠整齐。陆沉不是我的君王，但这是我最后一次以&quot;南国太子&quot;的身份站在这里了。</p>
+<p>&quot;王爷。&quot;</p>
+<p>他没有回答。他看了我一会儿，把那把剑往地上一扔。剑落在砖地上发出一声刺耳的脆响。他没有拔剑对着我。他只是把那把剑扔在了地上。</p>
+<p>&quot;你有什么要说的。&quot;</p>
+<p>&quot;没有。&quot;</p>
+<p>&quot;一句都没有？&quot;</p>
+<p>&quot;没有。&quot;</p>
+<p>他的喉结上下滚动了一下。他走过来，一步一步。他没有掐我。他走到我面前，站在那里。近得我能闻到他铠甲上铁锈和尘土的气味。</p>
+<p>&quot;老张什么都说了。&quot;他的声音很低。&quot;你的暗线——你的人——已经在城外了。南国余孽。一共十七个人。昨天夜里被我的暗卫截了，死了六个，剩下的绑在马厩里。&quot;</p>
+<p>我听着。平静地。</p>
+<p>&quot;你不怕？&quot;</p>
+<p>&quot;怕。&quot;</p>
+<p>&quot;那你为什么不跪下求饶？&quot;</p>
+<p>我看着他的脸。然后我笑了一下。很淡的，几乎没有弧度的一个微笑。</p>
+<p>&quot;因为臣知道，求饶没有用。一如当年在南国的密道里，臣被您拽上马背的时候就知道——求饶从来没有用。&quot;</p>
+<p>他沉默了。</p>
+<p>我能看出来，他在用力压制着什么。</p>
+<p>&quot;你在我府里住了三年。&quot;他说。声音有一点哑。&quot;三年。你每天都在想什么？&quot;</p>
+<p>我想了想。</p>
+<p>&quot;在想南国的春天。&quot;我说。&quot;南国的春天会下一种细密的小雨，不打伞走一会儿，肩上就落满了一层薄薄的水珠。北朔没有那种雨。&quot;</p>
+<p>他的眼眶红了。</p>
+<p>是另外一种红。</p>
+<p>&quot;你不想走。&quot;</p>
+<p>他说出这四个字的时候，语气像在说服自己。</p>
+<p>我没有回答。</p>
+<p>&quot;沈念。你不想走。&quot;</p>
+<p>他第二次叫我的名字。三年来他叫我的名字的次数屈指可数，而且都是在最不该被记住的场合。我垂下眼睛。</p>
+<p>&quot;王爷。臣的命是南国的。&quot;</p>
+<p>这句话说出口的时候，他的表情碎了。</p>
+<p>他一把掐住我的脖子，把我按在墙上。后脑撞上墙壁发出一声闷响，眼前黑了一瞬。他的手在收紧。拇指压在我的喉结上，呼吸被一寸一寸地截断。</p>
+<p>我没有挣扎。</p>
+<p>我甚至没有闭眼。我看着他的眼底。那双眸子里倒映着我的脸。我的脸在他的瞳孔里慢慢涨红，嘴唇从红变紫。我没有求饶，没有抓他的手腕。</p>
+<p>我只是看着他的视线。</p>
+<p>他的指节一根一根地松开了。</p>
+<p>他松了手。他往后退了一步。</p>
+<p>那一瞬间很安静。窗外的风停了一息，烛火竖直地烧着，没有晃动。我听到了自己的心跳声，很慢。我不知道那是我这辈子最平静的一刻，还是最决绝的一刻。</p>
+<p>我的手伸向发间，拔下了那根白玉簪。</p>
+<p>簪尖抵上了我的喉咙。</p>
+<h2 id="9-废契">9. 废契</h2>
+<p>&quot;放下。&quot;</p>
+<p>他的声音变了。不再是从前那个镇北王的语气，更接近请求。</p>
+<p>&quot;沈念，你把簪子放下。&quot;</p>
+<p>我迎着他的视线，然后我笑了。那是三年来第一个真正的笑。嘴角的弧度很小，但我自己知道，是走到终点的平静。不苦，也不冷。</p>
+<p>&quot;王爷。臣知道您不会杀臣。&quot;</p>
+<p>他的表情僵住了。因为我那句话里的某一个词。</p>
+<p>&quot;您不会杀臣，&quot;我一字一字地说，&quot;但臣可以杀自己。&quot;</p>
+<p>他向我迈了一步。我把簪尖往皮肤里压了一分。血珠从簪尖渗出来，顺着脖颈往下淌。他停住了。</p>
+<p>&quot;想要什么？我不关你了。出府——放你出府。南国——我送。&quot;</p>
+<p>他的语速变快了，快到失去了往日的沉稳。</p>
+<p>我摇了摇头。</p>
+<p>&quot;王爷，臣不是第一天想走。臣想了三年了。&quot;</p>
+<p>我垂下眼，看着手里那根簪子。白玉簪上的血迹在烛火里泛着温润的光。</p>
+<p>&quot;三年前，母后把这根簪子插在臣的头发里。她说——南境的白玉竹，芯子是实的。她说完就走进火里去了。&quot;</p>
+<p>我抬起眼看着他。</p>
+<p>&quot;她在告诉臣——要像这根竹子一样。宁可断了，不要弯。&quot;</p>
+<p>我看到他的表情裂开了一道缝。</p>
+<p>&quot;够了，&quot;他说，声音沙哑得几乎听不清，&quot;够了。你留下来，我——&quot;</p>
+<p>他没有说完。因为他看到了我手上的动作。</p>
+<p>我垂下手，转了一个方向，对准了自己那处旧伤。他的瞳孔骤缩。</p>
+<p>&quot;不要——&quot;</p>
+<p>他的声音被我的动作打断了。</p>
+<p>白玉簪的尖端刺入了我颈后的契口。三年前陆沉第一次咬下去的位置，那个被反复打开又愈合的地方。簪子穿过皮肤，穿过肌肉，刺入正中。疼，比我预想的还要疼得多，疼到我眼前一片白，手指在发抖。但我没有停。手腕用力一转，听到身体深处传来一声闷钝的撕裂。</p>
+<p>契口被搅碎了。</p>
+<p>血涌出来，温热的，顺着脊背往下淌，漫过脊背。颈后的伤处空了一块。那个被陆沉标记了三年的位置，现在什么都没有了。</p>
+<p>我在倒下去之前，说出了最后一句话。</p>
+<p>&quot;王爷。臣的身子是南国的。给您当了三年笼子——够了。&quot;</p>
+<p>我听到一声嘶哑的喊叫，接住了我倒下去的重量。他的手上全是我的血，他想按住我后颈的伤口，但血从他的指缝里一直在往外渗。</p>
+<p>烛火在我眼里慢慢暗下去。</p>
+<p>他的声音在很远的地方叫我。</p>
+<p>我听不清了。</p>
+<h2 id="10-笼空">10. 笼空</h2>
+<p>我醒来的时候，躺在一辆颠簸的马车上。</p>
+<p>车窗外是不断后退的山野。北朔的地界正在被我甩在身后。我的脖颈上缠着厚厚的纱布，每一下呼吸都扯着伤处生疼。但我还活着。</p>
+<p>一个陌生的声音从车帘外传进来，说的是南国的口音。</p>
+<p>&quot;殿下，我们快到南境了。&quot;</p>
+<p>我合上眼，没有回答。我把手伸到发间。空的。那根簪子不在那里了。我把手收回来，放在胸口上。</p>
+<p>在北朔的最后一夜，我站在城门口回头看了一眼。</p>
+<p>镇北王府的方向有一盏灯，很高的一盏，是城楼上夜巡的火把。但在那个距离上，它恍如一扇还亮着的窗户。我看了三息，然后转身走了。</p>
+<p>我没有回头第二次。</p>
+<p>后来听护送的人说，他在王府里站了三天。副将进去报信的时候，看到他手里握着什么东西。一截断成两截的簪子，断口上还有干涸的血痕。</p>
+<p>副将说，他把那截断簪握在掌心里，竹茬子扎进皮肉里，血顺着指缝往下滴。他没有松手。</p>
+<p>&quot;她还活着吗。&quot;</p>
+<p>&quot;太子殿下已平安抵达南境。只是——&quot;</p>
+<p>&quot;只是什么。&quot;</p>
+<p>&quot;大夫说，契口损毁太重。以后……不能再结契了。&quot;</p>
+<p>他紧握着那截断簪，血滴在桌面上。</p>
+<p>副将退出去之后，他在书房里坐了很久。窗外的天黑了又亮，亮了又黑。他一直没有动。</p>
+<p>他没有说一句话。</p>
+<p>他从来不说。</p>
+<p>我在南境的边界上站了一会儿。</p>
+<p>风很大，吹得衣袍猎猎作响。脖子上缠着的纱布被风吹得边角翻起来，露出下面那道已经愈合的疤。</p>
+<p>我站了一会儿。</p>
+<p>然后转身，沿着山坡走了下去。</p>
+<p>我没有回头。</p>
+<p>南国的春天会下一种细密的小雨。不打伞走一会儿，肩上就落满了一层薄薄的水珠。</p>
+<p>念念十一岁那年的春天，母后把白玉簪插进我的发髻里。南境的白玉竹，才刚刚冒出一截嫩尖。</p>
+<p>&quot;念念长大了。&quot;她的手停在我头顶，温热的。&quot;这是南境的白玉竹——你别看它细，芯子是实的。跟人一样。&quot;</p>
+<p>我当时没听懂。</p>
+<p>后来我听懂了。</p>
+<p>再后来，我把那根簪子，留在了北朔。</p>
+
+        </article>
+    </main>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0)">↑</button>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+function loadTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        html.classList.add('dark');
+        themeIcon.textContent = '☀';
+        themeText.textContent = '亮色';
+    }
+}
+function toggleTheme() {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeIcon.textContent = isDark ? '☀' : '🌙';
+    themeText.textContent = isDark ? '亮色' : '暗色';
+}
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+}
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progress.style.width = pct + '%';
+    const backToTop = document.getElementById('backToTop');
+    backToTop.classList.toggle('visible', scrollTop > 300);
+});
+const headings = document.querySelectorAll('article h1, article h2, article h3');
+const tocLinks = document.querySelectorAll('.toc-link');
+function updateActiveTOC() {
+    let current = '';
+    for (const h of headings) {
+        if (h.getBoundingClientRect().top <= 100) {
+            current = h.id;
+        }
+    }
+    tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        if (link.getAttribute('href') === '#' + current) {
+            link.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        }
+    });
+}
+window.addEventListener('scroll', () => requestAnimationFrame(updateActiveTOC));
+window.addEventListener('hashchange', () => {
+    const el = document.getElementById(location.hash.slice(1));
+    if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo(0, y);
+    }
+});
+loadTheme();
+updateActiveTOC();
+</script>
+</body>
+</html>

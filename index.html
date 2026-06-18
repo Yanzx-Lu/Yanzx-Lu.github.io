@@ -35,6 +35,13 @@ body {
 .theme-toggle:hover { background: var(--accent); color: white; border-color: var(--accent); }
 .container {
     max-width: 1000px; margin: 0 auto; padding: 0 20px 60px;
+}
+.section-title {
+    font-size: 1.4rem; font-weight: 700; color: var(--accent); margin: 40px 0 20px;
+    font-family: var(--font-body); border-left: 4px solid var(--accent); padding-left: 12px;
+}
+.section-title:first-child { margin-top: 0; }
+.book-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;
 }
 .book-card {
@@ -71,33 +78,49 @@ body {
     <p>故事自有归处</p>
 </div>
 <div class="container">
-    <a href="budun.html" class="book-card">
-        <div class="book-cover" data-title="不渡"><span class="badge updating">连载中</span></div>
-        <div class="book-info">
-            <h2>不渡</h2>
-            <div class="meta">古风仙侠 · 灵异 · 耽美</div>
-            <div class="desc">落魄司灯谢无妄，八百年后重遇因他而封的烬鬼沈烬。命契绑定，被迫共查神官失踪案。在执念旧案里双向救赎——"我亲手封了你，你回来渡我。"群像单元，每一桩旧案都照见主角自己的亏欠。</div>
-            <div class="read-btn">开始阅读</div>
-        </div>
-    </a>
-    <a href="lingdu.html" class="book-card">
-        <div class="book-cover" data-title="零度匹配"><span class="badge updating">连载中</span></div>
-        <div class="book-info">
-            <h2>零度匹配</h2>
-            <div class="meta">近代现代 · ABO · 耽美</div>
-            <div class="desc">全城匹配度决定一切的 ABO 社会里，陆洵和沈知遥被官方判定为"零度不匹配"。但两人越是被迫分开，信息素越是不受控地互相渴求。"匹配度是牢笼，不是爱情"——S级Alpha×边缘化Omega，一场关于被坚定选择的抗争。</div>
-            <div class="read-btn">开始阅读</div>
-        </div>
-    </a>
-    <a href="duanxian.html" class="book-card">
-        <div class="book-cover" data-title="断弦照影"><span class="badge updating">连载中</span></div>
-        <div class="book-info">
-            <h2>断弦照影</h2>
-            <div class="meta">古风 · 重生 · 耽美</div>
-            <div class="desc">被冤死的师弟重生归来，发现冷面师兄竟是唯一为他洗雪冤屈、背负骂名之人。前世一剑穿心，今生隔墙相望。沈折玉借外门弟子之身归来，逐步发现谢长离的隐忍与付出。师兄弟、破镜重圆、重生复仇——仙侠耽美，虐恋情深。</div>
-            <div class="read-btn">开始阅读</div>
-        </div>
-    </a>
+    <div class="section-title">长篇小说</div>
+    <div class="book-grid">
+        <a href="budun.html" class="book-card">
+            <div class="book-cover" data-title="不渡"><span class="badge updating">连载中</span></div>
+            <div class="book-info">
+                <h2>不渡</h2>
+                <div class="meta">古风仙侠 · 灵异 · 耽美</div>
+                <div class="desc">落魄司灯谢无妄，八百年后重遇因他而封的烬鬼沈烬。命契绑定，被迫共查神官失踪案。在执念旧案里双向救赎——"我亲手封了你，你回来渡我。"群像单元，每一桩旧案都照见主角自己的亏欠。</div>
+                <div class="read-btn">开始阅读</div>
+            </div>
+        </a>
+        <a href="lingdu.html" class="book-card">
+            <div class="book-cover" data-title="零度匹配"><span class="badge updating">连载中</span></div>
+            <div class="book-info">
+                <h2>零度匹配</h2>
+                <div class="meta">近代现代 · ABO · 耽美</div>
+                <div class="desc">全城匹配度决定一切的 ABO 社会里，陆洵和沈知遥被官方判定为"零度不匹配"。但两人越是被迫分开，信息素越是不受控地互相渴求。"匹配度是牢笼，不是爱情"——S级Alpha×边缘化Omega，一场关于被坚定选择的抗争。</div>
+                <div class="read-btn">开始阅读</div>
+            </div>
+        </a>
+        <a href="duanxian.html" class="book-card">
+            <div class="book-cover" data-title="断弦照影"><span class="badge updating">连载中</span></div>
+            <div class="book-info">
+                <h2>断弦照影</h2>
+                <div class="meta">古风 · 重生 · 耽美</div>
+                <div class="desc">被冤死的师弟重生归来，发现冷面师兄竟是唯一为他洗雪冤屈、背负骂名之人。前世一剑穿心，今生隔墙相望。沈折玉借外门弟子之身归来，逐步发现谢长离的隐忍与付出。师兄弟、破镜重圆、重生复仇——仙侠耽美，虐恋情深。</div>
+                <div class="read-btn">开始阅读</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="section-title">短篇小说</div>
+    <div class="book-grid">
+        <a href="qiuque.html" class="book-card">
+            <div class="book-cover" data-title="囚雀"><span class="badge pending">已完结</span></div>
+            <div class="book-info">
+                <h2>囚雀</h2>
+                <div class="meta">古风架空 · ABO · 耽美 · 约1.2万字</div>
+                <div class="desc">镇北王陆沉灭了南国，把敌国的Omega太子沈念带回府中做了禁脔。三年里极尽羞辱——百宴上让他斟酒、寒冬罚跪整夜、信期时强行结契。Alpha以为自己在驯一只鸟，直到鸟宁可用白玉簪刺穿自己的后颈废掉结契，也不愿再被关在笼子里。</div>
+                <div class="read-btn">开始阅读</div>
+            </div>
+        </a>
+    </div>
 </div>
 <div class="footer">
     <p>yanzx-lu.github.io</p>
