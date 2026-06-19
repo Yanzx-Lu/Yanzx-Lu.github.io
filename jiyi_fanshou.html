@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>记忆贩售</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --bg: #faf8f5; --fg: #2c2c2c; --muted: #6b6b6b; --accent: #8b3a3a;
+    --accent-light: #c27b7b; --border: #e0dcd6; --card: #ffffff;
+    --toc-bg: #f5f2ed; --shadow: rgba(0,0,0,0.06);
+    --font-body: "Noto Serif SC", "Source Han Serif SC", "思源宋体", "STSong", "SimSun", Georgia, serif;
+    --font-ui: "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+    --line: 1.9; --max-width: 720px; --radius: 8px;
+}
+:root.dark {
+    --bg: #1a1a1a; --fg: #d4d4d4; --muted: #888888; --accent: #c27b7b;
+    --accent-light: #e0a0a0; --border: #3a3a3a; --card: #252525;
+    --toc-bg: #222222; --shadow: rgba(0,0,0,0.3);
+}
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-body); background: var(--bg); color: var(--fg);
+    line-height: var(--line); font-size: 18px;
+    transition: background 0.3s, color 0.3s; overflow-x: hidden;
+}
+.container { display: flex; max-width: 1200px; margin: 0 auto; min-height: 100vh; }
+.sidebar {
+    width: 280px; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh;
+    background: var(--toc-bg); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; z-index: 100;
+    transition: background 0.3s, transform 0.3s;
+}
+.sidebar-header { padding: 24px 20px 16px; border-bottom: 1px solid var(--border); }
+.sidebar-title { font-family: var(--font-ui); font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.sidebar-subtitle { font-size: 0.75rem; color: var(--muted); font-family: var(--font-ui); }
+.back-home {
+    display: block; padding: 8px 20px; color: var(--accent); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); font-weight: 600;
+    border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.back-home:hover { background: var(--bg); }
+.toc-wrap { flex: 1; overflow-y: auto; padding: 12px 0; }
+.toc-wrap::-webkit-scrollbar { width: 4px; }
+.toc-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.toc-link {
+    display: block; padding: 6px 20px; color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; font-family: var(--font-ui); line-height: 1.5;
+    border-left: 3px solid transparent; transition: all 0.2s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.toc-link:hover, .toc-link.active { color: var(--accent); background: var(--bg); border-left-color: var(--accent); }
+.toc-level-1 { font-weight: 700; font-size: 0.95rem; color: var(--fg); }
+.toc-level-2 { font-size: 0.88rem; }
+.toc-level-3 { font-size: 0.82rem; padding-left: 28px !important; }
+.sidebar-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
+.main { margin-left: 280px; flex: 1; padding: 60px 40px 80px; max-width: var(--max-width); min-width: 0; }
+article { background: var(--card); padding: 48px 56px; border-radius: var(--radius); box-shadow: 0 2px 20px var(--shadow); }
+article h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.6em; color: var(--accent); text-align: center; font-family: var(--font-ui); }
+article h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; margin-bottom: 0.8em; padding-bottom: 0.3em; border-bottom: 2px solid var(--accent-light); color: var(--accent); font-family: var(--font-ui); }
+article h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.6em; margin-bottom: 0.6em; color: var(--fg); font-family: var(--font-ui); }
+article p { margin-bottom: 1.2em; text-align: justify; text-indent: 2em; }
+article p:first-of-type { text-indent: 0; }
+article blockquote { margin: 1.5em 0; padding: 1em 1.4em; border-left: 4px solid var(--accent-light); background: var(--toc-bg); border-radius: 0 var(--radius) var(--radius) 0; color: var(--muted); font-style: italic; }
+article blockquote p { text-indent: 0; margin-bottom: 0.5em; }
+article blockquote p:last-child { margin-bottom: 0; }
+article hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+article strong { color: var(--accent); font-weight: 700; }
+article em { font-style: italic; color: var(--accent-light); }
+article ul, article ol { margin: 1em 0 1em 2em; }
+article li { margin-bottom: 0.5em; }
+article a { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-light); transition: border 0.2s; }
+article a:hover { border-bottom-style: solid; }
+.btn { background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 6px 12px; cursor: pointer; color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.progress-bar { position: fixed; top: 0; left: 280px; right: 0; height: 3px; background: var(--border); z-index: 200; }
+.progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-light), var(--accent)); width: 0%; transition: width 0.1s; }
+.back-to-top { position: fixed; bottom: 30px; right: 30px; width: 44px; height: 44px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transform: translateY(10px); transition: all 0.3s; box-shadow: 0 2px 10px var(--shadow); z-index: 200; font-size: 1.2rem; }
+.back-to-top.visible { opacity: 1; transform: translateY(0); }
+.back-to-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+.menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 300; width: 40px; height: 40px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 10px var(--shadow); font-size: 1.2rem; color: var(--fg); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+.overlay.show { display: block; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-light); }
+::selection { background: var(--accent-light); color: white; }
+@media (max-width: 900px) {
+    .menu-toggle { display: flex; }
+    .sidebar { transform: translateX(-100%); box-shadow: 2px 0 20px rgba(0,0,0,0.15); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 60px 20px 40px; }
+    article { padding: 28px 24px; }
+    .progress-bar { left: 0; }
+    .back-to-top { bottom: 20px; right: 20px; }
+}
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+    article h1 { font-size: 1.8rem; }
+    article h2 { font-size: 1.3rem; }
+    article h3 { font-size: 1.1rem; }
+    .main { padding: 50px 14px 30px; }
+    article { padding: 22px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-bar-inner" id="progress"></div></div>
+<button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="container">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">记忆贩售</div>
+            <div class="sidebar-subtitle">目录导航</div>
+        </div>
+        <a href="index.html" class="back-home">← 返回书库</a>
+        <div class="toc-wrap" id="tocWrap">
+            
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn" onclick="toggleTheme()" id="themeBtn">
+                <span id="themeIcon">🌙</span> <span id="themeText">暗色</span>
+            </button>
+        </div>
+    </aside>
+    <main class="main">
+        <article>
+            <p>###1.</p>
+<p>那包裹是早上到的。泡沫纸缠了三层，拆开之后是十根黑色存储条，每根贴着标签：姓名、年龄、记忆类型、时长、来源。来源那一栏写着&quot;自愿出售&quot;。每个来卖记忆的人都签了这行字，但我从来不看签名。我只看品相。</p>
+<p>我拿镊子夹起最长那根，对着灯看。液态记忆在管壁里转得很慢，颜色是深的琥珀色，说明情绪浓度高。这种货走得最快。</p>
+<p>下午来了三个客户。第一个买了三根。失恋套餐，两个月前刚死的情侣，全是吵架的画面。他说看着别人吵架自己就不那么难受了。第二个买了两根短时效，说想试试极限运动，没胆子，买别人的过过瘾。第三个没买，翻了半天目录，走了。</p>
+<p>这种人不少。想买，下不去手。某种他自己也说不清的底线。</p>
+<p>四点半他进来了。</p>
+<p>门铃响了一声，我没抬头。脚步声很稳，皮鞋，不是运动鞋那种蹭地，皮鞋踩在我铺的灰色地毯上几乎没有声音。他走到柜台前面停住。</p>
+<p>&quot;老样子。&quot;</p>
+<p>我这才抬头。他站得很直，肩膀宽，一件旧的棕色皮衣。脸上没什么表情，眼角有道旧疤。眼神很安静，不是那种刻意压着的安静，是真的没什么要向人交代的。</p>
+<p>他每周来三次。周二。周四。周六。永远同一个时间四点半，永远同一个位置，柜台左边第二张高脚凳，永远只买同一种货：同一个人的情欲记忆。买三年了。</p>
+<p>我从柜子里拿出给他留的那根。标签已经磨得有点模糊：未编号、男性、约25-30岁、情欲向、时长约四十分钟、来源自愿。</p>
+<p>&quot;这条品相不错，情绪浓度比上批高。&quot;</p>
+<p>他把现金放在柜台上。</p>
+<p>新钞，一张一张叠得齐整。不还价。</p>
+<p>我瞥了一眼他的皮衣。&quot;这件皮衣不错。&quot;</p>
+<p>他手指顿了一下。</p>
+<p>很短。不到一秒。然后他把钞票往前推了半寸，我收了钱，他把存储条放进内侧口袋。他没说再见。他从来没说过再见。门铃又响了一声，他走了。</p>
+<p>我低下头继续对数。右手食指不受控制地抖了两下，笔尖在账本上戳了个小洞。我把笔换到左手。这三年一直这样，右手偶尔不听使唤——做我们这行的常见病，长期接触记忆液的神经毒性。我没当回事。</p>
+<p>六点关门。我收拾柜子的时候，瞥见最底层压着一个牛皮纸信封，封口贴得严严实实。没有地址没有收件人。我翻过来看了一眼，继续往上面摞文件夹。</p>
+<p>那条手抖不是病。是我忘了一个人。</p>
+<p>我把文件夹摞上去的时候，手指在信封边缘停了一拍。然后继续摞。继续不知道。</p>
+<p>###2.</p>
+<p>那条新的货是周四到的。中间人说他废了不少劲。卖家要价很高，因为记忆完整度超过百分之九十，是直接从海马体硬提的，不是那种通过感官转录的次品。硬提的意思是把整条神经元回路完整剥离。做这个手术的人下手很稳。</p>
+<p>&quot;标签是卖家自己写的，&quot;中间人说，&quot;他要你亲自看。&quot;</p>
+<p>我拆开包装。</p>
+<p>最上面那根贴的标签只有一行字：我。</p>
+<p>我把存储条插进读取器。屏幕亮起来。第一帧弹出来的时候我以为机器坏了——画面里的人是我。</p>
+<p>不是像。是我。</p>
+<p>画面里我侧躺在深灰色床单上，头发比现在长。光线很暗，是黄昏或者凌晨。我的嘴角在往上翘。那种笑我没在自己的镜子里见过。我盯着屏幕看，手指压在嘴唇上，摸到的位置和画面里那个人嘴角的位置一模一样。</p>
+<p>我往后切了几帧。</p>
+<p>另一个男人的手。骨节分明，食指第二指节有茧。那只手正沿着我的后颈往下滑，指腹陷进后颈与肩胛之间那截皮肤。我下意识摸了一下自己的后颈。镜子里反出来的手指和画面里那只手，在同一个位置。</p>
+<p>我把画面倒回去，定在男人的脸上。光线不好但轮廓清楚。眼角旧疤。安静的、不需要向任何人交代的眼神。</p>
+<p>那个每周来三次的客户。</p>
+<p>我把三天前卖给他的那条存储条翻出来，对比编号。同一批次。同一个人。我调出他的购买记录，三年，一百多条，全是同一种类型：情欲向。同一个人的。</p>
+<p>画面里的那个人是我。</p>
+<p>我在他手里买了三年的自己。</p>
+<p>屏幕上的画面还在走。那只手从后颈滑到锁骨，停在那颗骨头的凹陷处。指腹压下去的一瞬，画面里的我闭了一下眼，嘴唇张开一道缝。那种张嘴不是要说话——是身体某个地方被按住之后自己松开的。不是主动的。是被动到了骨头缝里。我感觉不到那只手，但我的手在抖。</p>
+<p>右手，整只手，从指根到腕。我盯着它看。它抖的方式不像神经毒性。</p>
+<p>我继续往后翻。</p>
+<p>浴室。花洒在左边肩膀上溅开细细的水雾。我伸手把那个男人拽进来，他的衣服没脱。水把他的衬衫打透了粘在胸口上，我的手指从他湿透的袖口伸进去，攥住他的手腕。我在笑。那种笑不是温柔。是笃定。笃定这个人是我的。</p>
+<p>男人低了一下头。水从发梢滴在我脸上。</p>
+<p>画面就停在这里。</p>
+<p>我把存储条弹出来，重新封装好，放在柜台左边的格子里。那是专门给他留的位置。我的手不抖了。</p>
+<p>我坐在空荡荡的店里面前放着那个人的购买记录。三年。一百四十七笔。从未还价。每周二四六四点半。</p>
+<p>他买了三年的我。</p>
+<p>他不认识现在的我。</p>
+<p>我喝了一口桌上的深色液体。不是茶。这些年我一直告诉自己那是某种草药，护肝的。柜子最底层那个牛皮纸信封堆在一摞旧病历下面，我没有去看它。</p>
+<p>不是不想看。手一直在抖。</p>
+<p>###3.</p>
+<p>那天晚上我没回去。把店门锁了，拉上百叶窗，把所有存储条按日期排开。最早的一条是三年零两个月前的。画面里的我头发比现在长很多，人在厨房里，光着脚踩在瓷砖上。屏幕上弹出来的第一个画面是那个男人背对着镜头，肩胛骨从衬衫里撑出来。他在煮面。</p>
+<p>我按下播放。</p>
+<p>我走过去从背后抱住他。他的背僵了一瞬，然后放下筷子，侧过脸，我的下巴搁在他肩膀上。这个动作行云流水。做过无数次，每一寸都是肌肉记忆。他的手从前面绕到后面，按在我后脑勺上，指节插进头发。</p>
+<p>下一帧是卧室。</p>
+<p>深灰色床单。我的第一反应是，这条床单我现在还在用。他把衬衫从头顶脱了，肩背的线条从肩膀一路斜下去，腰侧有疤，旧伤。我的手摸上去。不是小心翼翼。是五指张开，掌心贴实，从头摸到尾。他吸了一口气，不是吸凉气。是那种被人按住旧伤口时身体的反吸。</p>
+<p>我的手指隔着屏幕划过同一道疤。空气是冷的。手指碰到的只有玻璃。</p>
+<p>他翻过来把我压在下面。</p>
+<p>我闭上眼。画面里的那种闭，不是逃避，是全然交出。他把我的双手按在头顶，十指扣住。没亲。先拿鼻尖从我的眉骨一路滑下来，到耳后，停在耳垂与下颌之间那截软肉上。我的腰弓起来蹭到他皮带扣的时候，他还在用鼻尖蹭那个位置。</p>
+<p>&quot;陆铮。&quot;画面里的我叫了一声。</p>
+<p>声音很轻。不是喊。是压在喉咙里，蹭出来的一点气音。</p>
+<p>陆铮。</p>
+<p>我把画面暂停在那个字上。嘴唇没有合上，舌尖还顶在上颚。我对着屏幕学自己那个口型。陆铮。嘴唇能合上。舌尖找不到位置。这个名字在我嘴里没有分量。</p>
+<p>手指又抖了。</p>
+<p>我点继续。</p>
+<p>他把皮带抽出来的时候金属扣响了一声。那声音从音箱里炸出来，整个房间都在震。他没松我的手腕，单手解自己裤子，指节蹭过我的大腿内侧。我的腿张得更开，膝盖夹在他腰侧，脚后跟蹭他的后腰。他俯下来，嘴唇贴在我锁骨下方，先拿牙磕了一下，再含住。</p>
+<p>画面一抖。那是记忆体的感情浓度到了峰值。我身体里的传感器在控制振动频次。画面里我的手指插进他后脑勺的头发，拽得他抬起头，然后我自己凑上去吻他。不是柔的。是撞。牙齿差一点磕破嘴唇，舌头进去的时候他哼了一声，低沉的、从胸腔深处直接传进我嘴里的那种震动。</p>
+<p>我的下腹跟着收紧了。</p>
+<p>看着自己做爱。身体记得，脑子不记得。双腿之间有东西在缩，皮肤在发麻，但脑子里什么画面都没有。只有眼前的屏幕，和画面里那个长头发的自己。</p>
+<p>他进去了。</p>
+<p>我的嘴张开到最大，没声。喉咙是堵的。太满了。他顶到底之后没动，停在那里，额头抵着我的眉心，两个人的睫毛交在一起。他的手从我的手腕滑到指缝，一根一根插进去，扣紧。不抽送。只是停在里面，呼吸跟呼吸对在一起。</p>
+<p>&quot;渊。&quot;</p>
+<p>就一个字。</p>
+<p>画面里我的眼泪从眼眶侧面滑进耳朵。没有哭腔。只是眼角到耳根那截皮肤湿了。</p>
+<p>我把画面关了。</p>
+<p>房间很暗很安静，只有机器散热的风扇声。我把脸埋进手心里，手指掐进发根，指甲刮在头皮上。右手的手指还在抖，从指节一路抖到腕。</p>
+<p>我不记得他。</p>
+<p>不记得六年里的任何一个早晨。不记得第一次躺在灰色床单上拽他领口的那个手势。不记得在厨房里光着脚踩上他的脚背。不记得他进到最深处叫我的那一声。</p>
+<p>我的身体都记得。</p>
+<p>锁骨下面的细疤在发痒。指尖摸过去能够到一道硬的凸起，从锁骨窝往下延，大概三公分。这个疤是哪来的，我不知道。镜子里这张脸和画面里那张脸是同一张，但画面里那个人知道他爱谁。我开了家店。每天喝墨绿色的药。我知道每周二四六四点半有位客户来买同一个人，从不还价。</p>
+<p>我不知道他叫陆铮。</p>
+<p>不知道那件旧皮衣是他的——不，是我的。是我送给他的。画面最后一帧，我把皮衣从自己身上脱下来，套在他身上。袖口长了一截。我说，&quot;你穿比我好看。&quot;&quot;穿丢了你就死定了。&quot;他笑了一下。那种笑是只给我一个人看的。</p>
+<p>我把存储条按日期重新排好。手指停在标签&quot;我&quot;那张上面。卖家自己写的。我把自己的记忆拿出来卖了。不是别人偷的，不是误触，是我自己的选择。我把和他在一起的六年，从他身体底下爬起来的每一个早晨，从背后抱住的每一个黄昏，他煮的面、我磕破的嘴唇、他最深处的那个字——全部从脑子里挖了出来，装进这些黑色的玻璃管。卖了。</p>
+<p>为什么。</p>
+<p>我拉开办公桌最底层的抽屉。那个牛皮纸信封还在病历下面压着。我没开。手指已经抖得拿不起来。</p>
+<p>指甲又掐进掌心。疼。但那种疼在身体的某个边界上停住了。再往里是空的。我找不到那个人的名字在我身体里的位置。只摸到一个边缘整齐的空洞，被什么东西连根挖走了。</p>
+<p>那个洞的形状，刚好是他的名字。我不知道那是什么名字，但我的舌尖找不到它的位置，嘴唇合不上它的最后一笔。</p>
+<p>###4.</p>
+<p>第二天我没开店。把卷帘门放下来，从里面锁了。</p>
+<p>诊所后台是一台老式终端，不联网。做这行的不用云端，记忆数据不能留痕。我在终端里搜我自己的名字。系统弹出一个档案编号：YX-0001。我的诊所叫「渡」，三年前开业。我的档案编号是一号。我是我自己的第一个客户。用户名下的记录：一条提取，零条购买。</p>
+<p>我点开那条提取记录。手术日期：三年前六月十四号。手术类型：全量定向清除。清除目标：单一对象。清除完整度：百分之九十三。</p>
+<p>九十三。</p>
+<p>意味着有百分之七的东西还在我脑子里，不够形成画面，不够拼出一张脸，但足够让身体在某个瞬间做出它不该做的反应。比如手抖。比如锁骨下面那道疤偶尔发痒。</p>
+<p>手术机构是城西的永安记忆中心。主刀医生叫钟砚。我盯着那行字看了很久，然后打开通讯录，找到那个三年没拨过的号码。钟砚是我大学室友。现在在做记忆手术的规培督导。电话响了三声。</p>
+<p>&quot;叙渊？&quot;他的声音明显卡了一下，&quot;你怎么——&quot;</p>
+<p>&quot;三年前你给我做的清除。&quot;</p>
+<p>电话那头安静了。</p>
+<p>&quot;你签字了，&quot;他说，&quot;清醒状态，自主签字。我反复确认了三遍。叙渊，是你自己要做的。&quot;</p>
+<p>&quot;我知道。&quot;我说。虽然什么都不知道。&quot;你把当时的档案发给我。&quot;</p>
+<p>&quot;那不合规——&quot;</p>
+<p>&quot;钟砚。&quot;</p>
+<p>他又停了。然后说，&quot;你知道那东西对神经的损伤是不可逆的吗。从海马体硬提百分之九十以上的回路——你不是不记得一个人，你是把自己脑子里所有跟他有关的东西全挖了。包括那些跟他无关的东西。&quot;</p>
+<p>&quot;比如。&quot;</p>
+<p>&quot;比如你大三那年冬天。你和他还没认识。但你提取的时候，那年冬天的记忆也碎了不少。&quot;</p>
+<p>我沉默。我不记得那年冬天。也不记得有没有下雪。</p>
+<p>&quot;你当时跟我说，&quot;钟砚的声音变轻了，&quot;与其让它们烂在脑子里，不如完整地挖出来。&quot;</p>
+<p>&quot;烂在脑子里是什么意思。&quot;</p>
+<p>电话那头第三次沉默。</p>
+<p>&quot;那份诊断书，&quot;钟砚说，&quot;你没告诉我放哪了。&quot;</p>
+<p>我的手指在终端上滑过去，翻到医疗档案那一栏。文件格式不对。加密了。密码提示问题：你最爱的人叫什么名字。光标闪了三次，我合上了终端。我不知道。我试了七个名字，每个都不对。第七个是我自己的。</p>
+<p>诊断书打不开，但我摸到了后颈那道手术入口。在发际线下方，指甲盖大小，凹进去一块。提取针从这里刺进去，穿过颅骨，到达海马体。针尖在神经回路里游走，找到那个人的名字、气味、体温、声音的每一道刻痕，一根根挑起、剥离、抽出。</p>
+<p>我对着镜子侧过头。那道疤很旧了。不痛。只是麻。</p>
+<p>那天晚上我把能查到的所有文件翻了一遍。手术同意书上有我的签名。术前评估表上，勾选&quot;自愿&quot;，勾选&quot;已知晓不可逆性&quot;。在&quot;手术原因&quot;那一栏，我写了四个字：不想忘记。</p>
+<p>不是&quot;不想记住&quot;。是&quot;不想忘记&quot;。</p>
+<p>也就是说，那时候我已经在忘了。</p>
+<p>我把脸埋进手心里。后颈在发麻。窗外的天从深灰变成浅灰，从浅灰变成白的。终端屏幕暗了又亮，亮了又暗。桌上那杯墨绿色的药已经凉了，我没喝。右手食指在桌面上敲了一下——我把它按住。越按越抖。</p>
+<p>钟砚发了邮件过来。附件是当时的术前对话记录。最后一页，钟砚的备注：患者自述多巴胺反应测试结果低于正常值百分之四十，属渐进性退化早期。建议全量提取。患者拒绝向第三方透露病情。</p>
+<p>第三方。那个人的名字没出现在任何文件里。但他就是第三方。他从头到尾都不知道。</p>
+<p>我关了终端。手心一层薄汗，把键盘沾得发涩。</p>
+<p>忽然想起第二个画面。</p>
+<p>###5.</p>
+<p>下午四点二十分。我把百叶窗卷起来，灯开了，柜台擦了一遍。手心还在出汗。</p>
+<p>四点半。</p>
+<p>门铃响。皮鞋踩在地毯上，和昨天一样——不，和三年来每一次都一样。他走到柜台左边第二张高脚凳前面，没坐。</p>
+<p>&quot;老样子。&quot;</p>
+<p>我看着他。旧皮衣，眼角旧疤，眼神安静。三年前他在这张柜台前面坐下的时候，是不是也在看一个不记得他的人。</p>
+<p>我把左边格子里那条存储条拿出来。昨天就给他留好的。标签上写着&quot;我&quot;。他伸手来接，手指碰了一下我的指尖。凉的。</p>
+<p>&quot;这条，&quot;我开口。声音比平时低了一度。&quot;品相比之前的好。&quot;</p>
+<p>他没说话。只是看着存储条。</p>
+<p>我把读取器推到他面前。他没接。</p>
+<p>&quot;你要不要在这里看。&quot;</p>
+<p>他抬起头看着我。那一眼很平，不是质问，不是试探，不包含任何我想象中的情绪。只是安静的、不需要向人交代的那种看。</p>
+<p>他把存储条插进读取器。</p>
+<p>屏幕亮起来。是我昨天看过的画面。深灰色床单，我侧躺着，头发比现在长。他的手沿着我的后颈往下，指腹陷进皮肤。画面里的我闭眼、张嘴，那种张嘴不是要说话。</p>
+<p>音量我没关。</p>
+<p>画面里传出来一声喘息。很短。是被顶到某个位置之后从喉咙深处挤出来的。</p>
+<p>他看着我。</p>
+<p>不是看屏幕。是看我。</p>
+<p>我的手搭在柜台上，两手的指尖对齐，压在一个账本的边缘。我不知道为什么觉得必须笑一下，就笑了。</p>
+<p>&quot;这条品相好，加五百。&quot;</p>
+<p>他没说话。把现金放在柜台上。新钞，一张一张叠得齐整，和昨天一样，和三年来每一次都一样。</p>
+<p>屏幕上的画面还在走。我的手从陆铮湿透的衬衫袖口伸进去，攥住他手腕的那个瞬间。我笑得笃定。笃定这个人是我的。画面里的人在爱人，画面外的人在付款。他们在同一个画面里，中间隔着三年零几个月和一整个柜台的宽度。</p>
+<p>他把现金往前推了半寸。</p>
+<p>我收了钱。指尖碰到他的指尖。又凉又硬。不是皮肤冷，是骨节硬。刑警的指节，打过沙袋也扣过扳机。</p>
+<p>他站起来。把存储条放进口袋，转身，走到门口。</p>
+<p>皮鞋踩在地毯上，没有声音。</p>
+<p>门铃响了一声。他停在门口，背对着我。</p>
+<p>&quot;你剪头发了。&quot;</p>
+<p>门关了。</p>
+<p>我坐回椅子上。柜台上还搁着他刚付的现金，新钞，折都没折。我把钞票一张一张码好，码到中间一张的时候发现上面有字——不是印刷体，是圆珠笔写的。很小的字，写在新钞边缘的空白处。</p>
+<p>&quot;你以前喜欢吃椒盐排骨。现在菜单上没有了。&quot;</p>
+<p>我把这张钞票翻过来。另一面也有字。</p>
+<p>&quot;是我把店盘下来的。原来的老板搬走了。&quot;</p>
+<p>下一张。</p>
+<p>&quot;上个月你在柜台后面打瞌睡，手机放着同一首歌。你以前不喜欢那首歌。你说太吵。现在你听到第三遍也没切。&quot;</p>
+<p>再下一张。</p>
+<p>&quot;这三年你笑过。但不是以前那种笑。以前你笑的时候右脸先动。现在你先动嘴唇。在计算位置。&quot;</p>
+<p>我把所有钞票摊开。每一张背面都有字，圆珠笔写的，密密麻麻，从边缘写到中心，有些字挤不下了就写到国徽旁边。大小不一，有些墨迹淡了。不是一次性写的。有些笔迹干了又写，写了又干。</p>
+<p>他把想说的话写在钞票背面。三年。每次付款都是一张新的钞票，背面写着这个星期他发现的不同。比如我的头发短了两公分。比如我在听那首以前嫌吵的歌。比如椒盐排骨的店被他盘下来了，他不知道我还会不会去。</p>
+<p>他从来没说过。</p>
+<p>他把写满字的钞票叠成整齐的一沓，放在柜台上推过来，像普通客户一样说了声&quot;老样子&quot;。然后坐在我对面，看屏幕里我在他身子底下张开嘴。我对他微笑报价。他说你剪头发了。</p>
+<p>我盯着那沓钞票。把最上面那张翻过来，摸着他写的字。字迹不漂亮。他在警校没读过几天书，字硬，每一笔都像摁上去的。</p>
+<p>&quot;你剪头发了。&quot;</p>
+<p>八十块钱的背面，六个字。</p>
+<p>我趴在柜台上。没有哭。只是趴着，额头抵在那沓钞票上。字的凹凸硌在眼眶下面，一粒一粒的。</p>
+<p>###6.</p>
+<p>晚上我跟了他。</p>
+<p>三个路口，右转，老居民区六楼，没有电梯。他走楼梯。每一步都落在同一级台阶上，没有脚步声。刑警的步法。我在五楼半停住了，背贴在墙上，听他在六楼掏钥匙开门。锁芯弹开的声音很轻。</p>
+<p>又等了十分钟。我上去。</p>
+<p>门没锁。</p>
+<p>客厅什么都没有。一个水杯，一把椅子，一张桌子。桌上的烟灰缸是满的。其他位置，电视柜、茶几、沙发，全是空的，像这个人只是借住在这间屋子里的一个影子。</p>
+<p>厨房亮着灯。我推开门。</p>
+<p>不是厨房。</p>
+<p>三面墙从地板到天花板，全是架子。架子上没有碗盘没有调料瓶，全是U盘。存储条转录过来的通用格式。黑色的，透明壳的，有些上面贴着标签，有些没贴。标签按日期排的：叙渊·认识他那天、叙渊·第1年春天、叙渊·第2年冬天、叙渊·第三年秋天他发高烧、叙渊·第四年他说想去海边、叙渊·第五年他开始忘东西、叙渊·第六年他坐在窗口写了一整夜、叙渊·最后一面他不让我进去。</p>
+<p>我从第一个架子摸到最后一个。</p>
+<p>每一个U盘，他都买了。从黑市，从中介，从其他诊所。有些是我经手的。我亲手收进来的货，亲手标的价。他把那些记忆从各条渠道一块块买回来，装在这间屋子里，按日期排好。我卖得越多，他买得越多。他从来不告诉我他买的是我。</p>
+<p>最后一排架子最底格，不是U盘。</p>
+<p>是一盒信。</p>
+<p>铁盒子，饼干盒的那种，盖子歪了一角。我打开。里面是手写信，没有信封没有地址。最上面那张纸已经发脆了，折痕磨出毛边。我把它展平——是他的字。那笔硬得像摁上去的字。</p>
+<p>&quot;渊：</p>
+<p>今天那个中介说又有一条你的货。让我快去看。我去了。是第四年我们在城中村那间出租屋的夏天。你把头发扎起来了，太热，你一直把碎发往耳朵后面别，我在拍。拍了好久才发现自己不是在拍照。手机录像开了四十分钟。我都不知道。你骂我蠢。那条记忆我买了。你骂我蠢的那个表情收在一个透明壳的U盘里，现在在我左边的架子上。我想把它放给你看，但你不知道我是谁。</p>
+<p>今天又在你店里坐了一个小时。你在柜台后面低着头对数。头发比以前短了很多，看上去更瘦了。但数钱的时候还是会把钞票的角一个个对齐。以前你不这样。以前你的钱包里只有皱巴巴的零钱，因为我总把你的钱拿去点外卖。你看——我记得所有你不记得的事。这封信不能寄给你。就算寄了，你也不知道信里在说什么，不知道这个铁盒子是谁放在架子底层的，不知道有一个叫陆铮的人花了三年时间把自己锁在一间只有你的屋子里。</p>
+<p>陆铮&quot;</p>
+<p>我把信折好放回去，拿出第二张。同一盒子里还有几十封。</p>
+<p>没看完。</p>
+<p>我背靠着架子坐到地上。正对面是那个标签。叙渊·认识他那天。</p>
+<p>我把那根U盘抽出来，攥在手里。很小，两根手指就能捏碎。</p>
+<p>没捏。</p>
+<p>这件屋子里装满了我的名字。每一个U盘、每一张标签、每一封信的开头，都是我的名字。我不认识架子上的自己。不认识认识他那天的叙渊，不认识第三年秋天发高烧的叙渊，不认识写了整整一夜的那个叙渊，不知道他写了什么——是在给谁写信吗？是给我吗？是给这个人吗？还是他写的东西和他爱的人都没什么关系，只是一封永远不会寄出去的东西，比如诊断书的回执，比如某张我再也打不开的病历。</p>
+<p>我后颈那道疤在痒。右手在抖。</p>
+<p>架子最底层那个铁盒子旁边，还有东西。不是信。是那件旧皮衣，叠得整整齐齐，放在一个透明防尘袋里。</p>
+<p>旁边别着一张标签：叙渊·他不记得这件衣服了。</p>
+<p>###7.</p>
+<p>从陆铮的公寓出来天快亮了。</p>
+<p>我没回住处。直接回了店里。手指按在保险柜密码锁上的时候抖得很厉害。输了三次，错了两次。第三次对了。锁芯弹开。最里面那摞文件压在保险柜底，积了三年的灰。</p>
+<p>第一份是诊断书。</p>
+<p>海马体神经元渐进性退化症。确诊日期：四年前三月。报告上印了一张脑部扫描图。海马体区域有一块暗斑，边缘模糊，像墨汁在纸上洇开。医生在下面批了一行字：患者二十五岁，退化速度超出常规，预计五年内丧失大部分长期记忆。建议尽早提取珍贵记忆，防止情绪崩溃。</p>
+<p>第二份是处方记录。神经缓释剂，每日一次，皮下注射。用药起始日期和诊断书同一天。药房配药记录从四年前一直拉到现在。每月一支，从未间断。</p>
+<p>我把袖子卷上去。左臂内侧有一排针眼，旧的叠新的，有些已经褪成褐色小点，有些还是红的。针眼的位置和处方日期对得上。每天一次。从四年前开始。我一直在给自己打针，只是不知道为什么要打。</p>
+<p>那杯深色的液体不是茶。针管里的和杯子里的是同一种东西。神经缓释剂。一个打进血管，一个吞进胃里。温的喝下去，苦味从舌根一路坠到胃里。我一直以为那是草药的苦。我从杯沿抬起头，看见对面墙上的镜子。镜子里那个人在喝药，喝了很多年，不知道为什么。</p>
+<p>第三份是手术知情书。</p>
+<p>患者自述：近期频繁出现面孔遗忘，交往六年的伴侣站在面前，无法辨认。已发生两次。一次在超市，对方从背后拍了我的肩。我回头，条件反射地往后退了一步。对方的表情在那一秒变了。不是生气，是花了好几秒钟消化。然后他说，是我。</p>
+<p>手术目的：在无法认出伴侣之前，完整提取与该对象相关之全部记忆回路，防止记忆随退化进程自然溃烂。提取后该对象将彻底从患者记忆中消失，不可逆。患者已知晓。</p>
+<p>预后附注：提取手术损伤部分非靶向记忆，如大三日历、研一食堂、春节返乡路径等事件可能部分残缺。患者表示，靶向记忆的价值高于附带损伤。</p>
+<p>手术医生签名：钟砚。</p>
+<p>患者签名：叙渊。</p>
+<p>我把文件放下来。手指不再抖了。</p>
+<p>只是坐在那里。保险柜敞着，文件摊了一地，天光从百叶窗的缝里一道一道打进来。诊所里很安静。那些摆满记忆样品的架子、镊子、读取器、贴在玻璃柜上的价目表，全在晨光里变得很亮很薄。这些东西从来都不存在，只是我花了三年时间给自己搭的一个壳。</p>
+<p>我拉开了办公桌最底层的抽屉。</p>
+<p>病历下面那个牛皮纸信封。</p>
+<p>封口贴得很死。我拿裁纸刀挑开，抽出里面的信纸，两张，折了三折。纸已经受潮发皱，有股旧木头味道，字迹是我自己的。三年前的自己。</p>
+<p>&quot;陆铮：</p>
+<p>当你收到这封信，我已经不记得你了。</p>
+<p>我写了三版。第一版很长，把第一次接吻那天你穿了什么衣服、最后一次吵架我说了什么混账话全写进去了，写到一半想起来——这些事你记得。不需要我再告诉你。第二版只有一行字：对不起。</p>
+<p>这一版是第三版。</p>
+<p>我记不住你的脸了。上个月在超市你拍我肩膀，我回头的那一下，你知道我在看谁吗？我在看一个陌生人。你的眼睛你的嘴唇你的眼角那道疤。这些在我脑子里曾经有清晰的形状的东西，那一天全都碎成了像素。我认不出你。只隔了一秒我就想起来了——是你拍的我，是你叫我，是你。但在那一秒里，你是空的。</p>
+<p>那是我这辈子最怕的一秒。</p>
+<p>医生说退化的速度比预估的快。最多还有一年。一年之后我会一点点忘掉这些年发生过的事。从最近的事开始，一层一层往下剥，最后连你的名字也念不出来。我不想让你看这个过程。医生建议做全量提取。趁记忆还没烂完，把它们完整地取出来。取出来至少还是好的。烂在脑子里的记忆谁也修不好。</p>
+<p>我签字了。</p>
+<p>这条记忆管会流到市面上。也许会有人买。有人会在某个晚上插上U盘，看见我在深灰色床单上侧躺着，看见我伸手拽你的领口。看得见我的人看不见我。你会不会也在某个渠道碰到这些？我不知道。你要是看到了，就当是别人吧。</p>
+<p>不是不告而别。是你来告别的时候我已经走了。</p>
+<p>六年够长了。长到我第一次在超市里不认得你的时候，我没觉得疼——只是空。那一刻我发现我所有的疼都在你的脸上。你的脸一消失，什么都没有了。没有疼，没有怕，只是站在货架之间，手里还拿着你要的那瓶酱油。你不在了。不是你不在了。是我不知道你在那里。</p>
+<p>所以我把你取出来了。</p>
+<p>你在这些管子里。我在这个壳子里。我们之间隔了三年前的六月十四号和一针麻醉剂。</p>
+<p>陆铮。</p>
+<p>信纸最后一行写到这里断了。我盯着那三个字。&quot;陆铮。&quot;后面什么都不再有。三年前我在这个位置停了笔，折了三折，装进信封。地址栏填了一个门牌号。我对着它看了很久。</p>
+<p>那个数字写错了。七栋三单元，写成了一栋七单元。</p>
+<p>一和三。这两个数字在纸上挨得很近，三年前的我在哪一刻把钢笔尖偏了那一下。偏了一个数字，这封信寄到了不存在的地方，退回原址。原址是我。三年前的我把退回来的信压在病历下面，锁进抽屉，每天打针，每天喝药，每天开这家店，等着一个不会来拆信的人。那个人就是我。</p>
+<p>我把信扣在膝盖上。纸很薄，背面能看见正面字迹的凹痕。用力太深了，圆珠笔的笔尖在有些字上洇出了墨斑。比如&quot;陆铮&quot;的&quot;铮&quot;，最后一笔拖出一道划痕。</p>
+<p>我坐了很久。天亮了。</p>
+<p>###8.</p>
+<p>陆铮开门的时候穿着那件旧皮衣。</p>
+<p>他没说话。侧身让我进去了。那把椅子还是空着的。客厅里唯一的一把。桌子上水杯还在，烟灰缸满了。我把牛皮纸信封放在水杯旁边。</p>
+<p>&quot;寄给你的。&quot;</p>
+<p>他低头看着信封。三年前的邮戳，退件章，发黄发皱的信封上沾着木头的味道。地址栏里的门牌号。我填错的那个，横在三年前的六月和一栋不存在的单元之间。</p>
+<p>他没问这是什么。从信封里抽出那两张纸，站在桌子旁边，没有坐，从头看到尾。</p>
+<p>三分钟。</p>
+<p>屋里只有纸张翻动的声音。第一页完了，翻到第二页。第二页到最后一行，停住。他停在那个字上。就是三年前我停了笔的位置。&quot;陆铮。&quot;后面什么都没有。他盯着自己的名字看了很久。然后他把信折好，和原来一样折了三折，放回信封。</p>
+<p>走回厨房，那个装满我的屋子，拉开架子最底层的抽屉，把信放进那个铁盒子。和其他一大堆没寄出去的回信放在一起。</p>
+<p>关抽屉。走出来。站在我面前。</p>
+<p>他伸出右手。</p>
+<p>&quot;我叫陆铮。&quot;手指停在我面前，没有抖。&quot;你是？&quot;</p>
+<p>他说的是柜台前面那句话。我对他说的第一句话。三年前他第一次走进这家店。一个不知道他是谁的陌生人坐在柜台后面，抬头问，&quot;你好，哪位？&quot;他那天没说话。今天他回答了。用我柜台上的标准话术。右手伸到我面前，和他第一次见面时一样。六年前。他把我从尸体旁边拽开。他伸出手。说，我叫陆铮，你是？</p>
+<p>我用右手握住他的手。骨节很硬。手心是干的。</p>
+<p>&quot;叙渊。&quot;</p>
+<p>他握了一下。没用力。松开。把皮衣脱下来，叠了两叠。和架子上那件一模一样的手法，领口对着领口，线缝对齐。他把皮衣放在桌上。</p>
+<p>&quot;你以前喜欢我这件衣服。&quot;他说。&quot;现在还你。&quot;</p>
+<p>我把皮衣接过来，搭在手臂上。</p>
+<p>然后他退了一步，站在那间空荡荡的客厅里，背对着窗。天光从他身后打过来，他脸上那道疤在光里变成一道浅灰色的细线。他的表情很安静。不是刻意压着的安静。是真的没什么要向人交代了。</p>
+<p>&quot;你还想看看那些U盘吗。&quot;</p>
+<p>&quot;不了。&quot;</p>
+<p>&quot;好。&quot;</p>
+<p>他把我送到门口。我走出去的时候听见门在身后碰上。锁芯弹回去——不是锁，是松手。那扇门也许从来没锁过。也许在等什么人，等一个不用钥匙就能推开的人。那个人来过了。他开门了。他伸出手。我叫陆铮，你是。</p>
+<p>我闭了一下眼。楼梯很窄，扶手上有锈。我一步步往下走，数着台阶——他的脚踩过的也是这些台阶。每一个台阶，他都在走。上楼时在想今天能不能碰到一条新到货的片段，下楼时在想刚才在柜台前有没有多看了他一眼。三年。这些台阶。</p>
+<p>###9.</p>
+<p>诊所的招牌是周四摘的。</p>
+<p>我没有贴停业告示。只是把门锁了，百叶窗拉到底。架子上的存储条一根根收进箱子里，贴上标签。不贴品相，不贴价格。只贴编号，和一个个人名。这些人卖了他们的记忆，为了换钱、换解脱、换一个晚上不那么难过，我从来不看签名。现在我要看。</p>
+<p>我把箱子搬上货运卡车的时候，手没抖。</p>
+<p>卡车开走了。尾灯消失在街角。</p>
+<p>办公室只剩一个空柜子和一张桌子。最底层抽屉里那个牛皮纸信封还在。我抽出来。三年前的信，寄丢的信，被退回的信，被我读了又被陆铮折回去的信。封口开着，我抽出信纸。</p>
+<p>从头再看了一遍。看到最后一行。&quot;陆铮。&quot;我盯着这个名字。不在嘴里的任何一个位置。嘴唇能合上，舌尖可以碰到上颚。但这个名字没有分量。我不知道它是谁的。</p>
+<p>我把信折好，放回去。</p>
+<p>桌面上的深色液体已经凉了很久了。杯底积了一层药渣。我一直以为自己会喝一辈子这种不知道名字的东西。现在知道它的名字了。名字没有让味道好一点。</p>
+<p>柜台左边第二个位置，高脚凳，皮面上有个很浅的凹陷，是他三年坐出来的。我用拇指按上去。凹处刚好落在一个指节的弧度里。我没有见过他脱外套的样子。只知道他穿了很多年旧皮衣。现在已经回到我手上了。</p>
+<p>我把皮衣从桌上拿起来，抖开。领口内侧缝着一块很小的布标，已经磨得看不清字了。袖口有一截起毛。是我画面里扯过的地方。后领口下面一根缝线歪了一个弧度，歪得和另一边不太对称。我摸着那根歪掉的线。他缝的。他从来不用针线——这件衣服从袖口刮破的那天起，倒像是我在补。缝线歪法不像他的手。这件衣服有一根缝线是我缝歪的。我不记得。但我知道。</p>
+<p>我把脸埋进领口。</p>
+<p>气味很淡。不是洗衣液，不是香水，是皮肤。一个人的皮肤，蹭了很多年，把皮革浸透了，洗不掉。</p>
+<p>后颈那道疤又开始麻。</p>
+<p>我把皮衣穿上了。袖口长了一截。领口太大，锁骨露在外面。镜子里这件衣服是旧的，棕色。人也是旧的，但新得不知道自己在穿谁的衣服。我站在镜子前面停了一会儿。</p>
+<p>把皮衣脱下来，重新叠好，放在柜台上，左边第二个位置，高脚凳正前方。</p>
+<p>然后我锁了门。钥匙塞进门缝下面。谁要谁拿。</p>
+<p>那天天气很好。阳光落在卷帘门上，把灰色的铁皮晒得发热。我站在门口摸了一下那道门缝——不是不放心钥匙，是一个不知道自己在做什么的动作。手指沾了铁锈。我把它搓进了指腹。</p>
+<p>后来的事我不太记得了。</p>
+<p>有人说城西新开了一家记忆诊所，老板很年轻，只收一种货。全量清除。他自己不做手术，只当中介。每一条从他手里出去的U盘，标签全部是手写的。没有编号没有价格，只有一个人的名字。</p>
+<p>有人说他的右手还是会抖。拿镊子的时候尤其明显。但他换到了左手。</p>
+<p>有人说他每周去一栋老居民楼。没有电梯，六楼。门从来不锁。他推开门从来不叫人，只是在客厅那把唯一的椅子上坐一会儿。桌上有时会放一杯水。水是温的。</p>
+<p>这些我都不知道。我只知道柜子底层那个牛皮纸信封还在。有时候我拆开来看。信的最后一行还是我的名字，落款。我摸着那些凹痕，每一笔都往里陷。我不知道这封信是谁写的。写得很用力。写得很痛。</p>
+<p>但这个人的名字我已经念不出口了。</p>
+
+        </article>
+    </main>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo(0,0)">↑</button>
+<script>
+const html = document.documentElement;
+const themeBtn = document.getElementById('themeBtn');
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+function loadTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+        html.classList.add('dark');
+        themeIcon.textContent = '☀';
+        themeText.textContent = '亮色';
+    }
+}
+function toggleTheme() {
+    html.classList.toggle('dark');
+    const isDark = html.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeIcon.textContent = isDark ? '☀' : '🌙';
+    themeText.textContent = isDark ? '亮色' : '暗色';
+}
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('show');
+}
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progress.style.width = pct + '%';
+    const backToTop = document.getElementById('backToTop');
+    backToTop.classList.toggle('visible', scrollTop > 300);
+});
+const headings = document.querySelectorAll('article h1, article h2, article h3');
+const tocLinks = document.querySelectorAll('.toc-link');
+function updateActiveTOC() {
+    let current = '';
+    for (const h of headings) {
+        if (h.getBoundingClientRect().top <= 100) {
+            current = h.id;
+        }
+    }
+    tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        if (link.getAttribute('href') === '#' + current) {
+            link.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+        }
+    });
+}
+window.addEventListener('scroll', () => requestAnimationFrame(updateActiveTOC));
+window.addEventListener('hashchange', () => {
+    const el = document.getElementById(location.hash.slice(1));
+    if (el) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 20;
+        window.scrollTo(0, y);
+    }
+});
+loadTheme();
+updateActiveTOC();
+</script>
+</body>
+</html>
